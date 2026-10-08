@@ -1,0 +1,198 @@
+:root {
+    --paper: #ffffff;
+    --ink: #6b5647;
+    --font: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font);
+    transition: background-color 0.8s, color 0.8s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+canvas.scene {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: grab;
+    touch-action: none;
+    outline: none;
+}
+
+/* loader: the title painted in left to right as the scene comes up */
+.loader-study {
+    position: relative;
+    font: 700 clamp(30px, 6vw, 60px)/1 var(--font);
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+}
+.loader-ghost { opacity: 0.18; }
+.loader-fill {
+    position: absolute;
+    inset: 0;
+    color: #ff7d22;
+    -webkit-mask-image: linear-gradient(to right, #000 calc(var(--reveal, 0) * 100%), transparent calc(var(--reveal, 0) * 100% + 4%));
+    mask-image: linear-gradient(to right, #000 calc(var(--reveal, 0) * 100%), transparent calc(var(--reveal, 0) * 100% + 4%));
+    transition: -webkit-mask-image 0.3s, mask-image 0.3s;
+}
+.loader-status {
+    position: absolute;
+    bottom: 18%;
+    left: 0;
+    right: 0;
+    margin: 0;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    opacity: 0.7;
+}
+.loader.failed .loader-status { opacity: 1; padding: 0 24px; }
+
+/* chrome sits on the paper, outside the painting */
+html:not([data-state=ready]) .presets,
+html:not([data-state=ready]) .hint { opacity: 0; }
+
+.presets, .hint {
+    position: fixed;
+    z-index: 5;
+    transition: opacity 0.6s 0.2s;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+button {
+    font: 600 13px/1 var(--font);
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+}
+button:focus-visible, a:focus-visible { outline: 2px dashed var(--ink); outline-offset: 4px; border-radius: 4px; }
+
+/* painted previews of each time of day, stacked beside the sheet like the
+   reference's preset cards */
+.presets {
+    --thumb: 76px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    left: calc(var(--fx, 0px) - var(--thumb) - 34px);
+    top: calc(var(--fy, 0px) + var(--fh, 0px) - var(--thumb) * 2 - 16px);
+}
+html[data-layout=below] .presets {
+    --thumb: 58px;
+    flex-direction: row;
+    left: 50%;
+    top: calc(var(--fy, 0px) + var(--fh, 0px) + 22px);
+    transform: translateX(-50%);
+}
+.preset {
+    position: relative;
+    width: var(--thumb);
+    height: var(--thumb);
+    transition: transform 0.25s cubic-bezier(.3, 1.6, .5, 1), opacity 0.25s;
+    opacity: 0.62;
+}
+.preset:hover { transform: translateY(-3px) rotate(-1.5deg); opacity: 0.9; }
+.preset:active { transform: scale(0.94); }
+.preset[aria-pressed=true] { opacity: 1; }
+.preset[aria-pressed=true]::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -9px;
+    width: 4px;
+    height: 4px;
+    margin-left: -2px;
+    border-radius: 50%;
+    background: var(--ink);
+}
+html[data-layout=below] .preset[aria-pressed=true]::after { bottom: -8px; }
+.thumb {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.hint {
+    margin: 0;
+    left: 0;
+    right: 0;
+    top: calc(var(--fy, 0px) + var(--fh, 0px) + 14px);
+    text-align: center;
+    pointer-events: none;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    opacity: 0.55;
+}
+html[data-touched] .hint { opacity: 0; transition-delay: 2.5s; transition-duration: 1.2s; }
+html[data-layout=below] .hint { display: none; }
+
+/* soft cream cursor, mouse only */
+.cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 30;
+    width: 23px;
+    height: 23px;
+    margin: -11.5px 0 0 -11.5px;
+    border-radius: 50%;
+    background: #fff5dc;
+    box-shadow: 0 1px 6px rgba(70, 50, 40, 0.18);
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s, width 0.2s, height 0.2s, margin 0.2s;
+}
+.cursor span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #111;
+}
+.cursor.on { opacity: 0.85; }
+.cursor.hover { width: 34px; height: 34px; margin: -17px 0 0 -17px; opacity: 1; }
+.cursor.pressed { width: 20px; height: 20px; margin: -10px 0 0 -10px; }
+@media (hover: hover) and (pointer: fine) {
+    canvas.scene { cursor: none; }
+}
+
+/* lil-gui, dressed for the paper */
+.lil-gui.root {
+    --background-color: color-mix(in srgb, var(--paper) 92%, #fff);
+    --text-color: var(--ink);
+    --title-background-color: color-mix(in srgb, var(--ink) 12%, var(--paper));
+    --title-text-color: var(--ink);
+    --widget-color: color-mix(in srgb, var(--ink) 14%, var(--paper));
+    --hover-color: color-mix(in srgb, var(--ink) 22%, var(--paper));
+    --focus-color: color-mix(in srgb, var(--ink) 28%, var(--paper));
+    --number-color: #c2412c;
+    --string-color: #2f62d6;
+    --font-family: var(--font);
+    top: 18px !important;
+    right: 18px !important;
+    border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(60, 40, 30, 0.12);
+    z-index: 10;
+}
