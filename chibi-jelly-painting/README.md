@@ -9,7 +9,9 @@ A chibi martial-arts kid riding a wobbly cloud, painted live in the browser.
 </p>
 
 - **Live:** [chibi-jelly-painting.vercel.app](https://chibi-jelly-painting.vercel.app)
-- **Model:** Opus 5.5 (high)
+- **Model:** Opus 5.5 (high) for the build, Sonnet 5.5 (high) for the final polish, video, repo and deploy
+- **Tokens:** ~580K (300K input + 279K output), plus 35.7M read from cache
+- **Time:** 1h 25m of active agent time, spread over several days of iteration
 - **Built with:** Droid in the Factory app
 - **Stack:** three.js WebGPU + TSL (WebGL 2 fallback), Vite
 - **Style:** a screen-space paint filter after mesq's [Jelly Painting](https://x.com/mesqme/status/2106646827193778352)
