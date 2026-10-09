@@ -1,8 +1,21 @@
-# Kid on a Cloud
+# Chibi Jelly Painting
 
-A chibi martial-arts kid riding a wobbly cloud, painted live in the browser with
-three.js WebGPU + TSL (WebGL 2 fallback). The painting technique follows mesq's
-[Jelly Painting](https://x.com/mesqme/status/2106646827193778352).
+A chibi martial-arts kid riding a wobbly cloud, painted live in the browser.
+
+<p>
+  <img src="screenshots/day.jpg" width="32%" alt="Day" />
+  <img src="screenshots/turn.jpg" width="32%" alt="Turned around" />
+  <img src="screenshots/dusk.jpg" width="32%" alt="Dusk" />
+</p>
+
+- **Live:** [chibi-jelly-painting.vercel.app](https://chibi-jelly-painting.vercel.app)
+- **Model:** Opus 5.5 (high)
+- **Built with:** Droid in the Factory app
+- **Stack:** three.js WebGPU + TSL (WebGL 2 fallback), Vite
+- **Style:** a screen-space paint filter after mesq's [Jelly Painting](https://x.com/mesqme/status/2106646827193778352)
+- **Character:** built from primitives in code, with no model files
+
+## Run it
 
 ```bash
 npm install
