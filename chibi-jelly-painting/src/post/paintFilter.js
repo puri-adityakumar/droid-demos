@@ -268,7 +268,8 @@ export function createPaintFilter( renderer, scene, camera, settings = { ...pain
             {
                 const t = float( loop[ name ] ).div( STEPS )
                 const d = directionAt( pos ).toVar()
-                If( dot( d, prev ).lessThan( 0 ), () => d.assign( d.negate() ) )
+                // a block body: an expression body would be taken as a return value and dropped
+                If( dot( d, prev ).lessThan( 0 ), () => { d.assign( d.negate() ) } )
                 pos.addAssign( d.mul( u.stepLength ) )
                 prev.assign( d )
 

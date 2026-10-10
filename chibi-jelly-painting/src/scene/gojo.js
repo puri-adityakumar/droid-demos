@@ -1,9 +1,10 @@
 import {
-    Group, Mesh, SphereGeometry, CapsuleGeometry, CylinderGeometry, PlaneGeometry, TubeGeometry, TorusGeometry, LatheGeometry,
-    ShapeGeometry, Shape, Vector2, Vector3, CatmullRomCurve3, Sprite, SpriteNodeMaterial, MeshBasicNodeMaterial
+    Group, Mesh, SphereGeometry, CapsuleGeometry, CylinderGeometry, PlaneGeometry, TubeGeometry, LatheGeometry,
+    ShapeGeometry, Shape, Vector2, Vector3, CatmullRomCurve3, Sprite, SpriteNodeMaterial, MeshBasicNodeMaterial, Color
 } from 'three/webgpu'
+import { uniform, normalView, positionLocal, mix, smoothstep, mx_noise_float } from 'three/tsl'
 
-import { paintedMaterial } from '../materials/painted.js'
+import { paintedMaterial, light } from '../materials/painted.js'
 import {
     mesh, v3, sphereDir, skullRadius, skullGeometry, orient, spikeGeometry, onTorso, stroke,
     TORSO, TORSO_DEPTH, HAIR_RADIUS, UP, Z, deg
@@ -91,22 +92,18 @@ function buildHair( head, mat )
     add( at( - 100, 8 ), v3( - 0.8, - 0.3, - 0.25 ), 0.38, 0.16, 0.28, UP )
     add( at( 100, 6 ), v3( 0.8, - 0.35, - 0.25 ), 0.38, 0.16, 0.28, UP )
 
-    // the back: shorter layers that flick outward
-    const back = { flat: 0.45 }
-    add( at( 180, 62 ), v3( 0, 0.8, - 0.9 ), 0.64, 0.24, 0.22, UP, back )
-    add( at( - 140, 42 ), v3( - 0.8, 0.5, - 0.9 ), 0.62, 0.24, 0.26, UP, back )
-    add( at( 140, 42 ), v3( 0.8, 0.46, - 0.9 ), 0.62, 0.24, 0.26, UP, back )
-    add( at( 180, 22 ), v3( 0, 0.05, - 1 ), 0.58, 0.24, 0.28, UP, back )
-    add( at( - 150, 0 ), v3( - 0.6, - 0.4, - 1 ), 0.5, 0.22, 0.3, UP, back )
-    add( at( 150, 0 ), v3( 0.6, - 0.44, - 1 ), 0.5, 0.22, 0.3, UP, back )
-    add( at( 180, - 24 ), v3( 0, - 0.8, - 0.9 ), 0.44, 0.2, 0.26, UP, back )
-    add( at( 160, 76 ), v3( 0.4, 1, - 0.5 ), 0.5, 0.18, 0.26, RIGHT, back )
-    add( at( - 160, 76 ), v3( - 0.4, 1, - 0.5 ), 0.5, 0.18, 0.26, LEFT, back )
-    add( at( 118, 62 ), v3( 0.9, 0.8, - 0.5 ), 0.48, 0.18, 0.26, UP, back )
-    add( at( - 118, 62 ), v3( - 0.9, 0.8, - 0.5 ), 0.48, 0.18, 0.26, UP, back )
-    add( at( 180, 42 ), v3( 0, 0.3, - 1 ), 0.5, 0.2, 0.26, UP, back )
-    add( at( - 168, 10 ), v3( - 0.7, - 0.1, - 1 ), 0.42, 0.18, 0.26, UP, back )
-    add( at( 168, 10 ), v3( 0.7, - 0.1, - 1 ), 0.42, 0.18, 0.26, UP, back )
+    // The back: rows of locks that lie down along the skull and only flick out
+    // at the tips, so from behind it reads as layered hair rather than a burr.
+    const lock = ( yaw, pitch, length, radius, out ) =>
+    {
+        const n = at( yaw, pitch )
+        const down = UP.clone().sub( n.clone().multiplyScalar( n.y ) ).normalize().negate()
+        add( n, down.add( n.clone().multiplyScalar( out ) ), length, radius, 0.2, n, { inset: 0.55, flat: 0.42, fullness: 0.7 } )
+    }
+    for( const yaw of [ 122, 148, 172, - 164, - 138 ] ) lock( yaw, 66, 0.56, 0.24, 0.75 )
+    for( const yaw of [ 112, 136, 160, - 176, - 150, - 124 ] ) lock( yaw, 34, 0.54, 0.24, 0.6 )
+    for( const yaw of [ 126, 152, 178, - 154, - 128 ] ) lock( yaw, 2, 0.46, 0.22, 0.5 )
+    for( const yaw of [ 140, 166, - 168, - 142 ] ) lock( yaw, - 24, 0.36, 0.2, 0.35 )
 
     // Bangs lie on the forehead (tangent to the cap, nudged inward so the tips
     // hug the skin), a few of them hanging between the eyes.
@@ -240,8 +237,11 @@ function buildArm( side, kind, parent, m )
 
     if( kind === 'sign' )
     {
-        // index and middle finger up and a little apart, the others folded into the palm and the thumb over them
-        for( const [ x, length, tilt ] of [ [ - 0.034, 0.11, 0.14 ], [ 0.036, 0.125, - 0.12 ] ] )
+        // Index and middle finger up and apart, the others folded into the palm and
+        // the thumb over them. The hand is turned palm-out so both fingers stand side
+        // by side on screen instead of one hiding the other.
+        hand.rotation.y = 2.5
+        for( const [ x, length, tilt ] of [ [ - 0.04, 0.11, 0.2 ], [ 0.042, 0.125, - 0.18 ] ] )
         {
             const finger = mesh( new CapsuleGeometry( 0.03, length, 6, 10 ), m.skin, hand, v3( x, - 0.07 - length / 2 - 0.03, 0.01 ) )
             finger.rotation.z = tilt
@@ -365,12 +365,37 @@ export function createInfinity()
     }
     const blue = orbMaker( { color: '#46a8ff', shade: '#2036d0', highlight: '#e4f7ff', glow: '#5cb8ff', size: 0.2 } )
     const red = orbMaker( { color: '#ff4060', shade: '#a00e2c', highlight: '#ffd6da', glow: '#ff5070', size: 0.18 } )
-    const purple = orbMaker( { color: '#a24cff', shade: '#3c0fa8', highlight: '#f6e4ff', glow: '#b45cff', size: 0.3 } )
-    const ring = mesh( new TorusGeometry( 0.46, 0.016, 8, 48 ), paintedMaterial( { color: '#f0dcff', unlit: true } ), purple.orb )
+
+    // Hollow Purple is energy, not a ball: white-hot where it faces you, deep
+    // violet at the rim, churning, with sparks thrown around it.
+    const purple = { orb: new Group() }
+    group.add( purple.orb )
+    const energy = new MeshBasicNodeMaterial()
+    const facing = normalView.z.clamp( 0, 1 ).add( mx_noise_float( positionLocal.mul( 7 ).add( light.time.mul( 1.4 ) ) ).mul( 0.22 ) )
+    energy.colorNode = mix(
+        mix( uniform( new Color( '#3a0c8e' ) ), uniform( new Color( '#a84cff' ) ), smoothstep( 0.05, 0.5, facing ) ),
+        uniform( new Color( '#fbeaff' ) ),
+        smoothstep( 0.62, 0.95, facing )
+    )
+    purple.ball = mesh( new SphereGeometry( 0.3, 32, 24 ), energy, purple.orb )
+    const aura = new Sprite( glowMaterial( SpriteNodeMaterial, '#b45cff', { strength: 0.9, power: 1.3 } ) )
+    aura.scale.setScalar( 1.6 )
+    purple.orb.add( aura )
+
+    const sparkMaterial = paintedMaterial( { color: '#f4dcff', unlit: true } )
+    const sparks = Array.from( { length: 9 }, ( _, i ) =>
+    {
+        const spark = mesh( new SphereGeometry( 1, 10, 8 ), sparkMaterial, purple.orb )
+        spark.scale.setScalar( 0.022 + ( i % 3 ) * 0.012 )
+        const axis = v3( Math.sin( i * 2.4 ), Math.cos( i * 1.7 ), Math.sin( i * 3.1 + 1 ) ).normalize()
+        const start = v3( 1, 0, 0 ).cross( axis ).normalize()
+        return { spark, axis, start, radius: 0.38 + ( i % 4 ) * 0.05, speed: 2.2 + ( i % 5 ) * 0.6 }
+    } )
 
     // Hollow Purple hangs over the fingertips of his raised hand once Blue and Red have met
     const MERGE = v3( - 0.98, 2.12, 0.5 )
     const here = new Vector3()
+    const swirlOffset = new Vector3()
 
     function update( t )
     {
@@ -382,7 +407,7 @@ export function createInfinity()
             // they spiral in on each other and settle into one point
             const swirl = ( 1 - m ) * 0.22
             const a = t * 5 + phase
-            orb.position.lerpVectors( here, MERGE, m ).add( v3( Math.cos( a ) * swirl, Math.sin( a ) * swirl, 0 ) )
+            orb.position.lerpVectors( here, MERGE, m ).add( swirlOffset.set( Math.cos( a ) * swirl, Math.sin( a ) * swirl, 0 ) )
             orb.scale.setScalar( 1 - m * 0.55 )
             ball.rotation.y = t
         }
@@ -391,7 +416,8 @@ export function createInfinity()
         purple.orb.position.copy( MERGE )
         purple.orb.position.y += Math.sin( t * 1.6 ) * 0.04
         purple.orb.scale.setScalar( Math.max( grow, 1e-3 ) * ( 1 + Math.sin( t * 6 ) * 0.04 ) )
-        ring.rotation.set( 1.15, 0.3, t * 1.6 )
+        for( const { spark, axis, start, radius, speed } of sparks )
+            spark.position.copy( start ).applyAxisAngle( axis, t * speed ).multiplyScalar( radius )
         purple.orb.visible = grow > 0.002
     }
 

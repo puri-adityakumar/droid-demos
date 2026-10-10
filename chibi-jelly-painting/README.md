@@ -85,11 +85,11 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
 - `src/scene/gojo.js` — Gojo Satoru: messy snow-white hair (tufts on the crown, bangs
   that hang between his eyes), pale blue Six Eyes with a lighter rim and a soft lash
   line, a dark navy jacket zipped up to a high collar that flares around his chin, and
-  longer sleeves so one hand can make the two-finger sign beside his cheek while the
+  longer sleeves so one hand can make the two-finger sign (palm out) beside his cheek while the
   other grips his collar. In place of the cloud he hovers over an Infinity sign (a
   lemniscate tube) that his Blue and Red orbs run around. In the Hollow Purple mood
-  the two orbs spiral together and become a purple orb with a ring over his raised
-  hand. Reference: the JJK wiki and the Gojo Nendoroid.
+  the two orbs spiral together into a churning purple orb of energy that throws
+  sparks over his raised hand. Reference: the JJK wiki and the Gojo Nendoroid.
 - `src/scene/void.js` — his backdrop: white ink waves with flung drops and thin speed
   lines, flat shapes that always face the camera so orbiting never shows them edge-on.
   Their colours (and the `purple` mix that drives the orbs) are theme uniforms.
