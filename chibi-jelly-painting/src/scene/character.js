@@ -45,12 +45,12 @@ function makeMaterials()
 
 const SKULL_RADIUS = 0.58
 const SKULL_SCALE = new Vector3( 1.02, 0.95, 0.97 )
-const HAIR_RADIUS = 0.615
-const UP = new Vector3( 0, 1, 0 )
-const Z = new Vector3( 0, 0, 1 )
-const deg = Math.PI / 180
+export const HAIR_RADIUS = 0.615
+export const UP = new Vector3( 0, 1, 0 )
+export const Z = new Vector3( 0, 0, 1 )
+export const deg = Math.PI / 180
 
-function mesh( geometry, material, parent, position = null, scale = null )
+export function mesh( geometry, material, parent, position = null, scale = null )
 {
     const m = new Mesh( geometry, material )
     if( position ) m.position.copy( position )
@@ -59,9 +59,9 @@ function mesh( geometry, material, parent, position = null, scale = null )
     return m
 }
 
-const v3 = ( x, y, z ) => new Vector3( x, y, z )
+export const v3 = ( x, y, z ) => new Vector3( x, y, z )
 
-function sphereDir( yaw, pitch )
+export function sphereDir( yaw, pitch )
 {
     return new Vector3(
         Math.sin( yaw ) * Math.cos( pitch ),
@@ -71,7 +71,7 @@ function sphereDir( yaw, pitch )
 }
 
 /** Head surface distance along a unit direction: a squashed ball with soft, full cheeks. */
-function skullRadius( d )
+export function skullRadius( d )
 {
     const ellipsoid = SKULL_RADIUS / Math.hypot( d.x / SKULL_SCALE.x, d.y / SKULL_SCALE.y, d.z / SKULL_SCALE.z )
     const band = Math.exp( - ( ( ( d.y + 0.3 ) / 0.3 ) ** 2 ) )
@@ -81,7 +81,7 @@ function skullRadius( d )
     return ellipsoid * ( 1 + 0.05 * band * front - chin )
 }
 
-function skullGeometry()
+export function skullGeometry()
 {
     const g = mergeVertices( new SphereGeometry( 1, 72, 54 ).deleteAttribute( 'normal' ).deleteAttribute( 'uv' ) )
     const pos = g.attributes.position
@@ -99,7 +99,7 @@ function skullGeometry()
  * A flattened, tapered blade curved toward local +x: base at the origin, tip
  * along +y, thin along z so the locks read as cut shapes rather than cones.
  */
-function spikeGeometry( length, radius, bend, flat = 0.6, fullness = 1 )
+export function spikeGeometry( length, radius, bend, flat = 0.6, fullness = 1 )
 {
     const g = new ConeGeometry( radius, length, 12, 10 )
     g.translate( 0, length * 0.5, 0 )
@@ -116,7 +116,7 @@ function spikeGeometry( length, radius, bend, flat = 0.6, fullness = 1 )
     return g
 }
 
-function orient( object, direction, bendToward )
+export function orient( object, direction, bendToward )
 {
     const y = direction.clone().normalize()
     const x = bendToward.clone().sub( y.clone().multiplyScalar( bendToward.dot( y ) ) )
@@ -265,10 +265,10 @@ function buildFace( head, m )
 }
 
 // torso lathe profile, shared by the mesh and the details pinned to its surface
-const TORSO = [
+export const TORSO = [
     [ 0.0, 0.48 ], [ 0.3, 0.48 ], [ 0.33, 0.62 ], [ 0.34, 0.8 ], [ 0.3, 0.94 ], [ 0.2, 1.02 ], [ 0.12, 1.05 ], [ 0.0, 1.05 ]
 ]
-const TORSO_DEPTH = 0.82
+export const TORSO_DEPTH = 0.82
 
 function torsoRadius( y )
 {
@@ -282,13 +282,13 @@ function torsoRadius( y )
 }
 
 /** A point on the gi's front (face = 1) or back (face = -1), lifted off it by `lift`. */
-function onTorso( x, y, face = 1, lift = 0.004 )
+export function onTorso( x, y, face = 1, lift = 0.004 )
 {
     const r = torsoRadius( y )
     return v3( x, y, face * ( TORSO_DEPTH * Math.sqrt( Math.max( 0, r * r - x * x ) ) + lift ) )
 }
 
-function stroke( points, radius, material, parent )
+export function stroke( points, radius, material, parent )
 {
     return mesh( new TubeGeometry( new CatmullRomCurve3( points ), points.length * 6, radius, 8 ), material, parent )
 }

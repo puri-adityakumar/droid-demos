@@ -1,11 +1,18 @@
 # Chibi Jelly Painting
 
-A chibi martial-arts kid riding a wobbly cloud, painted live in the browser.
+A chibi martial-arts kid riding a wobbly cloud, and a smirking chibi Light Yagami
+sitting at his desk at night, writing in the Death Note, painted live in the browser. One
+page, one switch for the mood (day and dusk in the sky, lamp light and moonlight at
+the desk), one toggle for who is in the painting.
 
 <p>
   <img src="screenshots/day.jpg" width="32%" alt="Day" />
   <img src="screenshots/turn.jpg" width="32%" alt="Turned around" />
   <img src="screenshots/dusk.jpg" width="32%" alt="Dusk" />
+</p>
+<p>
+  <img src="screenshots/light-day.jpg" width="48%" alt="Light Yagami at his desk, lamp light" />
+  <img src="screenshots/light-dusk.jpg" width="48%" alt="Light Yagami at his desk, moonlight" />
 </p>
 
 - **Live:** [chibi-jelly-painting.vercel.app](https://chibi-jelly-painting.vercel.app)
@@ -27,10 +34,13 @@ npm run build    # static build in dist/
 
 ## Controls
 
-Tap the kid to jump, tap the cloud to bounce it, drag to orbit, scroll to zoom.
-The two painted cards beside the sheet switch between day and dusk; they are
-captured from the live pipeline at load.
-Keys: `space`/`j` jump · `w` wave · `t` day/dusk · `g` paint settings.
+Tap the character to jump (Light only hops in his chair), tap the cloud (or Light's notebook) to bounce it, drag to orbit, scroll to zoom.
+Two painted cards beside the sheet pick the character, **Goku** or **Light Yagami**
+(he hops in on arrival); the selected one is outlined. An icon-only button in
+the top right flips the mood: sun / moon for Goku's sky (day, dusk), lamp / moon
+for Light's desk (lamp light, moonlight). The card previews are
+captured from the live pipeline at load. Add `?char=light` to open on Light Yagami.
+Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku · `2` Light Yagami · `g` paint settings.
 
 ## How it works
 
@@ -51,11 +61,32 @@ Keys: `space`/`j` jump · `w` wave · `t` day/dusk · `g` paint settings.
      few pixels across the stroke, heaviest on edges) and a screen-locked
      9-level dither that gives the multi-hue pastel grain. Impasto relief,
      paper grain and edge pooling are available in the settings but off by default
-- `src/scene/character.js` — the kid, built from primitives (no model files).
-- `src/scene/world.js` — the nimbus cloud, far clouds, the painted multi-hue sky
-  and the twinkling sparkles.
+- `src/scene/character.js` — the kid, built from primitives (no model files). It also
+  exports the head, hair-blade and torso helpers the other character reuses.
+- `src/scene/yagami.js` — Light Yagami, same recipe: honey-brown bowl cut with a swept
+  fringe, narrow eyes with a red glint, a smirk, the tan jacket and red tie, and a pen
+  in his right hand. He sits behind his desk instead of riding a cloud: the open Death
+  Note on the desk plays the cloud's part (block lettering on the inside cover, names
+  on the page, a bookmark ribbon that sways, a bounce when tapped), plus Ryuk's apple.
+  Reference: the Death Note wiki and the Light Nendoroid.
+- `src/scene/room.js` — his desk at night: the wooden desk (its top is as high as his
+  waist, so it hides his legs) and the back of his chair, a brass desk lamp whose glow
+  is a real uniform (`light.lamp`) that fades the halo, the pool of light on the desk
+  and the bulb, a window onto a lit city with a crescent moon and Kira-red curtains,
+  stacked books, a sheet of names and a mug of pencils. The wall is the painted
+  backdrop; the far clouds and sparkles are hidden here.
+- `src/scene/world.js` — the nimbus cloud (recolorable), far clouds, the painted
+  multi-hue sky and the twinkling sparkles.
 - `src/scene/rig.js` — springs for bobbing, blinking, head tracking, squash-and-stretch
-  jumps, hair lag, tail swish and the occasional wave.
-- `src/themes.js` — day/dusk palettes, eased every frame.
+  jumps, hair lag, tail swish and the occasional wave. A character can hold an arm
+  pose by exposing `armRest` (with `scribble` for a hand that is writing), pick which
+  arm waves (`waveSide`), bob and hop less (`bobScale`, `jumpScale`) and may have no
+  tail. A prop can be `grounded`: it stays on its desk (`baseY`) and only squashes.
+- `src/main.js` — also gives each character their own camera height (`view.polar`),
+  so Light is seen from above enough to read the notebook; the camera eases there on
+  a swap until you grab it.
+- `src/themes.js` — two moods per world, eased every frame: `sky` (day, dusk) and `room`
+  (lamp light, moonlight). The switch picks a slot; each character's world decides
+  what it looks like.
 
-Dev-only debug hook: `window.__chibi` (renderer, scene, camera, filter, rig, kid).
+Dev-only debug hook: `window.__chibi` (renderer, scene, camera, controls, filter, cast, theme, character).

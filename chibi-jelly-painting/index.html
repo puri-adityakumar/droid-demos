@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
         <meta name="theme-color" content="#ffffff">
         <title>Chibi Jelly Painting</title>
-        <meta name="description" content="A chibi martial-arts kid on a cloud, painted live in the browser with three.js WebGPU + TSL, in the style of Jelly Painting.">
+        <meta name="description" content="Chibi Goku on his cloud and Light Yagami at his desk at night, painted live in the browser with three.js WebGPU + TSL, in the style of Jelly Painting.">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,16 +24,24 @@
 
         <h1 class="sr-only">Chibi Jelly Painting</h1>
 
-        <nav class="presets" aria-label="Time of day">
-            <button type="button" class="preset" data-theme-button="day" aria-pressed="true" aria-label="Day">
-                <canvas class="thumb" width="168" height="168" data-thumb="day"></canvas>
+        <nav class="presets" aria-label="Character">
+            <button type="button" class="preset" data-character="goku" aria-pressed="true">
+                <canvas class="thumb" width="168" height="168"></canvas>
+                <span class="preset-label">Goku</span>
             </button>
-            <button type="button" class="preset" data-theme-button="dusk" aria-pressed="false" aria-label="Dusk">
-                <canvas class="thumb" width="168" height="168" data-thumb="dusk"></canvas>
+            <button type="button" class="preset" data-character="light" aria-pressed="false">
+                <canvas class="thumb" width="168" height="168"></canvas>
+                <span class="preset-label">Light Yagami</span>
             </button>
         </nav>
 
-        <p class="hint">tap the kid to jump · drag to turn him</p>
+        <button type="button" class="mode" data-mode="day" data-world="sky" aria-label="Switch to dusk" title="Switch to dusk">
+            <svg class="mode-icon" data-mode="day" data-world="sky" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+            <svg class="mode-icon" data-mode="day" data-world="room" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg>
+            <svg class="mode-icon" data-mode="dusk" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+
+        <p class="hint">tap to jump · drag to turn · t day/dusk · c character</p>
 
         <div class="cursor" aria-hidden="true"><span></span></div>
 

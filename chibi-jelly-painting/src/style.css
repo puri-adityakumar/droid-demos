@@ -60,6 +60,7 @@ canvas.scene {
 
 /* chrome sits on the paper, outside the painting */
 html:not([data-state=ready]) .presets,
+html:not([data-state=ready]) .mode,
 html:not([data-state=ready]) .hint { opacity: 0; }
 
 .presets, .hint {
@@ -87,19 +88,20 @@ button {
 }
 button:focus-visible, a:focus-visible { outline: 2px dashed var(--ink); outline-offset: 4px; border-radius: 4px; }
 
-/* painted previews of each time of day, stacked beside the sheet like the
-   reference's preset cards */
+/* two toggle cards beside the sheet, each a painted preview of what it
+   switches to: the other time of day, and the other character */
 .presets {
     --thumb: 76px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 34px;
     left: calc(var(--fx, 0px) - var(--thumb) - 34px);
-    top: calc(var(--fy, 0px) + var(--fh, 0px) - var(--thumb) * 2 - 16px);
+    top: calc(var(--fy, 0px) + var(--fh, 0px) - var(--thumb) * 2 - 34px - 20px);
 }
 html[data-layout=below] .presets {
     --thumb: 58px;
     flex-direction: row;
+    gap: 30px;
     left: 50%;
     top: calc(var(--fy, 0px) + var(--fh, 0px) + 22px);
     transform: translateX(-50%);
@@ -109,28 +111,63 @@ html[data-layout=below] .presets {
     width: var(--thumb);
     height: var(--thumb);
     transition: transform 0.25s cubic-bezier(.3, 1.6, .5, 1), opacity 0.25s;
-    opacity: 0.62;
+    opacity: 0.6;
 }
 .preset:hover { transform: translateY(-3px) rotate(-1.5deg); opacity: 0.9; }
 .preset:active { transform: scale(0.94); }
 .preset[aria-pressed=true] { opacity: 1; }
-.preset[aria-pressed=true]::after {
-    content: '';
+.preset[aria-pressed=true] .thumb { outline: 2px solid var(--ink); outline-offset: 3px; }
+.preset[aria-pressed=true] .preset-label { font-weight: 700; }
+.preset-label {
     position: absolute;
+    top: calc(100% + 7px);
     left: 50%;
-    bottom: -9px;
-    width: 4px;
-    height: 4px;
-    margin-left: -2px;
-    border-radius: 50%;
-    background: var(--ink);
+    transform: translateX(-50%);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    pointer-events: none;
 }
-html[data-layout=below] .preset[aria-pressed=true]::after { bottom: -8px; }
 .thumb {
     display: block;
     width: 100%;
     height: 100%;
 }
+
+/* mood switch: a single icon-only button pinned to the top right. In the sky
+   the sun turns into the moon and back; at the desk a lamp does */
+.mode {
+    position: fixed;
+    z-index: 5;
+    top: 18px;
+    right: 18px;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--ink) 10%, var(--paper));
+    transition: opacity 0.6s 0.2s, background-color 0.8s, transform 0.25s cubic-bezier(.3, 1.6, .5, 1);
+}
+.mode:hover { transform: rotate(-8deg) scale(1.07); }
+.mode:active { transform: scale(0.93); }
+.mode-icon {
+    grid-area: 1 / 1;
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.45s cubic-bezier(.3, 1.4, .5, 1), opacity 0.25s;
+}
+.mode-icon[data-world=room],
+.mode[data-world=room] .mode-icon[data-world=sky] { display: none; }
+.mode[data-world=room] .mode-icon[data-world=room] { display: block; }
+.mode[data-mode=day] .mode-icon[data-mode=dusk] { opacity: 0; transform: rotate(-70deg) scale(0.4); }
+.mode[data-mode=dusk] .mode-icon[data-mode=day] { opacity: 0; transform: rotate(70deg) scale(0.4); }
 
 .hint {
     margin: 0;
@@ -190,7 +227,7 @@ html[data-layout=below] .hint { display: none; }
     --number-color: #c2412c;
     --string-color: #2f62d6;
     --font-family: var(--font);
-    top: 18px !important;
+    top: 70px !important;
     right: 18px !important;
     border-radius: 10px;
     box-shadow: 0 6px 24px rgba(60, 40, 30, 0.12);

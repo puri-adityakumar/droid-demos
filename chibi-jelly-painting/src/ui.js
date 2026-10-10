@@ -1,6 +1,6 @@
 import GUI from 'three/addons/libs/lil-gui.module.min.js'
 
-import { themes } from './themes.js'
+import { slots } from './themes.js'
 
 const $ = ( selector ) => document.querySelector( selector )
 
@@ -43,10 +43,17 @@ export function createUI()
 
     // Copy the painted sheet (plus a sliver of paper) into a preset card.
     // Must run in the same task as the render so the canvas still holds it.
+    const thumbs = new Map()
+
     function drawThumb( id, source, rect, dpr )
     {
-        const thumb = document.querySelector( `[data-thumb="${ id }"]` )
-        if( ! thumb ) return
+        let thumb = thumbs.get( id )
+        if( ! thumb )
+        {
+            thumb = document.createElement( 'canvas' )
+            thumb.width = thumb.height = 168
+            thumbs.set( id, thumb )
+        }
         const ctx = thumb.getContext( '2d' )
         const m = rect.width * 0.035
         ctx.fillStyle = '#ffffff'
@@ -93,16 +100,41 @@ export function createUI()
     const setCursorHover = ( on ) => cursor.classList.toggle( 'hover', on )
     const touched = () => { document.documentElement.dataset.touched = '' }
 
-    function bind( { filter, theme, onJump, onWave, onFrameChange } )
-    {
-        const themeButtons = [ ...document.querySelectorAll( '[data-theme-button]' ) ]
+    let sync = () => {}
 
-        const syncTheme = () =>
+    function bind( { filter, theme, character, onJump, onWave, onFrameChange } )
+    {
+        // One card per character, always visible and named, painted in the
+        // current time of day. A separate switch in the corner flips day <-> dusk.
+        const cards = [ ...document.querySelectorAll( '[data-character]' ) ]
+        const modeSwitch = $( '.mode' )
+        const hint = $( '.hint' )
+        const next = ( list, current ) => list[ ( list.indexOf( current ) + 1 ) % list.length ]
+
+        sync = () =>
         {
-            for( const b of themeButtons ) b.setAttribute( 'aria-pressed', String( b.dataset.themeButton === theme.current ) )
+            for( const card of cards )
+            {
+                const id = card.dataset.character
+                card.setAttribute( 'aria-pressed', String( id === character.current ) )
+                card.querySelector( '.preset-label' ).textContent = character.names[ id ]
+                const source = thumbs.get( `${ id }-${ theme.current }` )
+                if( source ) card.querySelector( 'canvas' ).getContext( '2d' ).drawImage( source, 0, 0 )
+            }
+            // the two moods mean different things in each world: day / dusk in
+            // the sky, lamp light / moonlight at the desk
+            const label = `Switch to ${ theme.label( next( slots, theme.current ) ).toLowerCase() }`
+            modeSwitch.dataset.mode = theme.current
+            modeSwitch.dataset.world = theme.world
+            hint.textContent = `tap to jump · drag to turn · t ${ slots.map( ( slot ) => theme.label( slot ).toLowerCase() ).join( ' / ' ) } · c character`
+            modeSwitch.setAttribute( 'aria-label', label )
+            modeSwitch.title = label
         }
 
-        for( const b of themeButtons ) b.addEventListener( 'click', () => { theme.set( b.dataset.themeButton ); syncTheme() } )
+        const toggleTheme = () => { theme.set( next( slots, theme.current ) ); sync() }
+        const toggleCharacter = ( id = next( character.ids, character.current ) ) => { character.set( id ); sync() }
+        modeSwitch.addEventListener( 'click', toggleTheme )
+        for( const card of cards ) card.addEventListener( 'click', () => toggleCharacter( card.dataset.character ) )
 
         const gui = new GUI( { title: 'Paint settings' } )
         gui.hide()
@@ -144,16 +176,14 @@ export function createUI()
             if( key === ' ' || key === 'j' ) { e.preventDefault(); onJump() }
             else if( key === 'w' ) onWave()
             else if( key === 'g' ) toggleGui()
-            else if( key === 't' )
-            {
-                const ids = Object.keys( themes )
-                theme.set( ids[ ( ids.indexOf( theme.current ) + 1 ) % ids.length ] )
-                syncTheme()
-            }
+            else if( key === 't' ) toggleTheme()
+            else if( key === 'c' ) toggleCharacter()
+            else if( key === '1' ) toggleCharacter( character.ids[ 0 ] )
+            else if( key === '2' ) toggleCharacter( character.ids[ 1 ] )
         } )
 
-        syncTheme()
+        sync()
     }
 
-    return { progress, ready, fail, bind, layout, drawThumb, setCursorHover, touched }
+    return { progress, ready, fail, bind, layout, drawThumb, syncPreviews: () => sync(), setCursorHover, touched }
 }

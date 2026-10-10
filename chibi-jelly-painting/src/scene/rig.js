@@ -90,7 +90,7 @@ export function createRig( kid, nimbus, farClouds )
             if( jump.timer <= 0 )
             {
                 jump.phase = 'air'
-                jump.vy = LAUNCH
+                jump.vy = LAUNCH * ( kid.jumpScale ?? 1 )
                 squash.target = 0
                 squash.v += 3
                 cloud.v -= 1.2
@@ -127,14 +127,17 @@ export function createRig( kid, nimbus, farClouds )
         cloud.step( dt )
         const cs = cloudSquash.step( dt )
 
-        kid.root.position.y = bob + jump.y + cloud.x * 0.6
-        kid.root.rotation.z = Math.sin( t * 0.9 ) * 0.025
+        // a prop that sits on a desk (`grounded`) doesn't float, and doesn't carry anyone with it;
+        // its group's origin is the desk top (`baseY`) so squashing it keeps it on the desk
+        const grounded = nimbus.grounded ?? false
+        kid.root.position.y = bob * ( kid.bobScale ?? 1 ) + jump.y + ( grounded ? 0 : cloud.x * 0.6 )
+        kid.root.rotation.z = Math.sin( t * 0.9 ) * 0.025 * ( kid.bobScale ?? 1 )
         const breathe = Math.sin( t * 2.4 ) * 0.012
         kid.body.scale.set( 1 - s * 0.5 - breathe * 0.4, 1 + s + breathe, 1 - s * 0.5 - breathe * 0.4 )
 
-        nimbus.group.position.y = cloudBob + cloud.x
-        nimbus.group.rotation.z = Math.sin( t * 0.9 - 0.3 ) * 0.04
-        nimbus.group.rotation.x = Math.sin( t * 0.7 ) * 0.025
+        nimbus.group.position.y = grounded ? ( nimbus.baseY ?? 0 ) + Math.max( cloud.x, 0 ) : cloudBob + cloud.x
+        nimbus.group.rotation.z = grounded ? 0 : Math.sin( t * 0.9 - 0.3 ) * 0.04
+        nimbus.group.rotation.x = grounded ? 0 : Math.sin( t * 0.7 ) * 0.025
         nimbus.group.scale.set( 1 - cs * 0.4, 1 + cs, 1 - cs * 0.4 )
         nimbus.tail.rotation.y = Math.sin( t * 1.7 ) * 0.06
 
@@ -177,7 +180,7 @@ export function createRig( kid, nimbus, farClouds )
         }
 
         // tail: a curl that swishes
-        const segments = kid.tail.segments
+        const segments = kid.tail?.segments ?? []
         for( let i = 0; i < segments.length; i++ )
         {
             const seg = segments[ i ]
@@ -222,12 +225,24 @@ export function createRig( kid, nimbus, farClouds )
             let shoulderX = - 0.08 - a * 0.25
             let elbowX = - 0.35 - a * 0.2
             let elbowZ = 0
-            if( side > 0 )
+            const rest = kid.armRest?.[ side < 0 ? 'left' : 'right' ]
+            if( rest )
             {
-                shoulderZ = MathUtils.lerp( shoulderZ, 2.55, wv )
+                shoulderZ = rest.shoulderZ + swing * 0.5 + side * a * 0.6
+                shoulderX = rest.shoulderX - a * 0.25
+                elbowX = rest.elbowX - a * 0.2
+                // a hand that is busy writing: small quick strokes, still while he is airborne
+                const busy = ( rest.scribble ?? 0 ) * ( 1 - a )
+                shoulderZ += Math.sin( t * 5.1 ) * 0.05 * busy
+                shoulderX += Math.sin( t * 3.3 ) * 0.025 * busy
+                elbowX += Math.sin( t * 8.3 + 1 ) * 0.04 * busy
+            }
+            if( side === ( kid.waveSide ?? 1 ) )
+            {
+                shoulderZ = MathUtils.lerp( shoulderZ, side * 2.55, wv )
                 shoulderX = MathUtils.lerp( shoulderX, - 0.15, wv )
                 elbowX = MathUtils.lerp( elbowX, - 0.1, wv )
-                elbowZ = MathUtils.lerp( 0, 0.35 + Math.sin( t * 11 ) * 0.5, wv )
+                elbowZ = MathUtils.lerp( 0, side * ( 0.35 + Math.sin( t * 11 ) * 0.5 ), wv )
             }
             arm.shoulder.rotation.set( shoulderX, 0, shoulderZ )
             arm.elbow.rotation.set( elbowX, 0, elbowZ )

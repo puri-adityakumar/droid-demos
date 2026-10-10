@@ -3,80 +3,154 @@ import { Color, Vector3 } from 'three/webgpu'
 import { light } from './materials/painted.js'
 import { sky } from './scene/world.js'
 
+// Two moods per world. The page has one switch, so a mood is a slot ('day' or
+// 'dusk') and each world decides what that slot looks like: Goku's sky goes
+// from day to dusk, Light's room from lamp light to moonlight.
 const raw = {
-    day: {
-        label: 'Day',
-        skyTop: '#6fa6f2',
-        skyHorizon: '#ffd9cf',
-        skyLeft: '#a796ea',
-        skyRight: '#8fd6e0',
-        blotch: '#ffffff',
-        haze: '#c8d4ff',
-        hazeAmount: 0.08,
-        sparkle: '#fff6e4',
-        sparkleStrength: 0.9,
-        lightDir: [ - 0.5, 0.78, 0.55 ],
-        rimDir: [ 0.7, 0.35, - 0.6 ],
-        rimColor: '#fff2cf',
-        bounce: '#ffd36b',
-        shadowTint: '#6c63c9',
-        shadowTintAmount: 0.24,
-        cloud: '#ffffff',
-        cloudShade: '#b7b0e8',
-        paper: '#ffffff',
-        ink: '#6b5647',
+    sky: {
+        day: {
+            label: 'Day',
+            skyTop: '#6fa6f2',
+            skyHorizon: '#ffd9cf',
+            skyLeft: '#a796ea',
+            skyRight: '#8fd6e0',
+            blotch: '#ffffff',
+            haze: '#c8d4ff',
+            hazeAmount: 0.08,
+            sparkle: '#fff6e4',
+            sparkleStrength: 0.9,
+            lightDir: [ - 0.5, 0.78, 0.55 ],
+            rimDir: [ 0.7, 0.35, - 0.6 ],
+            rimColor: '#fff2cf',
+            bounce: '#ffd36b',
+            shadowTint: '#6c63c9',
+            shadowTintAmount: 0.24,
+            cloud: '#ffffff',
+            cloudShade: '#b7b0e8',
+            paper: '#ffffff',
+            ink: '#6b5647',
+        },
+        dusk: {
+            label: 'Dusk',
+            skyTop: '#4a3f93',
+            skyHorizon: '#ffa27a',
+            skyLeft: '#8a5fc4',
+            skyRight: '#ff94a6',
+            blotch: '#ffc6a3',
+            haze: '#d6a6dc',
+            hazeAmount: 0.1,
+            sparkle: '#ffe4bf',
+            sparkleStrength: 1,
+            lightDir: [ 0.78, 0.3, 0.45 ],
+            rimDir: [ - 0.7, 0.3, - 0.6 ],
+            rimColor: '#ffbb80',
+            bounce: '#ff965c',
+            shadowTint: '#4a2f86',
+            shadowTintAmount: 0.3,
+            cloud: '#ffd8c4',
+            cloudShade: '#8d6cc2',
+            paper: '#ffffff',
+            ink: '#5c3f4b',
+        },
     },
-    dusk: {
-        label: 'Dusk',
-        skyTop: '#4a3f93',
-        skyHorizon: '#ffa27a',
-        skyLeft: '#8a5fc4',
-        skyRight: '#ff94a6',
-        blotch: '#ffc6a3',
-        haze: '#d6a6dc',
-        hazeAmount: 0.1,
-        sparkle: '#ffe4bf',
-        sparkleStrength: 1,
-        lightDir: [ 0.78, 0.3, 0.45 ],
-        rimDir: [ - 0.7, 0.3, - 0.6 ],
-        rimColor: '#ffbb80',
-        bounce: '#ff965c',
-        shadowTint: '#4a2f86',
-        shadowTintAmount: 0.3,
-        cloud: '#ffd8c4',
-        cloudShade: '#8d6cc2',
-        paper: '#ffffff',
-        ink: '#5c3f4b',
+    // Light's desk at night. The wall is the painted backdrop: amber pooling on
+    // the lamp side, a cool glaze toward the window. The haze does the night
+    // grading, since every painted surface is pulled toward it.
+    room: {
+        day: {
+            label: 'Lamp light',
+            skyTop: '#1d2150',
+            skyHorizon: '#5a3a58',
+            skyLeft: '#e0905a',
+            skyRight: '#34499a',
+            blotch: '#7a5a92',
+            haze: '#2a3068',
+            hazeAmount: 0.2,
+            sparkle: '#ffe9c0',
+            sparkleStrength: 0,
+            lightDir: [ - 0.8, 0.5, 0.45 ],
+            rimDir: [ 0.7, 0.4, - 0.55 ],
+            rimColor: '#a9c8ff',
+            bounce: '#ff9a58',
+            shadowTint: '#2c2468',
+            shadowTintAmount: 0.42,
+            cloud: '#ffd8c4',
+            cloudShade: '#8d6cc2',
+            paper: '#ffffff',
+            ink: '#4a3550',
+            lamp: 1,
+        },
+        dusk: {
+            label: 'Moonlight',
+            skyTop: '#0b0f30',
+            skyHorizon: '#232a5e',
+            skyLeft: '#2a2f68',
+            skyRight: '#4c76cc',
+            blotch: '#3a4084',
+            haze: '#0c1238',
+            hazeAmount: 0.5,
+            sparkle: '#cfe0ff',
+            sparkleStrength: 0,
+            lightDir: [ 0.55, 0.6, 0.25 ],
+            rimDir: [ 0.7, 0.4, - 0.5 ],
+            rimColor: '#c4dcff',
+            bounce: '#4a5aa0',
+            shadowTint: '#12175e',
+            shadowTintAmount: 0.6,
+            cloud: '#ffd8c4',
+            cloudShade: '#8d6cc2',
+            paper: '#ffffff',
+            ink: '#2d3358',
+            lamp: 0,
+        },
     },
 }
 
 const COLOR_KEYS = [ 'skyTop', 'skyHorizon', 'skyLeft', 'skyRight', 'blotch', 'haze', 'sparkle', 'rimColor', 'bounce', 'shadowTint', 'cloud', 'cloudShade', 'paper' ]
 
-export const themes = Object.fromEntries( Object.entries( raw ).map( ( [ id, t ] ) =>
+export const slots = [ 'day', 'dusk' ]
+
+export const worlds = Object.fromEntries( Object.entries( raw ).map( ( [ world, set ] ) => [ world, Object.fromEntries( Object.entries( set ).map( ( [ slot, t ] ) =>
 {
     const parsed = {
-        id, label: t.label, ink: t.ink, paperHex: t.paper,
+        slot, label: t.label, ink: t.ink, paperHex: t.paper, lamp: t.lamp ?? 0,
         shadowTintAmount: t.shadowTintAmount, hazeAmount: t.hazeAmount, sparkleStrength: t.sparkleStrength,
     }
     for( const k of COLOR_KEYS ) parsed[ k ] = new Color( t[ k ] )
     parsed.lightDir = new Vector3( ...t.lightDir ).normalize()
     parsed.rimDir = new Vector3( ...t.rimDir ).normalize()
-    return [ id, parsed ]
-} ) )
+    return [ slot, parsed ]
+} ) ) ] ) )
 
-/** Eases every theme-driven uniform toward the active theme each frame. */
+/** Eases every theme-driven uniform toward the active mood each frame. */
 export function createThemeDriver( { farClouds, sparkles, filter } )
 {
-    let target = themes.day
-    const paper = themes.day.paper.clone()
+    let world = 'sky'
+    let slot = 'day'
+    let target = worlds[ world ][ slot ]
+    const paper = target.paper.clone()
     const cloudPaint = farClouds.material.userData.paint
+
+    function apply()
+    {
+        target = worlds[ world ][ slot ]
+        document.documentElement.dataset.theme = slot
+        document.documentElement.dataset.world = world
+        document.documentElement.style.setProperty( '--ink', target.ink )
+        document.documentElement.style.setProperty( '--paper', target.paperHex )
+    }
 
     function set( id )
     {
-        target = themes[ id ] ?? themes.day
-        document.documentElement.dataset.theme = target.id
-        document.documentElement.style.setProperty( '--ink', target.ink )
-        document.documentElement.style.setProperty( '--paper', target.paperHex )
+        slot = slots.includes( id ) ? id : 'day'
+        apply()
+    }
+
+    function setWorld( id )
+    {
+        if( ! worlds[ id ] ) return
+        world = id
+        apply()
     }
 
     function snap()
@@ -94,6 +168,7 @@ export function createThemeDriver( { farClouds, sparkles, filter } )
         sky.blotch.value.lerp( target.blotch, k )
         light.haze.value.lerp( target.haze, k )
         light.hazeAmount.value += ( target.hazeAmount - light.hazeAmount.value ) * k
+        light.lamp.value += ( target.lamp - light.lamp.value ) * k
         sparkles.tint.value.lerp( target.sparkle, k )
         sparkles.strength.value += ( target.sparkleStrength - sparkles.strength.value ) * k
         light.rimColor.value.lerp( target.rimColor, k )
@@ -108,5 +183,10 @@ export function createThemeDriver( { farClouds, sparkles, filter } )
         filter.settings.paperColor = '#' + paper.getHexString()
     }
 
-    return { set, snap, update, get current() { return target.id } }
+    return {
+        set, setWorld, snap, update,
+        get current() { return slot },
+        get world() { return world },
+        label: ( id ) => worlds[ world ][ id ].label,
+    }
 }

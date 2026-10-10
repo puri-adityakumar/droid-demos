@@ -14,6 +14,8 @@ export const light = {
     shadowTintAmount: uniform( 0.22 ),
     haze: uniform( new Color( '#c8d4ff' ) ),
     hazeAmount: uniform( 0.14 ),
+    // how brightly a room's desk lamp burns (0 to 1); only the room's lamp reads it
+    lamp: uniform( 0 ),
     time: uniform( 0 ),
 }
 
