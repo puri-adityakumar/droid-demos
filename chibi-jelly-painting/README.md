@@ -1,9 +1,10 @@
 # Chibi Jelly Painting
 
-A chibi martial-arts kid riding a wobbly cloud, and a smirking chibi Light Yagami
-sitting at his desk at night, writing in the Death Note, painted live in the browser. One
+A chibi martial-arts kid riding a wobbly cloud, a smirking chibi Light Yagami
+sitting at his desk at night, writing in the Death Note, and a chibi Gojo Satoru
+hovering over an Infinity sign in a void of ink, painted live in the browser. One
 page, one switch for the mood (day and dusk in the sky, lamp light and moonlight at
-the desk), one toggle for who is in the painting.
+the desk, Unlimited Void and Hollow Purple in the void), one card per character.
 
 <p>
   <img src="screenshots/day.jpg" width="32%" alt="Day" />
@@ -13,6 +14,10 @@ the desk), one toggle for who is in the painting.
 <p>
   <img src="screenshots/light-day.jpg" width="48%" alt="Light Yagami at his desk, lamp light" />
   <img src="screenshots/light-dusk.jpg" width="48%" alt="Light Yagami at his desk, moonlight" />
+</p>
+<p>
+  <img src="screenshots/gojo-day.jpg" width="48%" alt="Gojo Satoru in the Unlimited Void" />
+  <img src="screenshots/gojo-dusk.jpg" width="48%" alt="Gojo Satoru with Hollow Purple" />
 </p>
 
 - **Live:** [chibi-jelly-painting.vercel.app](https://chibi-jelly-painting.vercel.app)
@@ -34,13 +39,15 @@ npm run build    # static build in dist/
 
 ## Controls
 
-Tap the character to jump (Light only hops in his chair), tap the cloud (or Light's notebook) to bounce it, drag to orbit, scroll to zoom.
-Two painted cards beside the sheet pick the character, **Goku** or **Light Yagami**
-(he hops in on arrival); the selected one is outlined. An icon-only button in
-the top right flips the mood: sun / moon for Goku's sky (day, dusk), lamp / moon
-for Light's desk (lamp light, moonlight). The card previews are
-captured from the live pipeline at load. Add `?char=light` to open on Light Yagami.
-Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku · `2` Light Yagami · `g` paint settings.
+Tap the character to jump (Light only hops in his chair), tap the cloud, Light's notebook or Gojo's Infinity sign to bounce it, drag to orbit, scroll to zoom.
+Three painted cards beside the sheet pick the character, **Goku**, **Light Yagami** or
+**Gojo Satoru** (each hops in on arrival); the selected one is outlined. An icon-only
+button in the top right flips the mood: sun / moon for Goku's sky (day, dusk), lamp / moon
+for Light's desk (lamp light, moonlight), the Infinity sign / a purple orb for Gojo's
+void (Unlimited Void, Hollow Purple). The card previews are
+captured from the live pipeline at load. Add `?char=light` or `?char=gojo` to open on a
+specific character.
+Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku · `2` Light Yagami · `3` Gojo Satoru · `g` paint settings.
 
 ## How it works
 
@@ -75,18 +82,32 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
   and the bulb, a window onto a lit city with a crescent moon and Kira-red curtains,
   stacked books, a sheet of names and a mug of pencils. The wall is the painted
   backdrop; the far clouds and sparkles are hidden here.
+- `src/scene/gojo.js` — Gojo Satoru: messy snow-white hair (tufts on the crown, bangs
+  that hang between his eyes), pale blue Six Eyes with a lighter rim and a soft lash
+  line, a dark navy jacket zipped up to a high collar that flares around his chin, and
+  longer sleeves so one hand can make the two-finger sign beside his cheek while the
+  other grips his collar. In place of the cloud he hovers over an Infinity sign (a
+  lemniscate tube) that his Blue and Red orbs run around. In the Hollow Purple mood
+  the two orbs spiral together and become a purple orb with a ring over his raised
+  hand. Reference: the JJK wiki and the Gojo Nendoroid.
+- `src/scene/void.js` — his backdrop: white ink waves with flung drops and thin speed
+  lines, flat shapes that always face the camera so orbiting never shows them edge-on.
+  Their colours (and the `purple` mix that drives the orbs) are theme uniforms.
+- `src/scene/glow.js` — the soft round glow shared by the lamp, the moon and the orbs.
 - `src/scene/world.js` — the nimbus cloud (recolorable), far clouds, the painted
   multi-hue sky and the twinkling sparkles.
 - `src/scene/rig.js` — springs for bobbing, blinking, head tracking, squash-and-stretch
   jumps, hair lag, tail swish and the occasional wave. A character can hold an arm
   pose by exposing `armRest` (with `scribble` for a hand that is writing), pick which
-  arm waves (`waveSide`), bob and hop less (`bobScale`, `jumpScale`) and may have no
-  tail. A prop can be `grounded`: it stays on its desk (`baseY`) and only squashes.
+  arm waves (`waveSide`, with its own `wavePose` if the default would hide the hand
+  behind the head), bob and hop less (`bobScale`, `jumpScale`) and may have no
+  tail. A prop can be `grounded`: it stays on its desk (`baseY`) and only squashes,
+  and may have an `update(t)` of its own (Gojo's orbs).
 - `src/main.js` — also gives each character their own camera height (`view.polar`),
   so Light is seen from above enough to read the notebook; the camera eases there on
   a swap until you grab it.
-- `src/themes.js` — two moods per world, eased every frame: `sky` (day, dusk) and `room`
-  (lamp light, moonlight). The switch picks a slot; each character's world decides
+- `src/themes.js` — two moods per world, eased every frame: `sky` (day, dusk), `room`
+  (lamp light, moonlight) and `void` (Unlimited Void, Hollow Purple). The switch picks a slot; each character's world decides
   what it looks like.
 
 Dev-only debug hook: `window.__chibi` (renderer, scene, camera, controls, filter, cast, theme, character).

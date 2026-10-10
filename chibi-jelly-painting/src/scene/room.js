@@ -4,10 +4,11 @@ import {
 } from 'three/webgpu'
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js'
-import { uniform, uv, mix, pow, smoothstep, length } from 'three/tsl'
+import { uniform, uv, mix, smoothstep } from 'three/tsl'
 
 import { paintedMaterial, light } from '../materials/painted.js'
 import { mesh, v3 } from './character.js'
+import { glowMaterial } from './glow.js'
 
 // Light's desk at night: the wall is the painted backdrop, so this builds what
 // stands in front of it: the desk and everything on it, a lamp that really
@@ -48,16 +49,6 @@ function makeMaterials()
         lit: paintedMaterial( { color: '#ffd98a', unlit: true } ),
         white: paintedMaterial( { color: '#fff3d0', unlit: true } ),
     }
-}
-
-/** A soft round glow; `lamp` ties its strength to the lamp ('on') or to its absence ('off'). */
-function glowMaterial( Material, color, { strength = 1, power = 1.5, lamp = null } = {} )
-{
-    const m = new Material( { transparent: true, depthWrite: false } )
-    m.colorNode = uniform( new Color( color ) )
-    const radial = pow( smoothstep( 0, 1, length( uv().mul( 2 ).sub( 1 ) ) ).oneMinus(), power ).mul( strength )
-    m.opacityNode = lamp === 'on' ? radial.mul( light.lamp ) : lamp === 'off' ? radial.mul( light.lamp.oneMinus() ) : radial
-    return m
 }
 
 function bar( a, b, radius, material, parent )

@@ -9,6 +9,8 @@ import { light } from './materials/painted.js'
 import { createCharacter } from './scene/character.js'
 import { createLight, createDeathNote, createApple } from './scene/yagami.js'
 import { createRoom, DESK_Y, NOTE_Z } from './scene/room.js'
+import { createGojo, createInfinity } from './scene/gojo.js'
+import { createVoid } from './scene/void.js'
 import { createNimbus, createFarClouds, createSparkles, skyNode } from './scene/world.js'
 import { createRig } from './scene/rig.js'
 import { createPaintFilter, paintDefaults } from './post/paintFilter.js'
@@ -49,6 +51,8 @@ async function start()
     apple.position.set( 1.0, DESK_Y + 0.156, 1.2 )
     room.group.add( apple )
 
+    const backdrop = createVoid()
+
     const cast = {
         goku: {
             name: 'Goku',
@@ -68,6 +72,15 @@ async function start()
             // seen from higher up so the open notebook on the desk can be read
             view: { y: 1.05, zoom: 1.15, polar: 1.2 },
             label: 'A painting of a chibi Light Yagami with honey-brown hair, a tan school jacket and a red tie, sitting at his desk at night with a smirk and writing in the open Death Note, with a red apple beside it, a glowing desk lamp, and a window onto the city and a crescent moon. Tap him to make him hop, tap the notebook to bounce it, drag to orbit and scroll to zoom.',
+        },
+        gojo: {
+            name: 'Gojo Satoru',
+            world: 'void',
+            kid: createGojo(),
+            ride: createInfinity(),
+            extras: [ backdrop.group ],
+            view: { y: 1.2, zoom: 1.55, polar: 1.3 },
+            label: 'A painting of a chibi Gojo Satoru with messy snow-white hair, pale blue eyes and a dark navy high-collared jacket, one hand raised in a two-finger sign and the other at his collar, hovering over a glowing Infinity sign with Blue and Red orbs circling it, in front of a void of indigo, magenta and white ink splashes. Tap him to make him jump, tap the sign to bounce it, drag to orbit and scroll to zoom.',
         },
     }
     for( const c of Object.values( cast ) )
@@ -96,8 +109,10 @@ async function start()
             c.ride.group.visible = on
             for( const e of c.extras ) e.visible = on
         }
-        // the sky's clouds and glints belong to the sky; a room has its own light
-        farClouds.group.visible = sparkles.group.visible = world === 'sky'
+        // the sky's clouds belong to the sky and a room has its own light; the
+        // glints are stars in the void as well
+        farClouds.group.visible = world === 'sky'
+        sparkles.group.visible = world === 'sky' || world === 'void'
         theme.setWorld( world )
         canvas.setAttribute( 'aria-label', cast[ id ].label )
     }
@@ -284,6 +299,7 @@ async function start()
 
         for( const c of Object.values( cast ) ) c.rig.update( dt )
         sparkles.update( light.time.value )
+        backdrop.update( light.time.value, camera )
         theme.update( dt )
         applyView( dt )
         controls.update()

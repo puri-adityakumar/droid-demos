@@ -2,10 +2,12 @@ import { Color, Vector3 } from 'three/webgpu'
 
 import { light } from './materials/painted.js'
 import { sky } from './scene/world.js'
+import { voidLook } from './scene/void.js'
 
 // Two moods per world. The page has one switch, so a mood is a slot ('day' or
 // 'dusk') and each world decides what that slot looks like: Goku's sky goes
-// from day to dusk, Light's room from lamp light to moonlight.
+// from day to dusk, Light's room from lamp light to moonlight, Gojo's void
+// from the Unlimited Void to Hollow Purple.
 const raw = {
     sky: {
         day: {
@@ -104,19 +106,77 @@ const raw = {
             lamp: 0,
         },
     },
+    // Gojo's void. The sky shader's four colours become a night with no ground:
+    // indigo through the middle, magenta pooling low on the left, blue up on
+    // the right. The two moods are his two techniques: the cold Unlimited Void,
+    // and Hollow Purple, where Blue and Red have merged and the whole field
+    // turns violet.
+    void: {
+        day: {
+            label: 'Unlimited Void',
+            skyTop: '#161258',
+            skyHorizon: '#2a1260',
+            skyLeft: '#e02a9c',
+            skyRight: '#3b44ea',
+            blotch: '#ffffff',
+            haze: '#1c1860',
+            hazeAmount: 0.16,
+            sparkle: '#dfe8ff',
+            sparkleStrength: 1,
+            lightDir: [ - 0.55, 0.65, 0.6 ],
+            rimDir: [ 0.75, 0.3, - 0.55 ],
+            rimColor: '#ff7ab8',
+            bounce: '#5a64ff',
+            shadowTint: '#241a8a',
+            shadowTintAmount: 0.45,
+            cloud: '#ffffff',
+            cloudShade: '#8d6cc2',
+            paper: '#ffffff',
+            ink: '#2a2a66',
+            rays: '#ff4f9a',
+            splash: '#f1eeff',
+        },
+        dusk: {
+            label: 'Hollow Purple',
+            skyTop: '#2a0e6e',
+            skyHorizon: '#5a1470',
+            skyLeft: '#e0309a',
+            skyRight: '#8a3cf0',
+            blotch: '#f2dcff',
+            haze: '#3a1478',
+            hazeAmount: 0.2,
+            sparkle: '#f2d6ff',
+            sparkleStrength: 1,
+            lightDir: [ - 0.5, 0.6, 0.65 ],
+            rimDir: [ 0.75, 0.3, - 0.55 ],
+            rimColor: '#e4a2ff',
+            bounce: '#c040ff',
+            shadowTint: '#4a1696',
+            shadowTintAmount: 0.5,
+            cloud: '#ffffff',
+            cloudShade: '#8d6cc2',
+            paper: '#ffffff',
+            ink: '#4a2470',
+            rays: '#b9a0ff',
+            splash: '#fbeaff',
+            purple: 1,
+        },
+    },
 }
 
-const COLOR_KEYS = [ 'skyTop', 'skyHorizon', 'skyLeft', 'skyRight', 'blotch', 'haze', 'sparkle', 'rimColor', 'bounce', 'shadowTint', 'cloud', 'cloudShade', 'paper' ]
+const COLOR_KEYS = [ 'skyTop', 'skyHorizon', 'skyLeft', 'skyRight', 'blotch', 'haze', 'sparkle', 'rimColor', 'bounce', 'shadowTint', 'cloud', 'cloudShade', 'paper', 'rays', 'splash' ]
+// worlds without ink and speed lines still need a value for the driver to ease from
+const DEFAULTS = { rays: '#ffffff', splash: '#ffffff' }
 
 export const slots = [ 'day', 'dusk' ]
 
 export const worlds = Object.fromEntries( Object.entries( raw ).map( ( [ world, set ] ) => [ world, Object.fromEntries( Object.entries( set ).map( ( [ slot, t ] ) =>
 {
     const parsed = {
-        slot, label: t.label, ink: t.ink, paperHex: t.paper, lamp: t.lamp ?? 0,
+        slot, label: t.label, ink: t.ink, paperHex: t.paper, lamp: t.lamp ?? 0, purple: t.purple ?? 0,
         shadowTintAmount: t.shadowTintAmount, hazeAmount: t.hazeAmount, sparkleStrength: t.sparkleStrength,
     }
-    for( const k of COLOR_KEYS ) parsed[ k ] = new Color( t[ k ] )
+    for( const k of COLOR_KEYS ) parsed[ k ] = new Color( t[ k ] ?? DEFAULTS[ k ] )
     parsed.lightDir = new Vector3( ...t.lightDir ).normalize()
     parsed.rimDir = new Vector3( ...t.rimDir ).normalize()
     return [ slot, parsed ]
@@ -169,6 +229,9 @@ export function createThemeDriver( { farClouds, sparkles, filter } )
         light.haze.value.lerp( target.haze, k )
         light.hazeAmount.value += ( target.hazeAmount - light.hazeAmount.value ) * k
         light.lamp.value += ( target.lamp - light.lamp.value ) * k
+        voidLook.rays.value.lerp( target.rays, k )
+        voidLook.splash.value.lerp( target.splash, k )
+        voidLook.purple.value += ( target.purple - voidLook.purple.value ) * k
         sparkles.tint.value.lerp( target.sparkle, k )
         sparkles.strength.value += ( target.sparkleStrength - sparkles.strength.value ) * k
         light.rimColor.value.lerp( target.rimColor, k )

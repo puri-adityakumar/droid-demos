@@ -122,7 +122,8 @@ export function createUI()
                 if( source ) card.querySelector( 'canvas' ).getContext( '2d' ).drawImage( source, 0, 0 )
             }
             // the two moods mean different things in each world: day / dusk in
-            // the sky, lamp light / moonlight at the desk
+            // the sky, lamp light / moonlight at the desk, Unlimited Void /
+            // Hollow Purple in the void
             const label = `Switch to ${ theme.label( next( slots, theme.current ) ).toLowerCase() }`
             modeSwitch.dataset.mode = theme.current
             modeSwitch.dataset.world = theme.world
@@ -178,8 +179,7 @@ export function createUI()
             else if( key === 'g' ) toggleGui()
             else if( key === 't' ) toggleTheme()
             else if( key === 'c' ) toggleCharacter()
-            else if( key === '1' ) toggleCharacter( character.ids[ 0 ] )
-            else if( key === '2' ) toggleCharacter( character.ids[ 1 ] )
+            else if( /^[1-9]$/.test( key ) && character.ids[ key - 1 ] ) toggleCharacter( character.ids[ key - 1 ] )
         } )
 
         sync()

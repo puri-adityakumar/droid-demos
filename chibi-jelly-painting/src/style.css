@@ -88,20 +88,22 @@ button {
 }
 button:focus-visible, a:focus-visible { outline: 2px dashed var(--ink); outline-offset: 4px; border-radius: 4px; }
 
-/* two toggle cards beside the sheet, each a painted preview of what it
-   switches to: the other time of day, and the other character */
+/* one card per character beside the sheet, each a painted preview of that
+   character in the current mood */
 .presets {
     --thumb: 76px;
+    --cards: 3;
+    --gap: 34px;
     display: flex;
     flex-direction: column;
-    gap: 34px;
+    gap: var(--gap);
     left: calc(var(--fx, 0px) - var(--thumb) - 34px);
-    top: calc(var(--fy, 0px) + var(--fh, 0px) - var(--thumb) * 2 - 34px - 20px);
+    top: calc(var(--fy, 0px) + var(--fh, 0px) - var(--thumb) * var(--cards) - var(--gap) * (var(--cards) - 1) - 20px);
 }
 html[data-layout=below] .presets {
     --thumb: 58px;
+    --gap: 30px;
     flex-direction: row;
-    gap: 30px;
     left: 50%;
     top: calc(var(--fy, 0px) + var(--fh, 0px) + 22px);
     transform: translateX(-50%);
@@ -136,7 +138,8 @@ html[data-layout=below] .presets {
 }
 
 /* mood switch: a single icon-only button pinned to the top right. In the sky
-   the sun turns into the moon and back; at the desk a lamp does */
+   the sun turns into the moon and back; at the desk a lamp does; in the void the
+   Infinity sign turns into Hollow Purple */
 .mode {
     position: fixed;
     z-index: 5;
@@ -163,9 +166,10 @@ html[data-layout=below] .presets {
     stroke-linejoin: round;
     transition: transform 0.45s cubic-bezier(.3, 1.4, .5, 1), opacity 0.25s;
 }
-.mode-icon[data-world=room],
-.mode[data-world=room] .mode-icon[data-world=sky] { display: none; }
-.mode[data-world=room] .mode-icon[data-world=room] { display: block; }
+.mode-icon[data-world] { display: none; }
+.mode[data-world=sky] .mode-icon[data-world~=sky],
+.mode[data-world=room] .mode-icon[data-world~=room],
+.mode[data-world=void] .mode-icon[data-world~=void] { display: block; }
 .mode[data-mode=day] .mode-icon[data-mode=dusk] { opacity: 0; transform: rotate(-70deg) scale(0.4); }
 .mode[data-mode=dusk] .mode-icon[data-mode=day] { opacity: 0; transform: rotate(70deg) scale(0.4); }
 

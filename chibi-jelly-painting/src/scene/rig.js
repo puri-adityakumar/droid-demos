@@ -28,6 +28,9 @@ const GRAVITY = - 14
 const LAUNCH = 4.1
 const CROUCH_TIME = 0.1
 
+// arm held up for a wave; a character whose arm would vanish behind the head sets its own `wavePose`
+const WAVE = { shoulderZ: 2.55, shoulderX: - 0.15, elbowX: - 0.1 }
+
 const axisX = new Vector3( 1, 0, 0 )
 const axisZ = new Vector3( 0, 0, 1 )
 const qa = new Quaternion()
@@ -139,7 +142,8 @@ export function createRig( kid, nimbus, farClouds )
         nimbus.group.rotation.z = grounded ? 0 : Math.sin( t * 0.9 - 0.3 ) * 0.04
         nimbus.group.rotation.x = grounded ? 0 : Math.sin( t * 0.7 ) * 0.025
         nimbus.group.scale.set( 1 - cs * 0.4, 1 + cs, 1 - cs * 0.4 )
-        nimbus.tail.rotation.y = Math.sin( t * 1.7 ) * 0.06
+        if( nimbus.tail ) nimbus.tail.rotation.y = Math.sin( t * 1.7 ) * 0.06
+        nimbus.update?.( t, dt )
 
         for( const c of farClouds.clouds )
         {
@@ -239,9 +243,10 @@ export function createRig( kid, nimbus, farClouds )
             }
             if( side === ( kid.waveSide ?? 1 ) )
             {
-                shoulderZ = MathUtils.lerp( shoulderZ, side * 2.55, wv )
-                shoulderX = MathUtils.lerp( shoulderX, - 0.15, wv )
-                elbowX = MathUtils.lerp( elbowX, - 0.1, wv )
+                const pose = kid.wavePose ?? WAVE
+                shoulderZ = MathUtils.lerp( shoulderZ, side * pose.shoulderZ, wv )
+                shoulderX = MathUtils.lerp( shoulderX, pose.shoulderX, wv )
+                elbowX = MathUtils.lerp( elbowX, pose.elbowX, wv )
                 elbowZ = MathUtils.lerp( 0, side * ( 0.35 + Math.sin( t * 11 ) * 0.5 ), wv )
             }
             arm.shoulder.rotation.set( shoulderX, 0, shoulderZ )
