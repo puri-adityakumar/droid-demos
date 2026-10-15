@@ -1,10 +1,12 @@
 # Chibi Jelly Painting
 
 A chibi martial-arts kid riding a wobbly cloud, a smirking chibi Light Yagami
-sitting at his desk at night, writing in the Death Note, and a chibi Gojo Satoru
-hovering over an Infinity sign in a void of ink, painted live in the browser. One
-page, one switch for the mood (day and dusk in the sky, lamp light and moonlight at
-the desk, Unlimited Void and Hollow Purple in the void), one card per character.
+sitting at his desk at night, writing in the Death Note, a chibi Gojo Satoru
+hovering over an Infinity sign in a void of ink, and a chibi Frieren standing in a
+floating bed of Blue-Moon Weed flowers with her mage's staff and open grimoire, painted
+live in the browser. One page, one switch for the mood (day and dusk in the sky, lamp
+light and moonlight at the desk, Unlimited Void and Hollow Purple in the void, Flower
+field and Zoltraak in the meadow), one card per character.
 
 <p>
   <img src="screenshots/day.jpg" width="32%" alt="Day" />
@@ -18,6 +20,10 @@ the desk, Unlimited Void and Hollow Purple in the void), one card per character.
 <p>
   <img src="screenshots/gojo-day.jpg" width="48%" alt="Gojo Satoru in the Unlimited Void" />
   <img src="screenshots/gojo-dusk.jpg" width="48%" alt="Gojo Satoru with Hollow Purple" />
+</p>
+<p>
+  <img src="screenshots/frieren-day.jpg" width="48%" alt="Frieren in a field of Blue-Moon Weed flowers" />
+  <img src="screenshots/frieren-dusk.jpg" width="48%" alt="Frieren casting Zoltraak" />
 </p>
 
 - **Live:** [chibi-jelly-painting.vercel.app](https://chibi-jelly-painting.vercel.app)
@@ -39,15 +45,16 @@ npm run build    # static build in dist/
 
 ## Controls
 
-Tap the character to jump (Light only hops in his chair), tap the cloud, Light's notebook or Gojo's Infinity sign to bounce it, drag to orbit, scroll to zoom.
-Three painted cards beside the sheet pick the character, **Goku**, **Light Yagami** or
-**Gojo Satoru** (each hops in on arrival); the selected one is outlined. An icon-only
+Tap the character to jump (Light only hops in his chair), tap the cloud, Light's notebook, Gojo's Infinity sign or Frieren's flower bed to bounce it, drag to orbit, scroll to zoom.
+Four painted cards beside the sheet pick the character, **Goku**, **Light Yagami**,
+**Gojo Satoru** or **Frieren** (each hops in on arrival); the selected one is outlined. An icon-only
 button in the top right flips the mood: sun / moon for Goku's sky (day, dusk), lamp / moon
 for Light's desk (lamp light, moonlight), the Infinity sign / a purple orb for Gojo's
-void (Unlimited Void, Hollow Purple). The card previews are
-captured from the live pipeline at load. Add `?char=light` or `?char=gojo` to open on a
+void (Unlimited Void, Hollow Purple), and a Blue-Moon Weed blossom / Zoltraak magic seal for
+Frieren's meadow (Flower field, Zoltraak). The card previews are
+captured from the live pipeline at load. Add `?char=light`, `?char=gojo` or `?char=frieren` to open on a
 specific character.
-Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku · `2` Light Yagami · `3` Gojo Satoru · `g` paint settings.
+Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku · `2` Light Yagami · `3` Gojo Satoru · `4` Frieren · `g` paint settings.
 
 ## How it works
 
@@ -93,6 +100,13 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
 - `src/scene/void.js` — his backdrop: white ink waves with flung drops and thin speed
   lines, flat shapes that always face the camera so orbiting never shows them edge-on.
   Their colours (and the `purple` mix that drives the orbs) are theme uniforms.
+- `src/scene/frieren.js` — Frieren: silver-white hair in long sweeping twin-tails tied with
+  black-and-gold ribbons, long pointed elf ears with red drop earrings, calm emerald-green
+  eyes with a relaxed lash line and cat-like smile, a white gold-trimmed capelet with a red
+  brooch over her belted tunic and skirt, dark tights and cuffed brown boots, holding her
+  red crescent mage's staff. She stands in a floating bed of Blue-Moon Weed blossoms with an
+  open floating grimoire and drifting petals; in the Zoltraak mood, glowing geometric spell
+  circles unfurl behind her, around the meadow and at her staff tip.
 - `src/scene/glow.js` — the soft round glow shared by the lamp, the moon and the orbs.
 - `src/scene/world.js` — the nimbus cloud (recolorable), far clouds, the painted
   multi-hue sky and the twinkling sparkles.
@@ -107,7 +121,8 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
   so Light is seen from above enough to read the notebook; the camera eases there on
   a swap until you grab it.
 - `src/themes.js` — two moods per world, eased every frame: `sky` (day, dusk), `room`
-  (lamp light, moonlight) and `void` (Unlimited Void, Hollow Purple). The switch picks a slot; each character's world decides
+  (lamp light, moonlight), `void` (Unlimited Void, Hollow Purple) and `meadow` (Flower
+  field, Zoltraak). The switch picks a slot; each character's world decides
   what it looks like.
 
 Dev-only debug hook: `window.__chibi` (renderer, scene, camera, controls, filter, cast, theme, character).

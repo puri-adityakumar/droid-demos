@@ -11,6 +11,7 @@ import { createLight, createDeathNote, createApple } from './scene/yagami.js'
 import { createRoom, DESK_Y, NOTE_Z } from './scene/room.js'
 import { createGojo, createInfinity } from './scene/gojo.js'
 import { createVoid } from './scene/void.js'
+import { createFrieren, createFlowerField } from './scene/frieren.js'
 import { createNimbus, createFarClouds, createSparkles, skyNode } from './scene/world.js'
 import { createRig } from './scene/rig.js'
 import { createPaintFilter, paintDefaults } from './post/paintFilter.js'
@@ -52,6 +53,7 @@ async function start()
     room.group.add( apple )
 
     const backdrop = createVoid()
+    const flowerField = createFlowerField()
 
     const cast = {
         goku: {
@@ -82,6 +84,15 @@ async function start()
             view: { y: 1.2, zoom: 1.55, polar: 1.3 },
             label: 'A painting of a chibi Gojo Satoru with messy snow-white hair, pale blue eyes and a dark navy high-collared jacket, one hand raised in a two-finger sign and the other at his collar, hovering over a glowing Infinity sign with Blue and Red orbs circling it, in front of a void of indigo, magenta and white ink splashes. Tap him to make him jump, tap the sign to bounce it, drag to orbit and scroll to zoom.',
         },
+        frieren: {
+            name: 'Frieren',
+            world: 'meadow',
+            kid: createFrieren(),
+            ride: flowerField,
+            extras: [ flowerField.backdrop ],
+            view: { y: 1.08, zoom: 1.22, polar: 1.36 },
+            label: 'A painting of a chibi Frieren with silver-white twin-tails, pointed elf ears with red drop earrings, emerald eyes, a white gold-trimmed capelet and her red crescent staff, standing in a floating bed of Blue-Moon Weed flowers beside an open grimoire. Tap her to make her jump, tap the flower bed to bounce it, drag to orbit and scroll to zoom.',
+        },
     }
     for( const c of Object.values( cast ) )
     {
@@ -109,10 +120,10 @@ async function start()
             c.ride.group.visible = on
             for( const e of c.extras ) e.visible = on
         }
-        // the sky's clouds belong to the sky and a room has its own light; the
-        // glints are stars in the void as well
-        farClouds.group.visible = world === 'sky'
-        sparkles.group.visible = world === 'sky' || world === 'void'
+        // the sky's clouds belong to the sky and meadow; the glints are stars in
+        // the void and mana motes in the meadow as well
+        farClouds.group.visible = world === 'sky' || world === 'meadow'
+        sparkles.group.visible = world === 'sky' || world === 'void' || world === 'meadow'
         theme.setWorld( world )
         canvas.setAttribute( 'aria-label', cast[ id ].label )
     }
