@@ -91,9 +91,9 @@ button:focus-visible, a:focus-visible { outline: 2px dashed var(--ink); outline-
 /* one card per character beside the sheet, each a painted preview of that
    character in the current mood */
 .presets {
-    --thumb: 76px;
-    --cards: 3;
-    --gap: 34px;
+    --thumb: 70px;
+    --cards: 4;
+    --gap: 28px;
     display: flex;
     flex-direction: column;
     gap: var(--gap);
@@ -101,8 +101,8 @@ button:focus-visible, a:focus-visible { outline: 2px dashed var(--ink); outline-
     top: calc(var(--fy, 0px) + var(--fh, 0px) - var(--thumb) * var(--cards) - var(--gap) * (var(--cards) - 1) - 20px);
 }
 html[data-layout=below] .presets {
-    --thumb: 58px;
-    --gap: 30px;
+    --thumb: 54px;
+    --gap: 24px;
     flex-direction: row;
     left: 50%;
     top: calc(var(--fy, 0px) + var(--fh, 0px) + 22px);
@@ -169,7 +169,8 @@ html[data-layout=below] .presets {
 .mode-icon[data-world] { display: none; }
 .mode[data-world=sky] .mode-icon[data-world~=sky],
 .mode[data-world=room] .mode-icon[data-world~=room],
-.mode[data-world=void] .mode-icon[data-world~=void] { display: block; }
+.mode[data-world=void] .mode-icon[data-world~=void],
+.mode[data-world=meadow] .mode-icon[data-world~=meadow] { display: block; }
 .mode[data-mode=day] .mode-icon[data-mode=dusk] { opacity: 0; transform: rotate(-70deg) scale(0.4); }
 .mode[data-mode=dusk] .mode-icon[data-mode=day] { opacity: 0; transform: rotate(70deg) scale(0.4); }
 

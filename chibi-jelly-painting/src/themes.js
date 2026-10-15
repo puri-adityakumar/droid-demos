@@ -3,11 +3,13 @@ import { Color, Vector3 } from 'three/webgpu'
 import { light } from './materials/painted.js'
 import { sky } from './scene/world.js'
 import { voidLook } from './scene/void.js'
+import { meadowLook } from './scene/frieren.js'
 
 // Two moods per world. The page has one switch, so a mood is a slot ('day' or
 // 'dusk') and each world decides what that slot looks like: Goku's sky goes
 // from day to dusk, Light's room from lamp light to moonlight, Gojo's void
-// from the Unlimited Void to Hollow Purple.
+// from the Unlimited Void to Hollow Purple, Frieren's meadow from a sunlit
+// Flower Field to a starlit Zoltraak spell.
 const raw = {
     sky: {
         day: {
@@ -162,18 +164,73 @@ const raw = {
             purple: 1,
         },
     },
+    // Frieren's meadow. In the day slot she stands in a warm, breezy sky over
+    // a bed of Blue-Moon Weed flowers; in the dusk slot the sky deepens to an
+    // astral night and her Zoltraak spell circles blaze cyan.
+    meadow: {
+        day: {
+            label: 'Flower field',
+            skyTop: '#5cb4f2',
+            skyHorizon: '#fff0d8',
+            skyLeft: '#9eb4f6',
+            skyRight: '#7de4d4',
+            blotch: '#ffffff',
+            haze: '#c8e4ff',
+            hazeAmount: 0.08,
+            sparkle: '#fff8e8',
+            sparkleStrength: 0.85,
+            lightDir: [ - 0.52, 0.78, 0.56 ],
+            rimDir: [ 0.72, 0.36, - 0.58 ],
+            rimColor: '#fff6d8',
+            bounce: '#78e0a4',
+            shadowTint: '#5b66cc',
+            shadowTintAmount: 0.24,
+            cloud: '#ffffff',
+            cloudShade: '#a8b8ec',
+            paper: '#ffffff',
+            ink: '#46586e',
+            petal: '#c8ecff',
+            ring: '#7ad8ff',
+            mana: 0,
+        },
+        dusk: {
+            label: 'Zoltraak',
+            skyTop: '#111b4a',
+            skyHorizon: '#234678',
+            skyLeft: '#463894',
+            skyRight: '#2482b8',
+            blotch: '#bceeff',
+            haze: '#1a2c68',
+            hazeAmount: 0.18,
+            sparkle: '#d4f6ff',
+            sparkleStrength: 1,
+            lightDir: [ 0.55, 0.62, 0.56 ],
+            rimDir: [ - 0.72, 0.35, - 0.58 ],
+            rimColor: '#88f0ff',
+            bounce: '#42b8ff',
+            shadowTint: '#1c2478',
+            shadowTintAmount: 0.42,
+            cloud: '#bfe4ff',
+            cloudShade: '#3d52a0',
+            paper: '#ffffff',
+            ink: '#263c66',
+            petal: '#94f0ff',
+            ring: '#8ef6ff',
+            mana: 1,
+        },
+    },
 }
 
-const COLOR_KEYS = [ 'skyTop', 'skyHorizon', 'skyLeft', 'skyRight', 'blotch', 'haze', 'sparkle', 'rimColor', 'bounce', 'shadowTint', 'cloud', 'cloudShade', 'paper', 'rays', 'splash' ]
-// worlds without ink and speed lines still need a value for the driver to ease from
-const DEFAULTS = { rays: '#ffffff', splash: '#ffffff' }
+const COLOR_KEYS = [ 'skyTop', 'skyHorizon', 'skyLeft', 'skyRight', 'blotch', 'haze', 'sparkle', 'rimColor', 'bounce', 'shadowTint', 'cloud', 'cloudShade', 'paper', 'rays', 'splash', 'petal', 'ring' ]
+// worlds without ink, speed lines or petals still need a value for the driver to ease from
+const DEFAULTS = { rays: '#ffffff', splash: '#ffffff', petal: '#c8ecff', ring: '#7ad8ff' }
 
 export const slots = [ 'day', 'dusk' ]
 
 export const worlds = Object.fromEntries( Object.entries( raw ).map( ( [ world, set ] ) => [ world, Object.fromEntries( Object.entries( set ).map( ( [ slot, t ] ) =>
 {
     const parsed = {
-        slot, label: t.label, ink: t.ink, paperHex: t.paper, lamp: t.lamp ?? 0, purple: t.purple ?? 0,
+        slot, label: t.label, ink: t.ink, paperHex: t.paper, lamp: t.lamp ?? 0, purple: t.purple ?? 0, mana: t.mana ?? 0,
         shadowTintAmount: t.shadowTintAmount, hazeAmount: t.hazeAmount, sparkleStrength: t.sparkleStrength,
     }
     for( const k of COLOR_KEYS ) parsed[ k ] = new Color( t[ k ] ?? DEFAULTS[ k ] )
@@ -232,6 +289,9 @@ export function createThemeDriver( { farClouds, sparkles, filter } )
         voidLook.rays.value.lerp( target.rays, k )
         voidLook.splash.value.lerp( target.splash, k )
         voidLook.purple.value += ( target.purple - voidLook.purple.value ) * k
+        meadowLook.petal.value.lerp( target.petal, k )
+        meadowLook.ring.value.lerp( target.ring, k )
+        meadowLook.mana.value += ( target.mana - meadowLook.mana.value ) * k
         sparkles.tint.value.lerp( target.sparkle, k )
         sparkles.strength.value += ( target.sparkleStrength - sparkles.strength.value ) * k
         light.rimColor.value.lerp( target.rimColor, k )

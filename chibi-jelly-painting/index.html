@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
         <meta name="theme-color" content="#ffffff">
         <title>Chibi Jelly Painting</title>
-        <meta name="description" content="Chibi Goku on his cloud, Light Yagami at his desk at night and Gojo Satoru in the void, painted live in the browser with three.js WebGPU + TSL, in the style of Jelly Painting.">
+        <meta name="description" content="Chibi Goku on his cloud, Light Yagami at his desk at night, Gojo Satoru in the void and Frieren in a field of Blue-Moon Weed flowers, painted live in the browser with three.js WebGPU + TSL, in the style of Jelly Painting.">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -37,14 +37,20 @@
                 <canvas class="thumb" width="168" height="168"></canvas>
                 <span class="preset-label">Gojo Satoru</span>
             </button>
+            <button type="button" class="preset" data-character="frieren" aria-pressed="false">
+                <canvas class="thumb" width="168" height="168"></canvas>
+                <span class="preset-label">Frieren</span>
+            </button>
         </nav>
 
         <button type="button" class="mode" data-mode="day" data-world="sky" aria-label="Switch to dusk" title="Switch to dusk">
             <svg class="mode-icon" data-mode="day" data-world="sky" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
             <svg class="mode-icon" data-mode="day" data-world="room" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg>
             <svg class="mode-icon" data-mode="day" data-world="void" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c-1.8-2.6-3.4-4-5.2-4a4 4 0 0 0 0 8c1.8 0 3.4-1.4 5.2-4s3.4-4 5.2-4a4 4 0 0 1 0 8c-1.8 0-3.4-1.4-5.2-4z"/></svg>
+            <svg class="mode-icon" data-mode="day" data-world="meadow" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2.5"/><path d="M12 4.5a3 3 0 0 1 2.2 5 3 3 0 0 1 4.1 4.1 3 3 0 0 1-3.3 4.8 3 3 0 0 1-6 0 3 3 0 0 1-3.3-4.8 3 3 0 0 1 4.1-4.1A3 3 0 0 1 12 4.5z"/></svg>
             <svg class="mode-icon" data-mode="dusk" data-world="sky room" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
             <svg class="mode-icon" data-mode="dusk" data-world="void" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3a9 9 0 0 1 9 9M12 21a9 9 0 0 1-9-9"/></svg>
+            <svg class="mode-icon" data-mode="dusk" data-world="meadow" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4l2.2 5.8L20 12l-5.8 2.2L12 20l-2.2-5.8L4 12l5.8-2.2z"/></svg>
         </button>
 
         <p class="hint">tap to jump · drag to turn · t day/dusk · c character</p>
