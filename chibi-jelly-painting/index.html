@@ -9,57 +9,224 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-        <style>html{background:#ffffff}.loader{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:#ffffff;color:#6b5647;transition:opacity .45s}.loader.leaving{opacity:0}</style>
+        <style>html{background:#ffffff}.loader{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:#ffffff;color:#6b5647;transition:opacity .45s}.loader.leaving{opacity:0}.loader-stage{position:relative;width:min(460px,86vw);aspect-ratio:480/150}</style>
     </head>
     <body>
-        <div class="loader" role="progressbar" aria-label="Mixing the paint" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-            <div class="loader-study" aria-hidden="true">
-                <span class="loader-ghost">Chibi Jelly Painting</span>
-                <span class="loader-fill">Chibi Jelly Painting</span>
-                <div class="loader-garden">
-                    <svg viewBox="0 0 400 70" preserveAspectRatio="xMidYMax meet" focusable="false">
-                        <defs>
-                            <g id="blossom">
-                                <ellipse cx="0" cy="-8.5" rx="5.6" ry="8.5"/>
-                                <ellipse cx="0" cy="-8.5" rx="5.6" ry="8.5" transform="rotate(72)"/>
-                                <ellipse cx="0" cy="-8.5" rx="5.6" ry="8.5" transform="rotate(144)"/>
-                                <ellipse cx="0" cy="-8.5" rx="5.6" ry="8.5" transform="rotate(216)"/>
-                                <ellipse cx="0" cy="-8.5" rx="5.6" ry="8.5" transform="rotate(288)"/>
-                                <circle r="4.4" class="blossom-eye"/>
+        <div class="loader" role="progressbar" aria-label="Loading anime scene" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="loader-stage" aria-hidden="true">
+                <svg class="loader-track" viewBox="0 0 480 150" preserveAspectRatio="xMidYMid meet" focusable="false">
+                    <defs>
+                        <g id="star4">
+                            <path d="M0 -6.5 L1.7 -1.7 L6.5 0 L1.7 1.7 L0 6.5 L-1.7 1.7 L-6.5 0 L-1.7 -1.7 Z"/>
+                        </g>
+                        <g id="db-star">
+                            <polygon points="0,-3.3 0.95,-1 3.3,-0.8 1.5,0.7 2.1,3.1 0,1.8 -2.1,3.1 -1.5,0.7 -3.3,-0.8 -0.95,-1"/>
+                        </g>
+                    </defs>
+
+                    <!-- Guide line & golden Kinto'un cloud stream -->
+                    <path class="trail-sketch" d="M 36 112 Q 104 104 172 112 T 308 112 T 444 112"/>
+                    <path class="trail-glow" pathLength="1" d="M 36 112 Q 104 104 172 112 T 308 112 T 444 112"/>
+                    <path class="trail-cloud" pathLength="1" d="M 36 112 Q 104 104 172 112 T 308 112 T 444 112"/>
+                    <path class="trail-core" pathLength="1" d="M 36 112 Q 104 104 172 112 T 308 112 T 444 112"/>
+
+                    <!-- Billowing cloud puffs along the Kinto'un stream -->
+                    <g class="cloud-puff" style="--t:.08" transform="translate(68 110)">
+                        <g class="puff-pop"><circle cx="-5" cy="1" r="6"/><circle cx="3" cy="-1" r="7.5"/><circle cx="10" cy="2" r="5"/></g>
+                    </g>
+                    <g class="cloud-puff" style="--t:.24" transform="translate(142 110)">
+                        <g class="puff-pop"><circle cx="-6" cy="2" r="5.5"/><circle cx="1" cy="-1" r="8"/><circle cx="9" cy="1" r="6"/></g>
+                    </g>
+                    <g class="cloud-puff" style="--t:.48" transform="translate(240 114)">
+                        <g class="puff-pop"><circle cx="-7" cy="1" r="6"/><circle cx="1" cy="-2" r="8.5"/><circle cx="9" cy="1" r="5.5"/></g>
+                    </g>
+                    <g class="cloud-puff" style="--t:.70" transform="translate(340 109)">
+                        <g class="puff-pop"><circle cx="-6" cy="1" r="5.5"/><circle cx="2" cy="-1" r="7.5"/><circle cx="9" cy="2" r="5"/></g>
+                    </g>
+                    <g class="cloud-puff" style="--t:.90" transform="translate(422 110)">
+                        <g class="puff-pop"><circle cx="-5" cy="1" r="5.5"/><circle cx="2" cy="-1" r="7"/><circle cx="8" cy="2" r="4.8"/></g>
+                    </g>
+
+                    <!-- 1. Goku: Four-Star Dragon Ball (Suushinchuu) -->
+                    <g class="relic" style="--t:.10;--c:#ff921c;--glow:#ffd166" transform="translate(92 38)">
+                        <g class="relic-body">
+                            <circle class="relic-aura" r="24"/>
+                            <circle class="relic-ring" r="20.5"/>
+                            <circle r="16.5" fill="#ff921c" stroke="#6b5647" stroke-width="2.2"/>
+                            <path d="M -11 7 A 14 14 0 0 0 12 -8 A 14.5 14.5 0 0 1 -11 7 Z" fill="#ffb703" opacity="0.78"/>
+                            <g fill="#d62828">
+                                <use href="#db-star" transform="translate(0 -7)"/>
+                                <use href="#db-star" transform="translate(-6.6 0.4)"/>
+                                <use href="#db-star" transform="translate(6.6 0.4)"/>
+                                <use href="#db-star" transform="translate(0 7.4)"/>
                             </g>
-                        </defs>
-                        <path class="vine-ghost" pathLength="1" d="M4 63 C60 58 90 68 150 63 S250 58 300 64 S370 60 396 63"/>
-                        <path class="vine" pathLength="1" d="M4 63 C60 58 90 68 150 63 S250 58 300 64 S370 60 396 63"/>
-                        <g class="flower" style="--t:.06;--ox:28px;--c:#ff8fb1;--k:1"><path class="stem" d="M28 62 Q24 48 28 36"/><g transform="translate(22 52) rotate(-28)"><ellipse class="leaf" rx="6" ry="2.6"/></g><g class="head" transform="translate(28 34) scale(1)"><use href="#blossom"/></g></g>
-                        <g class="flower" style="--t:.2;--ox:80px;--c:#8fb8ff;--k:1.15"><path class="stem" d="M80 63 Q86 42 80 24"/><g transform="translate(87 48) rotate(30)"><ellipse class="leaf" rx="6.5" ry="2.7"/></g><g class="head" transform="translate(80 22) scale(1.15)"><use href="#blossom"/></g></g>
-                        <g class="flower" style="--t:.34;--ox:135px;--c:#b79cff;--k:1"><path class="stem" d="M135 63 Q131 50 135 40"/><g transform="translate(141 54) rotate(25)"><ellipse class="leaf" rx="6" ry="2.6"/></g><g class="head" transform="translate(135 38)"><use href="#blossom"/></g></g>
-                        <g class="flower" style="--t:.48;--ox:196px;--c:#ff9fc0;--k:1.2"><path class="stem" d="M196 63 Q190 40 196 20"/><g transform="translate(189 47) rotate(-30)"><ellipse class="leaf" rx="6.5" ry="2.7"/></g><g class="head" transform="translate(196 18) scale(1.2)"><use href="#blossom"/></g></g>
-                        <g class="flower" style="--t:.62;--ox:256px;--c:#7fd6e8;--k:1"><path class="stem" d="M256 64 Q260 50 256 38"/><g transform="translate(262 55) rotate(28)"><ellipse class="leaf" rx="6" ry="2.6"/></g><g class="head" transform="translate(256 36)"><use href="#blossom"/></g></g>
-                        <g class="flower" style="--t:.74;--ox:313px;--c:#ffc2d6;--k:1.1"><path class="stem" d="M313 64 Q319 46 313 26"/><g transform="translate(306 52) rotate(-26)"><ellipse class="leaf" rx="6.5" ry="2.7"/></g><g class="head" transform="translate(313 24) scale(1.1)"><use href="#blossom"/></g></g>
-                        <g class="flower" style="--t:.85;--ox:368px;--c:#8fb8ff;--k:1"><path class="stem" d="M368 62 Q364 50 368 38"/><g transform="translate(374 53) rotate(26)"><ellipse class="leaf" rx="6" ry="2.6"/></g><g class="head" transform="translate(368 36)"><use href="#blossom"/></g></g>
+                            <ellipse cx="-6.4" cy="-7.4" rx="4.6" ry="2.3" transform="rotate(-32 -6.4 -7.4)" fill="#ffffff" opacity="0.92"/>
+                            <circle cx="-10.4" cy="-2.2" r="1.4" fill="#ffffff" opacity="0.85"/>
+                            <g transform="translate(-22 -14) scale(0.85)"><use href="#star4" class="spark s-a"/></g>
+                            <g transform="translate(22 -9) scale(0.68)"><use href="#star4" class="spark s-b"/></g>
+                        </g>
+                    </g>
+
+                    <!-- 2. Light Yagami: Death Note & Ryuk's Crimson Apple -->
+                    <g class="relic" style="--t:.34;--c:#e63946;--glow:#ff8fa3" transform="translate(192 38)">
+                        <g class="relic-body">
+                            <circle class="relic-aura" r="24"/>
+                            <circle class="relic-ring" r="20.5"/>
+                            <g transform="rotate(-9) translate(-3 -1)">
+                                <rect x="-12" y="-16" width="22" height="29" rx="2.2" fill="#fffdf7" stroke="#6b5647" stroke-width="1.8"/>
+                                <rect x="-15" y="-15" width="22" height="29" rx="2.4" fill="#242028" stroke="#6b5647" stroke-width="2.1"/>
+                                <rect x="-11.5" y="-11.5" width="15" height="22" rx="1" fill="none" stroke="#d8d4dc" stroke-width="0.9" opacity="0.65"/>
+                                <path d="M -4 -7.5 v 9 M -7.5 -4.2 h 7" stroke="#f4f1f8" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M -8 5.5 h 8 M -6.5 8.2 h 5" stroke="#d8d4dc" stroke-width="1.1" stroke-linecap="round"/>
+                            </g>
+                            <!-- Ryuk's Apple -->
+                            <g transform="translate(9 6)">
+                                <path d="M 0 -7.5 C -5.5 -9.5 -10.5 -4.5 -9.2 2.8 C -8 9.2 -3.2 11 0 9 C 3.2 11 8 9.2 9.2 2.8 C 10.5 -4.5 5.5 -9.5 0 -7.5 Z" fill="#e63946" stroke="#6b5647" stroke-width="2"/>
+                                <path d="M 0 -7.2 Q 1 -11.5 3.2 -12.5" fill="none" stroke="#6b5647" stroke-width="1.8" stroke-linecap="round"/>
+                                <path d="M 0.5 -8.5 Q 6 -12.5 8.5 -8.2 Q 4.5 -5.5 0.5 -8.5 Z" fill="#52b788" stroke="#6b5647" stroke-width="1.4"/>
+                                <ellipse cx="-3.6" cy="-2.2" rx="2.1" ry="3.6" transform="rotate(-18 -3.6 -2.2)" fill="#ffffff" opacity="0.85"/>
+                            </g>
+                            <g transform="translate(-22 -13) scale(0.8)"><use href="#star4" class="spark s-a"/></g>
+                            <g transform="translate(23 -12) scale(0.7)"><use href="#star4" class="spark s-b"/></g>
+                        </g>
+                    </g>
+
+                    <!-- 3. Gojo Satoru: Infinity & Red / Blue / Hollow Purple -->
+                    <g class="relic" style="--t:.58;--c:#9d4edd;--glow:#72efdd" transform="translate(292 38)">
+                        <g class="relic-body">
+                            <circle class="relic-aura" r="24"/>
+                            <circle class="relic-ring" r="20.5"/>
+                            <!-- Orbiting Cursed Technique Lapse: Blue & Reversal: Red -->
+                            <circle cx="-11.5" cy="-9.5" r="6.2" fill="#2596ff" stroke="#6b5647" stroke-width="1.8"/>
+                            <circle cx="-13.3" cy="-11.3" r="2" fill="#ffffff" opacity="0.92"/>
+                            <circle cx="11.5" cy="-9.5" r="6.2" fill="#ff2e55" stroke="#6b5647" stroke-width="1.8"/>
+                            <circle cx="9.7" cy="-11.3" r="2" fill="#ffffff" opacity="0.92"/>
+                            <!-- Glowing Infinity (Mugen) loop -->
+                            <path d="M 0 3.5 C -5.5 -4 -16.5 -4 -16.5 3.5 C -16.5 11 -5.5 11 0 3.5 C 5.5 -4 16.5 -4 16.5 3.5 C 16.5 11 5.5 11 0 3.5 Z" fill="none" stroke="#6b5647" stroke-width="6.2" stroke-linecap="round"/>
+                            <path d="M 0 3.5 C -5.5 -4 -16.5 -4 -16.5 3.5 C -16.5 11 -5.5 11 0 3.5 C 5.5 -4 16.5 -4 16.5 3.5 C 16.5 11 5.5 11 0 3.5 Z" fill="none" stroke="#c084fc" stroke-width="3.4" stroke-linecap="round"/>
+                            <path d="M 0 3.5 C -5.5 -4 -16.5 -4 -16.5 3.5 C -16.5 11 -5.5 11 0 3.5 C 5.5 -4 16.5 -4 16.5 3.5 C 16.5 11 5.5 11 0 3.5 Z" fill="none" stroke="#ffffff" stroke-width="1.2" stroke-dasharray="6 5" stroke-linecap="round"/>
+                            <!-- Hollow Purple convergence core -->
+                            <circle cx="0" cy="3.5" r="4.8" fill="#9d4edd" stroke="#ffffff" stroke-width="1.5"/>
+                            <g transform="translate(-23 9) scale(0.82)"><use href="#star4" class="spark s-a"/></g>
+                            <g transform="translate(23 -13) scale(0.72)"><use href="#star4" class="spark s-b"/></g>
+                        </g>
+                    </g>
+
+                    <!-- 4. Frieren: Zoltraak Magic Circle, Crescent Staff & Blue-Moon Weed -->
+                    <g class="relic" style="--t:.80;--c:#38bdf8;--glow:#a78bfa" transform="translate(392 38)">
+                        <g class="relic-body">
+                            <circle class="relic-aura" r="24"/>
+                            <circle class="relic-ring" r="20.5"/>
+                            <!-- Zoltraak geometric seal -->
+                            <g class="zoltraak-seal">
+                                <circle r="16.5" fill="#e0f4ff" stroke="#0284c7" stroke-width="1.9"/>
+                                <circle r="13.5" fill="none" stroke="#38bdf8" stroke-width="1.1" stroke-dasharray="3 2.5"/>
+                                <rect x="-9.5" y="-9.5" width="19" height="19" fill="none" stroke="#0284c7" stroke-width="1.3"/>
+                                <rect x="-9.5" y="-9.5" width="19" height="19" transform="rotate(45)" fill="none" stroke="#0284c7" stroke-width="1.3"/>
+                            </g>
+                            <!-- Frieren's Crescent Staff -->
+                            <g transform="rotate(26)">
+                                <line x1="0" y1="-2" x2="0" y2="18" stroke="#6b5647" stroke-width="4.2" stroke-linecap="round"/>
+                                <line x1="0" y1="-2" x2="0" y2="18" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
+                                <path d="M -5 0 h 10" stroke="#fbbf24" stroke-width="2.6" stroke-linecap="round"/>
+                                <path d="M 0 -16.5 C -10 -16.5 -12.5 -4.5 -4.5 0 C -9 -4.5 -7 -12 0 -12 C 7 -12 9 -4.5 4.5 0 C 12.5 -4.5 10 -16.5 0 -16.5 Z" fill="#e63946" stroke="#6b5647" stroke-width="1.8" stroke-linejoin="round"/>
+                                <circle cx="0" cy="-6.2" r="3.2" fill="#fbbf24" stroke="#6b5647" stroke-width="1.4"/>
+                                <circle cx="-0.8" cy="-7" r="1" fill="#ffffff"/>
+                            </g>
+                            <!-- Blue-Moon Weed blossom accent -->
+                            <g transform="translate(10 10) scale(0.72)">
+                                <g fill="#60a5fa" stroke="#6b5647" stroke-width="1.4">
+                                    <ellipse cx="0" cy="-5.5" rx="3.4" ry="5.5"/>
+                                    <ellipse cx="0" cy="-5.5" rx="3.4" ry="5.5" transform="rotate(72)"/>
+                                    <ellipse cx="0" cy="-5.5" rx="3.4" ry="5.5" transform="rotate(144)"/>
+                                    <ellipse cx="0" cy="-5.5" rx="3.4" ry="5.5" transform="rotate(216)"/>
+                                    <ellipse cx="0" cy="-5.5" rx="3.4" ry="5.5" transform="rotate(288)"/>
+                                </g>
+                                <circle r="2.6" fill="#fde047"/>
+                            </g>
+                            <g transform="translate(-22 -13) scale(0.82)"><use href="#star4" class="spark s-a"/></g>
+                            <g transform="translate(23 -10) scale(0.7)"><use href="#star4" class="spark s-b"/></g>
+                        </g>
+                    </g>
+                </svg>
+
+                <!-- Chibi Kid Goku riding his Flying Nimbus (Kinto'un) -->
+                <div class="loader-rider">
+                    <svg viewBox="-52 -58 92 78" focusable="false">
+                        <!-- Anime speed lines streaming behind -->
+                        <g class="speed-lines" stroke="#ffbe0b" stroke-linecap="round">
+                            <line class="sl-1" x1="-48" y1="-24" x2="-26" y2="-24" stroke-width="2.2"/>
+                            <line class="sl-2" x1="-50" y1="-10" x2="-30" y2="-10" stroke-width="1.8"/>
+                            <line class="sl-3" x1="-44" y1="3" x2="-24" y2="3" stroke-width="2"/>
+                        </g>
+
+                        <!-- Monkey tail -->
+                        <path d="M -9 -14 C -21 -16 -26 -25 -19 -29 C -15 -31 -12 -26 -16 -24" fill="none" stroke="#6b5647" stroke-width="4.4" stroke-linecap="round"/>
+                        <path d="M -9 -14 C -21 -16 -26 -25 -19 -29 C -15 -31 -12 -26 -16 -24" fill="none" stroke="#9c6644" stroke-width="2.4" stroke-linecap="round"/>
+
+                        <!-- Nyoibo (Power Pole) strapped on back -->
+                        <line x1="-13" y1="-7" x2="7" y2="-40" stroke="#6b5647" stroke-width="5" stroke-linecap="round"/>
+                        <line x1="-13" y1="-7" x2="7" y2="-40" stroke="#e63946" stroke-width="2.8" stroke-linecap="round"/>
+
+                        <!-- Torso: Goku's orange gi, kanji badge & navy sash -->
+                        <path d="M -9 -6 L -6 -21 L 8 -21 L 11 -6 Z" fill="#ff6b1a" stroke="#6b5647" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M -2 -21 L 2 -14 L 5 -21" fill="#1d3557" stroke="#6b5647" stroke-width="1.4"/>
+                        <circle cx="5.2" cy="-15.2" r="2.1" fill="#ffffff" stroke="#6b5647" stroke-width="0.9"/>
+                        <path d="M -8 -10 H 10" stroke="#1d3557" stroke-width="3.2" stroke-linecap="round"/>
+                        <path d="M -6 -10 Q -14 -7 -17 -3" fill="none" stroke="#1d3557" stroke-width="2.4" stroke-linecap="round"/>
+
+                        <!-- Outstretched arm & blue wristband -->
+                        <path d="M 6 -18 L 17 -20" stroke="#ff6b1a" stroke-width="5.2" stroke-linecap="round"/>
+                        <path d="M 14 -20 L 18 -20.5" stroke="#1d3557" stroke-width="4.8" stroke-linecap="round"/>
+                        <circle cx="20.5" cy="-20.8" r="3.2" fill="#ffd8b5" stroke="#6b5647" stroke-width="1.6"/>
+
+                        <!-- Chibi Head -->
+                        <circle cx="2" cy="-29" r="10.5" fill="#ffd8b5" stroke="#6b5647" stroke-width="2"/>
+                        <!-- Determined anime eye, brow & blush -->
+                        <ellipse cx="6.8" cy="-28.5" rx="1.7" ry="2.4" fill="#231f28"/>
+                        <circle cx="7.3" cy="-29.5" r="0.75" fill="#ffffff"/>
+                        <circle cx="6.2" cy="-27.4" r="0.4" fill="#ffffff"/>
+                        <path d="M 4.2 -32.2 L 9.2 -31" stroke="#231f28" stroke-width="1.5" stroke-linecap="round"/>
+                        <ellipse cx="5.2" cy="-25.5" rx="2.3" ry="1.2" fill="#ff8fa3" opacity="0.8"/>
+                        <path d="M 5.2 -23.5 Q 7.5 -22 9.2 -23.8" fill="none" stroke="#6b5647" stroke-width="1.4" stroke-linecap="round"/>
+
+                        <!-- Iconic Spiky Goku Hair -->
+                        <path d="M -6 -24
+                                 C -14 -22 -22 -25 -25 -29 C -19 -30 -14 -29 -10 -28
+                                 C -18 -31 -24 -36 -25 -42 C -17 -41 -12 -38 -8 -35
+                                 C -14 -41 -17 -48 -15 -53 C -9 -49 -5 -44 -3 -39
+                                 C -3 -46 1 -52 6 -55 C 7 -48 6 -43 4 -39
+                                 C 9 -44 16 -46 22 -44 C 17 -39 13 -36 9 -35
+                                 C 15 -36 21 -34 24 -30 C 18 -29 13 -30 9 -31
+                                 C 7 -35 3 -36 -1 -33 C -3 -30 -5 -27 -6 -24 Z"
+                              fill="#231f28" stroke="#6b5647" stroke-width="1.6" stroke-linejoin="round"/>
+                        <!-- Hair sheen highlight -->
+                        <path d="M -11 -39 Q -6 -44 -2 -38 M 2 -47 Q 4 -43 3 -39" fill="none" stroke="#4a4e69" stroke-width="1.4" stroke-linecap="round"/>
+
+                        <!-- Flying Nimbus (Kinto'un) golden cloud -->
+                        <g class="nimbus-cloud">
+                            <!-- Swirling cloud tail -->
+                            <path d="M -14 2 C -26 3 -35 -2 -30 -8 C -26 -12 -19 -8 -16 -3" fill="#ffd43b" stroke="#6b5647" stroke-width="2.1" stroke-linecap="round"/>
+                            <!-- Main fluffy cloud puffs -->
+                            <path d="M -18 3
+                                     C -23 3 -26 -2 -22 -6
+                                     C -23 -11 -16 -15 -10 -11
+                                     C -6 -16 4 -16 8 -11
+                                     C 14 -14 22 -10 21 -3
+                                     C 26 -1 25 6 19 7
+                                     C 15 11 6 11 2 8
+                                     C -4 11 -14 10 -18 3 Z"
+                                  fill="#ffd43b" stroke="#6b5647" stroke-width="2.2" stroke-linejoin="round"/>
+                            <!-- Warm underside shading -->
+                            <path d="M -16 3 C -11 8 -2 8 2 5 C 7 8 15 8 18 4 C 14 9 6 10 2 7 C -4 10 -13 9 -16 3 Z" fill="#f59f00" opacity="0.75"/>
+                            <!-- Creamy top highlight puffs -->
+                            <path d="M -9 -8 A 6 5 0 0 1 5 -8" fill="none" stroke="#fff9db" stroke-width="2.2" stroke-linecap="round"/>
+                            <path d="M 7 -7 A 5 4 0 0 1 16 -4" fill="none" stroke="#fff9db" stroke-width="2" stroke-linecap="round"/>
+                        </g>
                     </svg>
-                    <div class="loader-petals">
-                        <i style="--x:14%;--d:0s;--s:3.6s;--c:#ff8fb1"></i>
-                        <i style="--x:30%;--d:1.4s;--s:4.2s;--c:#8fb8ff"></i>
-                        <i style="--x:47%;--d:.6s;--s:3.9s;--c:#ffc2d6"></i>
-                        <i style="--x:60%;--d:2.2s;--s:4.4s;--c:#b79cff"></i>
-                        <i style="--x:75%;--d:.9s;--s:3.7s;--c:#7fd6e8"></i>
-                        <i style="--x:90%;--d:1.9s;--s:4.1s;--c:#ff8fb1"></i>
-                    </div>
-                    <div class="loader-bee">
-                        <svg viewBox="0 0 28 20" focusable="false">
-                            <ellipse class="wing wing-a" cx="11" cy="5" rx="5" ry="3.4"/>
-                            <ellipse class="wing wing-b" cx="16" cy="5.5" rx="5" ry="3.2"/>
-                            <ellipse class="bee-body" cx="13" cy="12" rx="9" ry="6"/>
-                            <path class="bee-stripe" d="M10 6.6v10.6M15 6.2v11.4"/>
-                            <circle class="bee-body" cx="22.5" cy="11.5" r="3.4"/>
-                            <circle class="bee-eye" cx="23.6" cy="10.8" r="0.9"/>
-                            <path class="bee-sting" d="M4 12l-2.4.8"/>
-                        </svg>
-                    </div>
                 </div>
             </div>
-            <p class="loader-status">mixing the paint…</p>
+            <p class="loader-status"></p>
         </div>
 
         <canvas class="scene" role="img" aria-label="A painting of a chibi martial-arts kid with spiky black hair and an orange gi, standing on a wobbly yellow cloud in the sky. Tap the kid to make him jump, tap the cloud to bounce it, drag to orbit and scroll to zoom."></canvas>

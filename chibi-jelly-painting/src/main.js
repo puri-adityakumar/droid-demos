@@ -290,6 +290,8 @@ async function start()
     {
         const look = thumbQueue.shift()
         ui.drawThumb( `${ look.id }-${ look.themeId }`, canvas, filter.frameRect(), renderer.getPixelRatio() )
+        const total = character.ids.length * slots.length
+        ui.progress( 0.55 + ( ( total - thumbQueue.length ) / total ) * 0.45 )
         if( thumbQueue.length ) applyLook( thumbQueue[ 0 ] )
         else ui.syncPreviews()
     }
@@ -320,7 +322,7 @@ async function start()
         if( thumbQueue.length ) captureThumbnail()
 
         frames++
-        if( frames === 2 ) { ui.progress( 0.9 ); queueThumbnails() }
+        if( frames === 2 ) queueThumbnails()
         if( frames > 2 && ! thumbQueue.length && ! ready ) { ready = true; ui.ready() }
     } )
 }
