@@ -1,0 +1,16 @@
+---
+import { site } from '../data/site';
+---
+<div id="loader" aria-hidden="true">
+  <div class="loader__top" data-loader-out>
+    <span>{site.studioCode}</span>
+    <span>ZEROING COORDINATE STAGE // STOCKHOLM LAB</span>
+  </div>
+  <div>
+    <div class="loader__inner">
+      <span class="loader__name loader-title">{site.name}</span>
+      <span class="loader__count" data-loader-count>CAL 000%</span>
+    </div>
+    <div class="loader__bar" data-loader-bar></div>
+  </div>
+</div>

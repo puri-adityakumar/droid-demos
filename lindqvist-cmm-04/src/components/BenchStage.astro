@@ -1,0 +1,273 @@
+---
+import { projects } from '../data/site';
+
+interface Props {
+  initialSpecimen?: string;
+  allowSwitch?: boolean;
+  initialExplode?: number;
+}
+
+const {
+  initialSpecimen = 'kestrel-01',
+  allowSwitch = true,
+  initialExplode = 0.38,
+} = Astro.props;
+
+const activeProject = projects.find((p) => p.slug === initialSpecimen) || projects[0];
+const sliderVal = Math.round(initialExplode * 100);
+---
+<div
+  class="bench-card"
+  data-bench-stage
+  data-initial-specimen={activeProject.slug}
+  data-initial-explode={String(initialExplode)}
+>
+  <div class="bench-card__hud-top bench-hud-overlay">
+    <span data-telemetry-specimen>{activeProject.shortTitle.toUpperCase()} // {activeProject.glbSize}</span>
+    <div class="bench-card__telemetry-group">
+      <span>Z-TRAVEL <strong data-telemetry-spread>+31.9 mm</strong> (<strong data-telemetry-ratio>{sliderVal}%</strong>)</span>
+      <span>ROT <strong data-telemetry-angle>024.0°</strong></span>
+      <span>SHADER <strong data-telemetry-mode>SOLID PBR</strong></span>
+    </div>
+  </div>
+
+  <div class="bench-viewport">
+    <div class="bench-schematic-wrap">
+      <!-- Orthographic CAD Blueprint 01: Kestrel-01 Acoustic Field Recorder -->
+      <svg
+        class:list={['bench-schematic', { 'is-active': activeProject.slug === 'kestrel-01' }]}
+        data-schematic-slug="kestrel-01"
+        viewBox="0 0 520 360"
+        role="img"
+        aria-label="Orthographic exploded CAD schematic of the Kestrel-01 Coaxial Field Recorder"
+      >
+        <defs>
+          <pattern id="grid-kestrel" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(236,234,228,0.06)" stroke-width="1" />
+          </pattern>
+        </defs>
+        <rect width="520" height="360" fill="url(#grid-kestrel)" />
+        <!-- Rotating Vernier Reticle Ring -->
+        <g data-reticle-orbit>
+          <circle cx="250" cy="180" r="142" fill="none" stroke="rgba(255,85,48,0.28)" stroke-width="1.2" stroke-dasharray="8 6" />
+          <circle cx="250" cy="38" r="3.5" fill="#ff5530" />
+          <circle cx="250" cy="322" r="3.5" fill="#d9b05b" />
+        </g>
+        <!-- Datum Centerlines -->
+        <line x1="250" y1="14" x2="250" y2="346" stroke="rgba(255,85,48,0.45)" stroke-width="1" stroke-dasharray="5 4" />
+        <line x1="20" y1="185" x2="500" y2="185" stroke="rgba(236,234,228,0.22)" stroke-width="1" stroke-dasharray="3 3" />
+
+        <!-- Part 05: Bayonet Mount (Bottom) -->
+        <g data-svg-part="part_05_bayonet_mount" data-svg-vx="0" data-svg-vy="0.85">
+          <rect x="182" y="262" width="136" height="26" rx="2" fill="#141922" stroke="#eceae4" stroke-width="1.5" />
+          <line x1="196" y1="275" x2="304" y2="275" stroke="#d9b05b" stroke-width="1.2" />
+          <text x="328" y="280" fill="#9da5b0" font-family="JetBrains Mono, monospace" font-size="13">05 // BAYONET</text>
+        </g>
+
+        <!-- Part 01: CNC Unibody Chassis (Center) -->
+        <g data-svg-part="part_01_chassis" data-svg-vx="0" data-svg-vy="0.12">
+          <rect x="172" y="142" width="156" height="106" rx="3" fill="#181e28" stroke="#eceae4" stroke-width="1.6" />
+          <rect x="188" y="156" width="124" height="50" rx="2" fill="#0b0d10" stroke="#ff5530" stroke-width="1.2" />
+          <line x1="196" y1="174" x2="304" y2="174" stroke="#ff5530" stroke-width="1" />
+          <line x1="196" y1="190" x2="282" y2="190" stroke="#9da5b0" stroke-width="1" />
+          <circle cx="208" cy="228" r="7" fill="none" stroke="#d9b05b" stroke-width="1.4" />
+          <circle cx="292" cy="228" r="7" fill="none" stroke="#d9b05b" stroke-width="1.4" />
+          <text x="16" y="192" fill="#eceae4" font-family="JetBrains Mono, monospace" font-size="13">01 // CHASSIS</text>
+        </g>
+
+        <!-- Part 04: Rotary Gain Turret (Right Offset) -->
+        <g data-svg-part="part_04_rotary_gain" data-svg-vx="0.85" data-svg-vy="-0.15">
+          <rect x="336" y="164" width="32" height="50" rx="2" fill="#1d2430" stroke="#d9b05b" stroke-width="1.5" />
+          <line x1="342" y1="174" x2="362" y2="174" stroke="#d9b05b" stroke-width="1" />
+          <line x1="342" y1="186" x2="362" y2="186" stroke="#d9b05b" stroke-width="1" />
+          <line x1="342" y1="198" x2="362" y2="198" stroke="#d9b05b" stroke-width="1" />
+          <text x="376" y="194" fill="#d9b05b" font-family="JetBrains Mono, monospace" font-size="13">04 // GAIN DIAL</text>
+        </g>
+
+        <!-- Part 03: Transducer Core (Upper Mid) -->
+        <g data-svg-part="part_03_transducer_core" data-svg-vx="0" data-svg-vy="-0.55">
+          <circle cx="224" cy="112" r="19" fill="#151b24" stroke="#d9b05b" stroke-width="1.5" />
+          <circle cx="276" cy="112" r="19" fill="#151b24" stroke="#d9b05b" stroke-width="1.5" />
+          <circle cx="224" cy="112" r="6.5" fill="#ff5530" />
+          <circle cx="276" cy="112" r="6.5" fill="#ff5530" />
+          <text x="16" y="116" fill="#d9b05b" font-family="JetBrains Mono, monospace" font-size="13">03 // CAPSULE</text>
+        </g>
+
+        <!-- Part 02: Capsule Guard (Top) -->
+        <g data-svg-part="part_02_capsule_guard" data-svg-vx="0" data-svg-vy="-1.0">
+          <path d="M 180 86 L 198 50 L 302 50 L 320 86 Z" fill="rgba(24,30,40,0.82)" stroke="#eceae4" stroke-width="1.5" />
+          <line x1="216" y1="50" x2="216" y2="86" stroke="rgba(236,234,228,0.45)" stroke-width="1" />
+          <line x1="250" y1="50" x2="250" y2="86" stroke="#ff5530" stroke-width="1.2" />
+          <line x1="284" y1="50" x2="284" y2="86" stroke="rgba(236,234,228,0.45)" stroke-width="1" />
+          <text x="330" y="73" fill="#eceae4" font-family="JetBrains Mono, monospace" font-size="13">02 // TI-64 CAGE</text>
+        </g>
+      </svg>
+
+      <!-- Orthographic CAD Blueprint 02: Verge-M2 Monochromator -->
+      <svg
+        class:list={['bench-schematic', { 'is-active': activeProject.slug === 'verge-m2' }]}
+        data-schematic-slug="verge-m2"
+        viewBox="0 0 520 360"
+        role="img"
+        aria-label="Orthographic exploded CAD schematic of the Verge-M2 Czerny-Turner Monochromator"
+      >
+        <defs>
+          <pattern id="grid-verge" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(236,234,228,0.06)" stroke-width="1" />
+          </pattern>
+        </defs>
+        <rect width="520" height="360" fill="url(#grid-verge)" />
+        <line x1="250" y1="16" x2="250" y2="344" stroke="rgba(255,85,48,0.45)" stroke-width="1" stroke-dasharray="5 4" />
+        <line x1="20" y1="180" x2="500" y2="180" stroke="rgba(236,234,228,0.22)" stroke-width="1" stroke-dasharray="3 3" />
+
+        <g data-svg-part="part_05_bayonet_mount" data-svg-vx="-0.5" data-svg-vy="0.65">
+          <rect x="118" y="252" width="264" height="24" rx="2" fill="#141922" stroke="#eceae4" stroke-width="1.5" />
+          <circle cx="156" cy="264" r="5" fill="none" stroke="#d9b05b" stroke-width="1.3" />
+          <circle cx="250" cy="264" r="5" fill="none" stroke="#d9b05b" stroke-width="1.3" />
+          <circle cx="344" cy="264" r="5" fill="none" stroke="#d9b05b" stroke-width="1.3" />
+          <text x="122" y="298" fill="#9da5b0" font-family="JetBrains Mono, monospace" font-size="13">05 // ALUMINA KINEMATIC BASE</text>
+        </g>
+
+        <g data-svg-part="part_01_chassis" data-svg-vx="0" data-svg-vy="0">
+          <polygon points="142,126 358,126 382,234 118,234" fill="#181e28" stroke="#eceae4" stroke-width="1.6" />
+          <path d="M 156 174 L 250 140 L 344 174 L 250 206 Z" fill="none" stroke="#ff5530" stroke-width="1.4" />
+          <text x="148" y="224" fill="#eceae4" font-family="JetBrains Mono, monospace" font-size="13">01 // 6082 OPTICAL BLOCK</text>
+        </g>
+
+        <g data-svg-part="part_03_transducer_core" data-svg-vx="0.45" data-svg-vy="-0.45">
+          <circle cx="250" cy="166" r="30" fill="#12161c" stroke="#d9b05b" stroke-width="1.6" />
+          <rect x="233" y="149" width="34" height="34" fill="none" stroke="#ff5530" stroke-width="1.2" />
+          <line x1="274" y1="146" x2="304" y2="112" stroke="#d9b05b" stroke-width="1.2" />
+          <text x="310" y="114" fill="#d9b05b" font-family="JetBrains Mono, monospace" font-size="13">03 // GRATING TURRET</text>
+        </g>
+
+        <g data-svg-part="part_04_rotary_gain" data-svg-vx="0.7" data-svg-vy="-0.2">
+          <circle cx="384" cy="176" r="20" fill="#1b222c" stroke="#d9b05b" stroke-width="1.5" />
+          <line x1="372" y1="176" x2="396" y2="176" stroke="#ff5530" stroke-width="1.2" />
+          <text x="352" y="146" fill="#d9b05b" font-family="JetBrains Mono, monospace" font-size="13">04 // VERNIER DRUM</text>
+        </g>
+
+        <g data-svg-part="part_02_capsule_guard" data-svg-vx="0" data-svg-vy="-0.85">
+          <rect x="150" y="52" width="200" height="36" rx="2" fill="#151b24" stroke="#eceae4" stroke-width="1.5" />
+          <text x="160" y="75" fill="#eceae4" font-family="JetBrains Mono, monospace" font-size="13">02 // COLLIMATOR SHROUD</text>
+        </g>
+      </svg>
+
+      <!-- Orthographic CAD Blueprint 03: Aether-G9 Two-Axis Gimbal -->
+      <svg
+        class:list={['bench-schematic', { 'is-active': activeProject.slug === 'aether-g9' }]}
+        data-schematic-slug="aether-g9"
+        viewBox="0 0 520 360"
+        role="img"
+        aria-label="Orthographic exploded CAD schematic of the Aether-G9 Two-Axis Lidar Gimbal"
+      >
+        <defs>
+          <pattern id="grid-aether" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(236,234,228,0.06)" stroke-width="1" />
+          </pattern>
+        </defs>
+        <rect width="520" height="360" fill="url(#grid-aether)" />
+        <line x1="250" y1="16" x2="250" y2="344" stroke="rgba(255,85,48,0.45)" stroke-width="1" stroke-dasharray="5 4" />
+        <line x1="20" y1="180" x2="500" y2="180" stroke="rgba(236,234,228,0.22)" stroke-width="1" stroke-dasharray="3 3" />
+
+        <g data-svg-part="part_05_bayonet_mount" data-svg-vx="0" data-svg-vy="0.85">
+          <rect x="174" y="260" width="152" height="28" rx="2" fill="#141922" stroke="#eceae4" stroke-width="1.5" />
+          <text x="336" y="279" fill="#9da5b0" font-family="JetBrains Mono, monospace" font-size="13">05 // STATOR BASE</text>
+        </g>
+
+        <g data-svg-part="part_01_chassis" data-svg-vx="0" data-svg-vy="0.2">
+          <path d="M 156 128 L 188 128 L 188 236 L 312 236 L 312 128 L 344 128 L 344 252 L 156 252 Z" fill="#181e28" stroke="#eceae4" stroke-width="1.6" />
+          <text x="16" y="236" fill="#eceae4" font-family="JetBrains Mono, monospace" font-size="13">01 // YAW YOKE</text>
+        </g>
+
+        <g data-svg-part="part_04_rotary_gain" data-svg-vx="0.75" data-svg-vy="0">
+          <rect x="354" y="148" width="30" height="58" rx="2" fill="#1d2430" stroke="#d9b05b" stroke-width="1.5" />
+          <text x="392" y="182" fill="#d9b05b" font-family="JetBrains Mono, monospace" font-size="13">04 // ROLL RING</text>
+        </g>
+
+        <g data-svg-part="part_03_transducer_core" data-svg-vx="0" data-svg-vy="-0.35">
+          <circle cx="250" cy="168" r="44" fill="#12161c" stroke="#ff5530" stroke-width="1.6" />
+          <circle cx="250" cy="168" r="20" fill="#1b222c" stroke="#d9b05b" stroke-width="1.4" />
+          <line x1="150" y1="120" x2="212" y2="152" stroke="#ff5530" stroke-width="1.2" />
+          <text x="16" y="122" fill="#ff5530" font-family="JetBrains Mono, monospace" font-size="13">03 // BRASS CORE</text>
+        </g>
+
+        <g data-svg-part="part_02_capsule_guard" data-svg-vx="0" data-svg-vy="-0.9">
+          <ellipse cx="250" cy="74" rx="72" ry="22" fill="#151b24" stroke="#eceae4" stroke-width="1.5" />
+          <text x="332" y="79" fill="#eceae4" font-family="JetBrains Mono, monospace" font-size="13">02 // PITCH RING</text>
+        </g>
+      </svg>
+    </div>
+
+    <div
+      class="bench-canvas-host"
+      data-bench-canvas
+      data-cursor="DRAG / ORBIT"
+      role="region"
+      aria-label="Interactive 3D coordinate measuring viewport"
+    ></div>
+
+    <div class="bench-viewport__corner-note bench-hud-overlay">
+      <span data-telemetry-part>ALL 5 SUB-ASSEMBLIES LOCKED</span>
+    </div>
+  </div>
+
+  <div class="bench-static-footer" aria-hidden="true">
+    <span>ORTHOGRAPHIC CAD SCHEMATIC // STATIC REDUCED-MOTION VIEW // SCALE 1:1</span>
+    <span>DATUM TOLERANCE {activeProject.datumTolerance}</span>
+  </div>
+
+  <div class="bench-controls bench-controls-bar">
+    <div class="specimen-tabs" role="group" aria-label="Specimen and explosion controls">
+      {allowSwitch ? (
+        projects.map((p, idx) => (
+          <button
+            type="button"
+            class:list={['control-chip', 'bench-tab', { 'is-active': p.slug === activeProject.slug }]}
+            data-specimen-select={p.slug}
+            aria-pressed={p.slug === activeProject.slug ? 'true' : 'false'}
+          >
+            <span>0{idx + 1} // {p.shortTitle}</span>
+          </button>
+        ))
+      ) : (
+        <>
+          <button type="button" class="control-chip bench-detent-btn" data-bench-preset="0">
+            <span>ASSEMBLED (0.0 MM)</span>
+          </button>
+          <button type="button" class="control-chip bench-detent-btn is-active" data-bench-preset="0.48">
+            <span>INSPECTION DETENT</span>
+          </button>
+          <button type="button" class="control-chip bench-detent-btn" data-bench-preset="1">
+            <span>FULL AXIAL EXPLOSION</span>
+          </button>
+        </>
+      )}
+    </div>
+
+    <button
+      type="button"
+      class="control-chip bench-action-btn"
+      data-bench-wireframe
+      aria-pressed="false"
+    >
+      <span>WIREFRAME: OFF</span>
+    </button>
+
+    <div class="bench-scrubber-row">
+      <label for="axial-vernier-slider" class="bench-scrubber-label">
+        EXPLODE ASSEMBLY (Z-AXIS)
+      </label>
+      <input
+        id="axial-vernier-slider"
+        type="range"
+        min="0"
+        max="100"
+        value={sliderVal}
+        class="bench-slider"
+        data-bench-slider
+        aria-label="Explode assembly along Z-axis"
+      />
+    </div>
+  </div>
+</div>

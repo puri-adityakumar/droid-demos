@@ -1,0 +1,219 @@
+---
+import Base from '../layouts/Base.astro';
+import BenchStage from '../components/BenchStage.astro';
+import PipelineSchematic from '../components/PipelineSchematic.astro';
+import { site, projects, engagementModels } from '../data/site';
+
+const heroSpecimen = projects[0];
+---
+<Base
+  title={`${site.name} // 3D Industrial Design & WebGL`}
+  description={site.description}
+  schemaType="WebSite"
+>
+  <!-- SECTION 1: 3D COORDINATE STAGE HERO -->
+  <section class="hero-wrapper" data-bench-hero aria-label="Optical Coordinate Measuring Stage">
+    <div class="hero-stage">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="hero-datum-bar" data-reveal="up" data-hero>
+            <span class="hero-datum-badge">CAD + WEBGL STUDIO</span>
+            <span>{site.studioCode} // STOCKHOLM, SE</span>
+          </div>
+
+          <h1 class="hero-title" data-split="words" data-hero>
+            Precision Hardware CAD &amp; Sub-300 KB WebGL Twins.
+          </h1>
+
+          <p class="hero-lead" data-reveal="up" data-hero data-delay="0.08">
+            {site.heroLead}
+          </p>
+
+          <p class="hero-sub" data-reveal="up" data-hero data-delay="0.11">
+            {site.heroSub}
+          </p>
+
+          <div class="hero-actions" data-reveal="up" data-hero data-delay="0.14">
+            <a
+              href={`/work/${heroSpecimen.slug}`}
+              class="btn-detent"
+              data-magnetic="0.2"
+            >
+              <span class="btn-detent__fill" aria-hidden="true"></span>
+              <span class="roll">
+                <span data-roll="Inspect Kestrel-01">Inspect Kestrel-01</span>
+              </span>
+              <span class="btn-detent__arrow" aria-hidden="true">&rarr;</span>
+            </a>
+
+            <a
+              href="#scopes"
+              class="btn-detent btn-detent--ghost"
+              data-magnetic="0.16"
+            >
+              <span class="btn-detent__fill" aria-hidden="true"></span>
+              <span class="roll">
+                <span data-roll="Scopes & Timelines (3 to 6 Wks)">Scopes &amp; Timelines (3 to 6 Wks)</span>
+              </span>
+            </a>
+          </div>
+
+          <!-- 5-Part BOM Sub-Assembly Callout Table -->
+          <div class="bom-panel" data-reveal="up" data-hero data-delay="0.2">
+            <div class="bom-panel__header">
+              <span>5-NODE KINEMATIC BOM</span>
+              <span data-telemetry-tolerance>{heroSpecimen.datumTolerance}</span>
+            </div>
+            <ul class="bom-list" data-bom-list aria-label="Sub-assembly bill of materials">
+              {heroSpecimen.parts.map((part) => (
+                <li>
+                  <button
+                    type="button"
+                    class="bom-row"
+                    data-bom-row
+                    data-bom-part={part.nodeName}
+                  >
+                    <span class="bom-row__code" data-part-code>{part.index} // {part.code}</span>
+                    <span class="bom-row__label" data-part-label>{part.label}</span>
+                    <span class="bom-row__tol" data-part-tolerance>{part.tolerance} &middot; {part.mass}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <!-- 3D Coordinate Measuring Viewport + Orthographic Blueprint -->
+        <BenchStage initialSpecimen="kestrel-01" allowSwitch={true} initialExplode={0.38} />
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: INDEXED SPECIMEN ARCHIVE -->
+  <section id="work" class="section-work" aria-labelledby="work-heading">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-header__meta" data-reveal="up">
+          <p class="mono-accent">SECTION 01 // SPECIMEN LEDGER</p>
+          <p class="mono-label" style="margin-top: 0.35rem;">3 VERIFIED ASSEMBLIES // STEP + GLB</p>
+        </div>
+        <div class="section-header__title-wrap">
+          <h2 id="work-heading" class="section-title" data-split="words">
+            Machined Instruments &amp; Real-Time Digital Twins.
+          </h2>
+          <p class="section-lead" data-reveal="up">
+            Every commission ships both as physical CNC production tooling and as a self-contained, 60 fps WebGL inspection twin. Select a specimen to examine its tolerance stack, exploded sub-assemblies, and shader architecture.
+          </p>
+        </div>
+      </div>
+
+      <ol class="specimen-ledger">
+        {projects.map((project, idx) => (
+          <li class="specimen-item" data-reveal="up">
+            <a
+              href={`/work/${project.slug}`}
+              class="specimen-row"
+              data-specimen-hover={project.slug}
+            >
+              <span class="specimen-row__idx">0{idx + 1} //</span>
+              <div class="specimen-row__main">
+                <h3 class="specimen-row__title">{project.title}</h3>
+                <p class="specimen-row__summary">{project.summary}</p>
+              </div>
+              <div class="specimen-row__sector">
+                <span>{project.client}</span>
+                <p class="mono-label" style="margin-top: 0.2rem;">{project.sector}</p>
+              </div>
+              <div class="specimen-row__specs">
+                <span>CODE: {project.specimenCode}</span>
+                <span>TOL: {project.datumTolerance}</span>
+                <span>MESH: {project.triangleCount} ({project.glbSize})</span>
+              </div>
+              <span class="specimen-row__cta">
+                <span>Inspect</span>
+                <span aria-hidden="true">&nearr;</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- SECTION 3: CAD-TO-SHADER ENGINEERING PIPELINE -->
+  <section id="pipeline" class="section-pipeline" aria-labelledby="pipeline-heading">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-header__meta" data-reveal="up">
+          <p class="mono-accent">SECTION 02 // METHODOLOGY</p>
+          <p class="mono-label" style="margin-top: 0.35rem;">ZERO-BAKE PROCEDURAL PBR</p>
+        </div>
+        <div class="section-header__title-wrap">
+          <h2 id="pipeline-heading" class="section-title" data-split="words">
+            Why Creative Agencies Botch Hardware CAD (And How I Fix It).
+          </h2>
+          <p class="section-lead" data-reveal="up">
+            Most web agencies turn your STEP assemblies into 25 MB texture bakes that overheat mobile GPUs and round off critical mating threads. I rebuild parametric CAD directly into clean quad B-Meshes and analytic metalness shaders that preserve every tolerance under 300 KB.
+          </p>
+        </div>
+      </div>
+
+      <PipelineSchematic />
+    </div>
+  </section>
+
+  <!-- SECTION 4: VERIFIED BENCH TELEMETRY -->
+  <section class="section-metrics" aria-label="Verified Bench Telemetry">
+    <div class="container">
+      <div class="metrics-grid">
+        {site.benchMetrics.map((m) => (
+          <div class="metric-cell" data-reveal="up">
+            <span class="metric-cell__label">{m.label}</span>
+            <p class="metric-cell__val">{m.value}</p>
+            <p class="metric-cell__detail">{m.detail}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: COMMISSIONING SCOPES -->
+  <section id="scopes" class="section-commissioning" aria-labelledby="scopes-heading">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-header__meta" data-reveal="up">
+          <p class="mono-accent">SECTION 03 // ENGAGEMENT MODELS</p>
+          <p class="mono-label" style="margin-top: 0.35rem;">STOCKHOLM LAB &amp; REMOTE DEPLOYMENT</p>
+        </div>
+        <div class="section-header__title-wrap">
+          <h2 id="scopes-heading" class="section-title" data-split="words">
+            Commissioning Scopes &amp; Deliverables.
+          </h2>
+          <p class="section-lead" data-reveal="up">
+            Fixed-fee engineering sprints with clear deliverables. You work directly with me from initial STEP review to production CNC release and browser deployment.
+          </p>
+        </div>
+      </div>
+
+      <div class="scopes-grid">
+        {engagementModels.map((scope) => (
+          <article class="scope-card" data-reveal="up">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="mono-accent">{scope.code}</span>
+                <span class="mono-label">{scope.duration}</span>
+              </div>
+              <h3 class="scope-card__title">{scope.title}</h3>
+              <p class="scope-card__summary">{scope.summary}</p>
+            </div>
+            <ul class="scope-card__list">
+              {scope.includes.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

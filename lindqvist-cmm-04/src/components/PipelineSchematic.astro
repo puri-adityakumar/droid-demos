@@ -1,0 +1,134 @@
+---
+import { pipelineStages } from '../data/site';
+---
+<div class="pipeline-layout">
+  <div class="pipeline-plate pipeline-sticky">
+    <div class="pipeline-plate__top">
+      <span class="mono-accent">PLATE A-01 // CAD-TO-SHADER GEOMETRY PIPELINE</span>
+      <span class="mono-label">TOLERANCE RETENTION: 99.94%</span>
+    </div>
+
+    <svg
+      class="pipeline-svg"
+      viewBox="0 0 720 340"
+      role="img"
+      aria-label="Three-stage engineering schematic showing NURBS CAD solid, B-Mesh quad topology, and WebGL PBR shader output"
+    >
+      <defs>
+        <pattern id="pipe-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+          <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(236,234,228,0.06)" stroke-width="1" />
+        </pattern>
+      </defs>
+      <rect width="720" height="340" fill="url(#pipe-grid)" />
+
+      <!-- Stage 01: NURBS CAD Solid (Left) -->
+      <g data-pipeline-svg-stage="01" class="is-lit">
+        <rect x="28" y="42" width="196" height="236" rx="2" fill="#12161c" stroke="#eceae4" stroke-width="1.4" />
+        <text x="42" y="66" fill="#ff5530" font-family="JetBrains Mono, monospace" font-size="10">01 // NURBS B-REP</text>
+        <circle cx="126" cy="154" r="56" fill="none" stroke="#eceae4" stroke-width="1.5" />
+        <circle cx="126" cy="154" r="32" fill="none" stroke="#d9b05b" stroke-width="1.2" stroke-dasharray="4 3" />
+        <line x1="58" y1="154" x2="194" y2="154" stroke="#ff5530" stroke-width="1" />
+        <line x1="126" y1="86" x2="126" y2="222" stroke="#ff5530" stroke-width="1" />
+        <text x="42" y="256" fill="#9da5b0" font-family="JetBrains Mono, monospace" font-size="9">G3 CONTINUITY // ±2.0 µM</text>
+      </g>
+
+      <!-- Connector 01 -> 02 -->
+      <path d="M 224 160 L 262 160" stroke="#ff5530" stroke-width="1.5" />
+      <polygon points="258,156 266,160 258,164" fill="#ff5530" />
+
+      <!-- Stage 02: Blender B-Mesh Topology (Center) -->
+      <g data-pipeline-svg-stage="02" class="is-lit">
+        <rect x="262" y="42" width="196" height="236" rx="2" fill="#12161c" stroke="#d9b05b" stroke-width="1.4" />
+        <text x="276" y="66" fill="#d9b05b" font-family="JetBrains Mono, monospace" font-size="10">02 // B-MESH RE-TOPO</text>
+        <polygon points="360,96 412,126 412,182 360,212 308,182 308,126" fill="none" stroke="#eceae4" stroke-width="1.4" />
+        <polygon points="360,116 394,136 394,172 360,192 326,172 326,136" fill="none" stroke="#d9b05b" stroke-width="1.2" />
+        <line x1="308" y1="126" x2="412" y2="182" stroke="rgba(236,234,228,0.35)" stroke-width="1" />
+        <line x1="412" y1="126" x2="308" y2="182" stroke="rgba(236,234,228,0.35)" stroke-width="1" />
+        <line x1="360" y1="96" x2="360" y2="212" stroke="rgba(236,234,228,0.35)" stroke-width="1" />
+        <text x="276" y="256" fill="#9da5b0" font-family="JetBrains Mono, monospace" font-size="9">14.6K TRIS // 5 NAMED NODES</text>
+      </g>
+
+      <!-- Connector 02 -> 03 -->
+      <path d="M 458 160 L 496 160" stroke="#ff5530" stroke-width="1.5" />
+      <polygon points="492,156 500,160 492,164" fill="#ff5530" />
+
+      <!-- Stage 03: Single-Clock WebGL Shader (Right) -->
+      <g data-pipeline-svg-stage="03" class="is-lit">
+        <rect x="496" y="42" width="196" height="236" rx="2" fill="#12161c" stroke="#ff5530" stroke-width="1.4" />
+        <text x="510" y="66" fill="#ff5530" font-family="JetBrains Mono, monospace" font-size="10">03 // GLSL + TICKER</text>
+        <circle cx="594" cy="154" r="54" fill="#181e28" stroke="#ff5530" stroke-width="1.6" />
+        <ellipse cx="594" cy="154" rx="54" ry="22" fill="none" stroke="#d9b05b" stroke-width="1.2" />
+        <ellipse cx="594" cy="154" rx="22" ry="54" fill="none" stroke="#eceae4" stroke-width="1.1" />
+        <circle cx="578" cy="138" r="10" fill="rgba(255,85,48,0.45)" />
+        <text x="510" y="256" fill="#9da5b0" font-family="JetBrains Mono, monospace" font-size="9">60 FPS // 1 RAF CLOCK</text>
+      </g>
+
+      <!-- Bottom Dimension Callout Bar -->
+      <line x1="28" y1="306" x2="692" y2="306" stroke="rgba(236,234,228,0.3)" stroke-width="1" />
+      <text x="28" y="324" fill="#9da5b0" font-family="JetBrains Mono, monospace" font-size="9">
+        STEP AP214 &rarr; BLENDER 4.2 PYTHON (BPY) &rarr; GLTF 2.0 BINARY (.GLB) &rarr; THREE.JS PMREM PBR
+      </text>
+    </svg>
+
+    <div class="pipeline-plate__tabs" role="tablist" aria-label="Filter pipeline stage schematic">
+      <button
+        type="button"
+        role="tab"
+        aria-selected="true"
+        class="control-chip is-active"
+        data-pipeline-tab="all"
+      >
+        <span>ALL STAGES</span>
+      </button>
+      {pipelineStages.map((s) => (
+        <button
+          type="button"
+          role="tab"
+          aria-selected="false"
+          class="control-chip"
+          data-pipeline-tab={s.step}
+        >
+          <span>{s.code}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="pipeline-stages">
+    {pipelineStages.map((s, idx) => (
+      <article
+        class:list={['pipeline-card', { 'is-active': idx === 0 }]}
+        data-pipeline-panel={s.step}
+        data-reveal="up"
+      >
+        <div class="pipeline-card__head">
+          <span class="mono-accent">{s.code}</span>
+          <span class="mono-label">{s.metric}</span>
+        </div>
+        <h3 class="pipeline-card__title">{s.title}</h3>
+        <p class="pipeline-card__summary">{s.summary}</p>
+        <ul class="pipeline-card__specs">
+          {s.specs.map((spec) => (
+            <li>&bull; {spec}</li>
+          ))}
+        </ul>
+      </article>
+    ))}
+
+    <article class="pipeline-card" data-reveal="up">
+      <div class="pipeline-card__head">
+        <span class="mono-accent">STAGE 04 // AUTOMATED QA GATE</span>
+        <span class="mono-label">ZERO TEXTURE BLOAT</span>
+      </div>
+      <h3 class="pipeline-card__title">Deterministic 60 fps &amp; WCAG AA Sign-Off</h3>
+      <p class="pipeline-card__summary">
+        Every compiled hardware twin passes an automated headless browser benchmark before handoff to verify frame pacing, keyboard accessibility, and geometry fidelity.
+      </p>
+      <ul class="pipeline-card__specs">
+        <li>&bull; Sub-300 KB total GLB payload (109 KB to 287 KB across all 3 specimens)</li>
+        <li>&bull; Orthographic CAD schematic fallback for reduced-motion &amp; no-WebGL environments</li>
+        <li>&bull; Full source code, Blender Python build script, and STEP AP242 master archive</li>
+      </ul>
+    </article>
+  </div>
+</div>
