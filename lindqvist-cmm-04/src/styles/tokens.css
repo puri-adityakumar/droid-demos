@@ -1,0 +1,111 @@
+/* SELF-HOSTED TYPOGRAPHY (Fontshare Clash Display + General Sans, Google JetBrains Mono) */
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/clash-display-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/clash-display-600-normal.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/clash-display-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/general-sans-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/general-sans-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/general-sans-600-normal.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* DESIGN TOKENS: Optical Coordinate Measuring Bench (Zeiss / Leica CMM System) */
+:root {
+  /* 6 Named Palette Roles (AAA/AA verified contrast on Granite Obsidian #0b0d10) */
+  --c-bg: #0b0d10;
+  --c-surface: #12161c;
+  --c-surface-raised: #171c24;
+  --c-fg: #eceae4;
+  --c-muted: #9da5b0;
+  --c-line: rgba(236, 234, 228, 0.14);
+  --c-line-strong: rgba(236, 234, 228, 0.28);
+  --c-accent: #ff5530;
+  --c-accent-ink: #0b0d10;
+  --c-brass: #d9b05b;
+  --c-curtain: #141820;
+
+  /* Type families */
+  --f-display: 'Clash Display', system-ui, -apple-system, sans-serif;
+  --f-body: 'General Sans', system-ui, -apple-system, sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Fluid type scale (375px -> 1440px+) */
+  --t-mega: clamp(2.65rem, 1.15rem + 6.4vw, 6.5rem);
+  --t-xl: clamp(2rem, 1.2rem + 3.4vw, 4.15rem);
+  --t-l: clamp(1.45rem, 1.1rem + 1.4vw, 2.25rem);
+  --t-m: clamp(1.125rem, 1.02rem + 0.45vw, 1.4rem);
+  --t-body: clamp(1rem, 0.96rem + 0.18vw, 1.125rem);
+  --t-s: 0.875rem;
+  --t-xs: 0.75rem;
+
+  /* Space & 12-column metrology grid */
+  --u: clamp(0.5rem, 0.35rem + 0.55vw, 0.95rem);
+  --gutter: clamp(1rem, 0.6rem + 1.6vw, 2.5rem);
+  --cols: 12;
+
+  /* Single machined chamfer radius across the entire site */
+  --radius: 2px;
+
+  /* Motion curve ("index and detent") */
+  --ease-detent: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Z-index layers */
+  --z-gl: 0;
+  --z-content: 1;
+  --z-header: 50;
+  --z-cursor: 80;
+  --z-curtain: 90;
+  --z-loader: 100;
+}

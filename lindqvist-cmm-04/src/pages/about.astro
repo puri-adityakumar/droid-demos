@@ -1,0 +1,152 @@
+---
+import Base from '../layouts/Base.astro';
+import BenchStage from '../components/BenchStage.astro';
+import { site, labEquipment, engagementModels } from '../data/site';
+---
+<Base
+  title={`Metrology Lab & Bio // ${site.name}`}
+  description="Stockholm industrial designer and WebGL engineer Soren Lindqvist. CNC hardware enclosures paired with sub-300 KB 3D inspection twins."
+  schemaType="ProfilePage"
+>
+  <!-- ABOUT & LAB HERO -->
+  <section class="hero-wrapper" data-bench-hero aria-label="Soren Lindqvist Metrology Lab">
+    <div class="hero-stage">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="hero-datum-bar" data-reveal="up" data-hero>
+            <span class="hero-datum-badge">PRINCIPAL ENGINEER</span>
+            <span>{site.studioCode} // {site.coordinates}</span>
+          </div>
+
+          <h1 class="hero-title" data-split="words" data-hero>
+            Bridging 5-Axis Billet Tooling &amp; 60 fps Browser Graphics.
+          </h1>
+
+          <p class="hero-lead" data-reveal="up" data-hero data-delay="0.08">
+            I am {site.name}, an industrial designer and real-time graphics engineer operating an independent metrology and WebGL studio in Södermalm, Stockholm.
+          </p>
+
+          <p class="hero-sub" data-reveal="up" data-hero data-delay="0.12">
+            Trained in precision mechanical design at KTH Royal Institute of Technology and optical fixture engineering in Heerbrugg, I founded {site.studioCode} to close the gap between frozen manufacturing STEP assemblies and interactive browser documentation.
+          </p>
+
+          <div class="hero-actions" data-reveal="up" data-hero data-delay="0.16">
+            <a
+              href={`mailto:${site.email}?subject=Lab%20Consultation`}
+              class="btn-detent"
+              data-magnetic="0.2"
+            >
+              <span class="btn-detent__fill" aria-hidden="true"></span>
+              <span class="roll">
+                <span data-roll={site.ctaLabel}>{site.ctaLabel}</span>
+              </span>
+              <span class="btn-detent__arrow" aria-hidden="true">&nearr;</span>
+            </a>
+
+            <a href="/#work" class="btn-detent btn-detent--ghost">
+              <span class="btn-detent__fill" aria-hidden="true"></span>
+              <span class="roll">
+                <span data-roll="View 3 Specimens">View 3 Specimens</span>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <BenchStage
+          initialSpecimen="verge-m2"
+          allowSwitch={true}
+          initialExplode={0.5}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDIO DOCTRINE & LAB INVENTORY -->
+  <section class="container" aria-label="Studio Doctrine and Lab Inventory">
+    <div class="case-body-grid">
+      <aside class="case-sidebar workshop-section">
+        <p class="mono-accent" style="margin-bottom: 1rem;">STOCKHOLM WORKSHOP</p>
+        <div class="metric-cell">
+          <span class="metric-cell__label">BENCH LOCATION</span>
+          <p style="font-family: var(--f-display); font-size: 1.25rem; font-weight: 600;">{site.location}</p>
+          <p class="metric-cell__detail">{site.coordinates}</p>
+        </div>
+
+        <div class="metric-cell" style="margin-top: 1.5rem;">
+          <span class="metric-cell__label">CURRENT WINDOW</span>
+          <p style="font-family: var(--f-display); font-size: 1.25rem; font-weight: 600;">Two Q3/Q4 2026 Bench Slots Open</p>
+          <p class="metric-cell__detail">Direct principal execution; no junior handoffs.</p>
+        </div>
+
+        <div style="margin-top: 1.75rem; padding: 1.25rem; border: 1px solid var(--c-line-strong); background: var(--c-surface);">
+          <p class="mono-accent">CALIBRATION EQUIPMENT // LAB</p>
+          <ul class="scope-card__list" style="margin-top: 0.75rem; border-top: 0; padding-top: 0;">
+            <li>Mitutoyo Crysta-Apex V544 CMM</li>
+            <li>Renishaw SP25M Scanning Probe</li>
+            <li>Rhode &amp; Schwarz Audio Analyzer</li>
+            <li>WebGL2 / glTF 2.0 Test Rig</li>
+          </ul>
+        </div>
+
+        <div style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+          {site.socials.map((s) => (
+            <a
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="control-chip"
+            >
+              <span>{s.label} &nearr;</span>
+            </a>
+          ))}
+        </div>
+      </aside>
+
+      <div class="case-narrative">
+        <article class="case-chapter" data-reveal="up">
+          <p class="mono-accent">PRINCIPLE 01 // SINGLE SOURCE OF GEOMETRY</p>
+          <h2>Why Hardware Teams Need Real-Time Inspection Twins</h2>
+          <p>
+            When an acoustic lab, photonics company, or robotics manufacturer finishes a physical instrument, the engineering truth lives inside a 400 MB parametric STEP assembly. Marketing teams usually hand that file to an offline render farm, producing static MP4 turntables that obscure internal tolerances and cannot be inspected by prospective engineers.
+          </p>
+          <p>
+            At {site.studioCode}, I engineer the physical enclosure and the real-time WebGL twin from the same coordinate origin. Every chamfer, thread relief, and bearing seat is preserved inside a sub-300 KB glTF 2.0 binary that parses in under 200 ms on mobile and desktop browsers.
+          </p>
+        </article>
+
+        <article class="case-chapter" data-reveal="up">
+          <p class="mono-accent">PRINCIPLE 02 // METROLOGY LAB INVENTORY</p>
+          <h2>Hardware &amp; Software Calibration Stack</h2>
+          <div class="scopes-grid" style="margin-top: 1.25rem;">
+            {labEquipment.map((group) => (
+              <div class="scope-card">
+                <div>
+                  <span class="mono-accent">CALIBRATED STACK</span>
+                  <h3 class="scope-card__title" style="font-size: 1.2rem;">{group.category}</h3>
+                </div>
+                <ul class="scope-card__list">
+                  {group.items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article class="case-chapter" data-reveal="up">
+          <p class="mono-accent">PRINCIPLE 03 // COMMISSIONING PROTOCOL</p>
+          <h2>How an Engagement Starts</h2>
+          <p>
+            Whether you need a three-week WebGL inspection twin compiled from your frozen STEP files ({engagementModels[0].title}) or a full six-week physical enclosure design and launch microsite ({engagementModels[1].title}), every project ships with verified source code, CAD masters, and orthographic schematics.
+          </p>
+          <ul class="scope-card__list" style="margin-top: 1.25rem;">
+            <li><strong>1. Mutual NDA &amp; Brief:</strong> Send your STEP assembly or hardware brief to {site.email}. I return a signed mutual NDA within two hours.</li>
+            <li><strong>2. 24-Hour STEP Audit:</strong> I inspect your geometry and reply within one business day with a fixed-fee scope, triangle budget, and delivery schedule.</li>
+            <li><strong>3. Principal Execution:</strong> Weekly milestone builds (STEP release, glTF binary, and 60 fps staging link) with zero junior handoffs.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+</Base>

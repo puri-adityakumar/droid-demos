@@ -1,0 +1,93 @@
+---
+import { site, projects } from '../data/site';
+---
+<footer id="commission" class="site-footer">
+  <div class="container">
+    <div class="footer-cta-block" data-reveal="up">
+      <div class="footer-cta-block__main">
+        <p class="mono-accent">COMMISSIONING // {site.availability}</p>
+        <h2 class="footer-mega-title">
+          Send a STEP Assembly or Hardware Brief for a 24-Hour Feasibility Check.
+        </h2>
+        <p style="margin-top: 1rem; color: var(--c-muted); max-width: 56ch;">
+          Email me your SolidWorks or Rhino STEP file, tolerance sheet, or early product brief. I sign a mutual NDA within two hours and return a 24-hour engineering feasibility review with fixed scope, triangle budget, and delivery schedule.
+        </p>
+        <div style="margin-top: 1.65rem; display: flex; flex-direction: column; gap: 0.65rem; align-items: flex-start;">
+          <a
+            href={`mailto:${site.email}?subject=20-Min%20CAD%20Review%20%2F%20Bench%20Commission`}
+            class="btn-detent"
+            data-magnetic="0.22"
+          >
+            <span class="btn-detent__fill" aria-hidden="true"></span>
+            <span class="roll">
+              <span data-roll={`${site.ctaLabel} (${site.email})`}>{site.ctaLabel} ({site.email})</span>
+            </span>
+            <span class="btn-detent__arrow" aria-hidden="true">&nearr;</span>
+          </a>
+          <span class="mono-label">MUTUAL NDA INCLUDED // DIRECT REPLY FROM SOREN WITHIN 24H CET</span>
+        </div>
+      </div>
+
+      <aside class="footer-cta-block__telemetry" aria-label="Deliverable Package Checklist">
+        <div class="footer-telemetry-head">
+          <span class="mono-accent">DELIVERABLE PACKAGE // FIXED-SCOPE HANDOFF</span>
+          <span class="mono-label">ISO 2768-mK</span>
+        </div>
+        <ul class="footer-telemetry-list">
+          <li>
+            <span class="mono-accent">01.</span>
+            <span>STEP AP242 Master Assembly</span>
+            <span class="mono-label">±0.002 mm</span>
+          </li>
+          <li>
+            <span class="mono-accent">02.</span>
+            <span>Sub-300 KB Production .GLB Twin</span>
+            <span class="mono-label">5 Nodes</span>
+          </li>
+          <li>
+            <span class="mono-accent">03.</span>
+            <span>Single-Clock GSAP + Three.js Module</span>
+            <span class="mono-label">60 FPS</span>
+          </li>
+          <li>
+            <span class="mono-accent">04.</span>
+            <span>Automated 60 FPS / 0 CLS Audit Report</span>
+            <span class="mono-label">Verified</span>
+          </li>
+        </ul>
+      </aside>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-col-id">
+        <p style="color: var(--c-fg); font-weight: 500;">{site.name} // {site.studioCode}</p>
+        <p style="margin-top: 0.25rem;">{site.location}</p>
+      </div>
+
+      <nav class="footer-col-nav" aria-label="Footer">
+        <a href="/" class="nav-link">
+          <span class="roll">
+            <span data-roll="Bench">Bench</span>
+          </span>
+        </a>
+        {projects.map((p) => (
+          <a href={`/work/${p.slug}`} class="nav-link">
+            <span class="roll">
+              <span data-roll={p.shortTitle}>{p.shortTitle}</span>
+            </span>
+          </a>
+        ))}
+        <a href="/about" class="nav-link">
+          <span class="roll">
+            <span data-roll="Lab & Bio">Lab &amp; Bio</span>
+          </span>
+        </a>
+      </nav>
+
+      <div class="footer-col-colophon">
+        <p>CALIBRATED AT 60 FPS // THREE.JS + GSAP TICKER</p>
+        <p style="margin-top: 0.25rem;">&copy; {new Date().getFullYear()} {site.name}. ALL TOLERANCES VERIFIED.</p>
+      </div>
+    </div>
+  </div>
+</footer>

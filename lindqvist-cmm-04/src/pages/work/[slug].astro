@@ -1,0 +1,322 @@
+---
+import Base from '../../layouts/Base.astro';
+import BenchStage from '../../components/BenchStage.astro';
+import { site, projects, type Project } from '../../data/site';
+
+export function getStaticPaths() {
+  return projects.map((project, idx) => ({
+    params: { slug: project.slug },
+    props: {
+      project,
+      nextProject: projects[(idx + 1) % projects.length],
+    },
+  }));
+}
+
+interface Props {
+  project: Project;
+  nextProject: Project;
+}
+
+const { project, nextProject } = Astro.props;
+---
+<Base
+  title={`${project.title} // ${site.name}`}
+  description={project.summary}
+  schemaType="CreativeWork"
+>
+  <!-- CASE STUDY INTERACTIVE 3D STAGE HERO -->
+  <section class="hero-wrapper" data-bench-hero aria-label={`${project.title} 3D Inspection Stage`}>
+    <div class="hero-stage">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="hero-datum-bar" data-reveal="up" data-hero>
+            <a href="/#work" class="nav-link back-link">
+              <span class="roll">
+                <span data-roll="← Specimen Ledger">&larr; Specimen Ledger</span>
+              </span>
+            </a>
+            <span class="hero-datum-badge">{project.specimenCode}</span>
+          </div>
+
+          <h1 class="hero-title" data-split="words" data-hero>
+            {project.title}
+          </h1>
+
+          <p class="hero-lead" data-reveal="up" data-hero data-delay="0.08">
+            {project.summary}
+          </p>
+
+          <p class="hero-sub" data-reveal="up" data-hero data-delay="0.12">
+            {project.heroCaption}
+          </p>
+
+          <!-- 5-Part BOM Sub-Assembly Callout Table -->
+          <div class="bom-panel" data-reveal="up" data-hero data-delay="0.18">
+            <div class="bom-panel__header">
+              <span>5-NODE EXPLODED BILL OF MATERIALS</span>
+              <span data-telemetry-tolerance>{project.datumTolerance}</span>
+            </div>
+            <ul class="bom-list" data-bom-list aria-label="Sub-assembly bill of materials">
+              {project.parts.map((part) => (
+                <li>
+                  <button
+                    type="button"
+                    class="bom-row"
+                    data-bom-row
+                    data-bom-part={part.nodeName}
+                  >
+                    <span class="bom-row__code" data-part-code>{part.index} // {part.code}</span>
+                    <span class="bom-row__label" data-part-label>{part.label} ({part.material})</span>
+                    <span class="bom-row__tol" data-part-tolerance>{part.tolerance} &middot; {part.mass}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <BenchStage
+          initialSpecimen={project.slug}
+          allowSwitch={false}
+          initialExplode={0.48}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- SPECIMEN METADATA STRIP & ENGINEERING CHAPTERS -->
+  <section class="container" aria-label="Specimen Technical Specifications">
+    <dl class="case-meta-strip" data-reveal="up">
+      <div>
+        <dt>Client &amp; Year</dt>
+        <dd>{project.client} ({project.year})</dd>
+      </div>
+      <div>
+        <dt>Sector &amp; Scope</dt>
+        <dd>{project.sector}</dd>
+      </div>
+      <div>
+        <dt>Datum Tolerance &amp; Travel</dt>
+        <dd>{project.datumTolerance} // {project.axialTravelMm} mm Z-Travel</dd>
+      </div>
+      <div>
+        <dt>WebGL Asset Budget</dt>
+        <dd>{project.triangleCount} // {project.glbSize} GLB</dd>
+      </div>
+    </dl>
+
+    <div class="case-body-grid">
+      <aside class="case-sidebar bom-section">
+        <p class="mono-accent" style="margin-bottom: 1rem;">SUB-ASSEMBLY SPECIFICATIONS</p>
+        <div style="display: flex; flex-direction: column; gap: 1.15rem;">
+          {project.parts.map((part) => (
+            <div class="metric-cell">
+              <span class="metric-cell__label">{part.index} // {part.code} ({part.mass})</span>
+              <p style="font-family: var(--f-display); font-size: 1.15rem; font-weight: 600;">{part.label}</p>
+              <p class="metric-cell__detail">{part.material} &middot; {part.finish}</p>
+              <p class="metric-cell__detail" style="color: var(--c-fg);">{part.note}</p>
+            </div>
+          ))}
+        </div>
+
+        <div style="margin-top: 1.75rem; padding: 1.25rem; border: 1px solid var(--c-line); background: var(--c-surface);">
+          <p class="mono-accent">COMMISSION DELIVERABLES</p>
+          <ul class="scope-card__list" style="margin-top: 0.75rem; border-top: 0; padding-top: 0;">
+            {project.deliverables.map((d) => (
+              <li>{d}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div style="margin-top: 1.25rem; padding: 1.25rem; border: 1px solid var(--c-line-strong); background: var(--c-surface-raised);">
+          <p class="mono-accent">EXPLOSION KINEMATICS // TELEMETRY</p>
+          <ul class="scope-card__list" style="margin-top: 0.75rem; border-top: 0; padding-top: 0;">
+            <li>5-Node Hierarchical Scene Graph</li>
+            <li>Zero-Allocation Matrix Transform</li>
+            <li>60 FPS Single-Clock Ticker</li>
+            <li>Axial Z-Travel: {project.axialTravelMm} mm ({project.datumTolerance})</li>
+          </ul>
+        </div>
+      </aside>
+
+      <div class="case-narrative">
+        <article class="case-chapter" data-reveal="up">
+          <p class="mono-accent">CHAPTER 01 // THE HARDWARE &amp; COMMERCIAL BOTTLENECK</p>
+          <h2>Field Constraints &amp; Buyer Proof Requirements</h2>
+          {project.context.map((para) => (
+            <p>{para}</p>
+          ))}
+        </article>
+
+        <article class="case-chapter" data-reveal="up">
+          <p class="mono-accent">CHAPTER 02 // MECHANICAL &amp; WEBGL ARCHITECTURE</p>
+          <h2>5-Axis Billet Machining &amp; Kinematic Assembly</h2>
+          {project.decision.map((para) => (
+            <p>{para}</p>
+          ))}
+        </article>
+
+        <article class="case-chapter" data-reveal="up">
+          <p class="mono-accent">CHAPTER 03 // ORTHOGRAPHIC CRAFT PLATES</p>
+          <h2>Sub-Assembly Tolerance Stack &amp; Shader Plates</h2>
+          <div class="craft-plates-grid">
+            {project.craftPlates.map((plate, idx) => (
+              <div class="craft-plate">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span class="mono-accent">PLATE {plate.index}</span>
+                  <span class="mono-label">{plate.metric}</span>
+                </div>
+                <svg
+                  class="craft-plate__svg"
+                  viewBox="0 0 320 200"
+                  role="img"
+                  aria-label={`Technical schematic for ${plate.title}`}
+                >
+                  <defs>
+                    <pattern id={`plate-grid-${idx}`} width="16" height="16" patternUnits="userSpaceOnUse">
+                      <path d="M 16 0 L 0 0 0 16" fill="none" stroke="rgba(236,234,228,0.06)" stroke-width="0.8" />
+                    </pattern>
+                    <pattern id={`plate-hatch-${idx}`} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                      <line x1="0" y1="0" x2="0" y2="6" stroke="rgba(217,176,91,0.32)" stroke-width="1.2" />
+                    </pattern>
+                  </defs>
+                  <rect width="320" height="200" fill={`url(#plate-grid-${idx})`} />
+                  <!-- Datum Centerlines -->
+                  <line x1="12" y1="100" x2="308" y2="100" stroke="rgba(255,85,48,0.38)" stroke-width="0.9" stroke-dasharray="5 3" />
+                  <line x1="160" y1="12" x2="160" y2="188" stroke="rgba(236,234,228,0.22)" stroke-width="0.9" stroke-dasharray="3 3" />
+
+                  {idx === 0 && (
+                    <g>
+                      <!-- Cross-hatched 7075-T6 Base Flange Section -->
+                      <rect x="44" y="138" width="232" height="22" fill={`url(#plate-hatch-${idx})`} stroke="#eceae4" stroke-width="1.3" />
+                      <!-- 4-Ring Stepped Acoustic/Optical Cage Cross-Section (60mm tapering to 49.5mm) -->
+                      <rect x="52" y="114" width="216" height="14" rx="1.5" fill="#141922" stroke="#eceae4" stroke-width="1.3" />
+                      <rect x="64" y="90" width="192" height="14" rx="1.5" fill="#141922" stroke="#eceae4" stroke-width="1.3" />
+                      <rect x="76" y="66" width="168" height="14" rx="1.5" fill="#141922" stroke="#d9b05b" stroke-width="1.3" />
+                      <rect x="88" y="42" width="144" height="14" rx="1.5" fill="#141922" stroke="#ff5530" stroke-width="1.4" />
+                      <!-- Axial Strut Columns -->
+                      <line x1="94" y1="42" x2="66" y2="138" stroke="#9da5b0" stroke-width="1.2" />
+                      <line x1="226" y1="42" x2="254" y2="138" stroke="#9da5b0" stroke-width="1.2" />
+                      <!-- Internal Brass Condenser Dome & Acoustic Ray-Angle Vectors -->
+                      <path d="M 124 138 A 36 36 0 0 1 196 138 Z" fill="rgba(217,176,91,0.18)" stroke="#d9b05b" stroke-width="1.5" />
+                      <line x1="32" y1="54" x2="142" y2="112" stroke="#ff5530" stroke-width="1.1" stroke-dasharray="3 2" />
+                      <polygon points="139,108 145,114 137,114" fill="#ff5530" />
+                      <line x1="288" y1="54" x2="178" y2="112" stroke="#ff5530" stroke-width="1.1" stroke-dasharray="3 2" />
+                      <polygon points="181,108 175,114 183,114" fill="#ff5530" />
+                      <!-- Dimension Arrows & Callouts -->
+                      <line x1="88" y1="26" x2="232" y2="26" stroke="#d9b05b" stroke-width="1" />
+                      <line x1="88" y1="21" x2="88" y2="38" stroke="#d9b05b" stroke-width="1" />
+                      <line x1="232" y1="21" x2="232" y2="38" stroke="#d9b05b" stroke-width="1" />
+                      <text x="112" y="21" fill="#d9b05b" font-family="JetBrains Mono, monospace" font-size="10">Ø49.5 MM ±0.003</text>
+                      <text x="18" y="182" fill="#9da5b0" font-family="JetBrains Mono, monospace" font-size="10">Ø60.0 MM BASE // 0.88 APERTURE</text>
+                    </g>
+                  )}
+
+                  {idx === 1 && (
+                    <g>
+                      <!-- Outer Broached Stator Housing Ring -->
+                      <circle cx="142" cy="102" r="68" fill="none" stroke="#eceae4" stroke-width="1.4" />
+                      <circle cx="142" cy="102" r="58" fill={`url(#plate-hatch-${idx})`} stroke="rgba(236,234,228,0.45)" stroke-width="1" />
+                      <circle cx="142" cy="102" r="46" fill="#0b0d10" stroke="#d9b05b" stroke-width="1.4" />
+                      <!-- 24-Tooth Starwheel Detent Cam Profile (15° Pitch) -->
+                      <polygon
+                        points="142,58 148,65 156,60 159,68 168,66 168,75 177,76 174,85 183,89 178,97 186,102 178,107 183,115 174,119 177,128 168,129 168,138 159,136 156,144 148,139 142,146 136,139 128,144 125,136 116,138 116,129 107,128 110,119 101,115 106,107 98,102 106,97 101,89 110,85 107,76 116,75 116,66 125,68 128,60 136,65"
+                        fill="#161c26"
+                        stroke="#d9b05b"
+                        stroke-width="1.3"
+                      />
+                      <circle cx="142" cy="102" r="18" fill="#0b0d10" stroke="#eceae4" stroke-width="1.3" />
+                      <circle cx="142" cy="102" r="5" fill="#ff5530" />
+                      <!-- Spring-Loaded Ceramic Ball Plunger Assembly (Right) -->
+                      <rect x="204" y="88" width="78" height="28" rx="2" fill="#141922" stroke="#eceae4" stroke-width="1.4" />
+                      <circle cx="194" cy="102" r="9" fill="#ff5530" stroke="#eceae4" stroke-width="1.2" />
+                      <polyline points="212,102 220,93 228,111 236,93 244,111 252,93 260,111 268,102" fill="none" stroke="#d9b05b" stroke-width="1.4" />
+                      <!-- 15° Pitch Angle Callout Vectors -->
+                      <line x1="142" y1="102" x2="72" y2="52" stroke="#ff5530" stroke-width="1" stroke-dasharray="3 2" />
+                      <line x1="142" y1="102" x2="58" y2="76" stroke="#ff5530" stroke-width="1" stroke-dasharray="3 2" />
+                      <text x="16" y="44" fill="#ff5530" font-family="JetBrains Mono, monospace" font-size="10">PITCH 15.0° (24X)</text>
+                      <text x="196" y="76" fill="#d9b05b" font-family="JetBrains Mono, monospace" font-size="10">Si3N4 BALL DETENT</text>
+                      <text x="196" y="136" fill="#9da5b0" font-family="JetBrains Mono, monospace" font-size="10">PRELOAD: 4.2 N</text>
+                    </g>
+                  )}
+
+                  {idx === 2 && (
+                    <g>
+                      <!-- Left Panel: Parametric NURBS STEP Solid + 32° Bevel Normal Vectors -->
+                      <rect x="20" y="34" width="124" height="128" rx="2" fill="#12161c" stroke="#eceae4" stroke-width="1.2" />
+                      <text x="28" y="50" fill="#d9b05b" font-family="JetBrains Mono, monospace" font-size="10">STEP AP242 SOLID</text>
+                      <polygon points="44,124 62,72 104,72 122,124" fill={`url(#plate-hatch-${idx})`} stroke="#eceae4" stroke-width="1.4" />
+                      <!-- Bevel Chamfer Normal Vectors -->
+                      <line x1="62" y1="72" x2="48" y2="56" stroke="#ff5530" stroke-width="1.2" />
+                      <circle cx="48" cy="56" r="2.2" fill="#ff5530" />
+                      <line x1="104" y1="72" x2="118" y2="56" stroke="#ff5530" stroke-width="1.2" />
+                      <circle cx="118" cy="56" r="2.2" fill="#ff5530" />
+                      <text x="28" y="148" fill="#9da5b0" font-family="JetBrains Mono, monospace" font-size="10">BEVEL: 32.0° LIMIT</text>
+
+                      <!-- Conversion Arrow -->
+                      <line x1="146" y1="98" x2="172" y2="98" stroke="#ff5530" stroke-width="1.5" />
+                      <polygon points="168,94 175,98 168,102" fill="#ff5530" />
+
+                      <!-- Right Panel: Triangulated B-Mesh GLB Wireframe Topology -->
+                      <rect x="176" y="34" width="124" height="128" rx="2" fill="#12161c" stroke="#ff5530" stroke-width="1.2" />
+                      <text x="184" y="50" fill="#ff5530" font-family="JetBrains Mono, monospace" font-size="10">GLTF 2.0 B-MESH</text>
+                      <polygon points="196,124 214,72 262,72 280,124" fill="#161d28" stroke="#eceae4" stroke-width="1.4" />
+                      <!-- Dense Triangulation Web -->
+                      <line x1="214" y1="72" x2="238" y2="124" stroke="#d9b05b" stroke-width="0.9" />
+                      <line x1="262" y1="72" x2="238" y2="124" stroke="#d9b05b" stroke-width="0.9" />
+                      <line x1="196" y1="124" x2="262" y2="72" stroke="rgba(236,234,228,0.45)" stroke-width="0.8" />
+                      <line x1="280" y1="124" x2="214" y2="72" stroke="rgba(236,234,228,0.45)" stroke-width="0.8" />
+                      <line x1="205" y1="98" x2="271" y2="98" stroke="#ff5530" stroke-width="0.9" />
+                      <line x1="238" y1="72" x2="238" y2="124" stroke="#ff5530" stroke-width="0.9" />
+                      <circle cx="214" cy="72" r="2.2" fill="#ff5530" />
+                      <circle cx="262" cy="72" r="2.2" fill="#ff5530" />
+                      <circle cx="238" cy="98" r="2.2" fill="#d9b05b" />
+                      <text x="184" y="148" fill="#eceae4" font-family="JetBrains Mono, monospace" font-size="10">{project.glbSize} // 0 TEX</text>
+                    </g>
+                  )}
+                </svg>
+                <h3 style="font-family: var(--f-display); font-size: 1.05rem; font-weight: 600;">
+                  {plate.title}
+                </h3>
+                <p style="font-size: var(--t-s); color: var(--c-muted);">
+                  {plate.caption}
+                </p>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article class="case-chapter" data-reveal="up">
+          <p class="mono-accent">CHAPTER 04 // PRODUCTION &amp; COMMERCIAL OUTCOME</p>
+          <h2>Tooling Validation &amp; Sales Impact</h2>
+          {project.outcome.map((para) => (
+            <p>{para}</p>
+          ))}
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEXT SPECIMEN HANDOFF -->
+  <section class="container" style="padding-top: calc(var(--u) * 6); padding-bottom: calc(var(--u) * 5);" aria-label="Next Specimen">
+    <a
+      href={`/work/${nextProject.slug}`}
+      class="next-specimen-bar"
+    >
+      <div>
+        <span class="mono-accent">NEXT SPECIMEN IN TURRET // {nextProject.specimenCode}</span>
+        <h2 class="next-specimen-title" style="font-family: var(--f-display); font-size: var(--t-xl); font-weight: 600; line-height: 1.06; margin-top: 0.35rem;">
+          {nextProject.title}
+        </h2>
+        <p style="color: var(--c-muted); margin-top: 0.35rem;">
+          {nextProject.summary}
+        </p>
+      </div>
+      <span class="specimen-row__cta">
+        <span>Load {nextProject.shortTitle}</span>
+        <span aria-hidden="true">&rarr;</span>
+      </span>
+    </a>
+  </section>
+</Base>

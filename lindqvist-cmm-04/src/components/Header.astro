@@ -1,0 +1,110 @@
+---
+import { site, projects } from '../data/site';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isHome = path === '/';
+const isWork = path.startsWith('/work');
+const isAbout = path === '/about';
+---
+<header class="site-header" data-frame>
+  <div class="site-header__bar">
+    <div class="frame__tl">
+      <a
+        href="/"
+        class="brand-link"
+        aria-current={isHome ? 'page' : undefined}
+      >
+        <span class="brand-link__dot" aria-hidden="true"></span>
+        <span>{site.name}</span>
+      </a>
+      <span class="brand-meta">
+        {site.studioCode} // {site.coordinates} // <strong data-frame-progress style="color: var(--c-fg);">000%</strong>
+      </span>
+    </div>
+
+    <div class="frame__tr">
+      <nav class="site-nav" aria-label="Primary">
+        <a
+          href="/#work"
+          class="nav-link"
+          aria-current={isWork ? 'page' : undefined}
+        >
+          <span class="roll">
+            <span data-roll="01 // Specimens">01 // Specimens</span>
+          </span>
+        </a>
+        <a href="/#pipeline" class="nav-link">
+          <span class="roll">
+            <span data-roll="02 // Pipeline">02 // Pipeline</span>
+          </span>
+        </a>
+        <a
+          href="/about"
+          class="nav-link"
+          aria-current={isAbout ? 'page' : undefined}
+        >
+          <span class="roll">
+            <span data-roll="03 // Lab & Bio">03 // Lab &amp; Bio</span>
+          </span>
+        </a>
+        <a href="/#commission" class="btn-detent btn-detent--sm" data-magnetic="0.18">
+          <span class="btn-detent__fill" aria-hidden="true"></span>
+          <span class="roll">
+            <span data-roll="Commission">Commission</span>
+          </span>
+          <span class="btn-detent__arrow" aria-hidden="true">&nearr;</span>
+        </a>
+      </nav>
+
+      <button
+        type="button"
+        class="menu-toggle"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-menu-drawer"
+        aria-label="Toggle navigation menu"
+      >
+        <span>MENU</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu-drawer" class="menu-drawer" data-menu-drawer hidden>
+    <nav aria-label="Mobile navigation">
+      <p class="mono-label" style="margin-bottom: 1rem;">CMM BENCH INDEX // NAVIGATION</p>
+      <ul class="menu-drawer__links">
+        <li>
+          <a href="/" class="menu-drawer__link" aria-current={isHome ? 'page' : undefined}>
+            <span>00 // Bench Stage</span>
+            <span class="mono-accent">&rarr;</span>
+          </a>
+        </li>
+        {projects.map((p, idx) => (
+          <li>
+            <a
+              href={`/work/${p.slug}`}
+              class="menu-drawer__link"
+              aria-current={path === `/work/${p.slug}` ? 'page' : undefined}
+            >
+              <span>0{idx + 1} // {p.shortTitle}</span>
+              <span class="mono-accent">{p.glbSize}</span>
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href="/about" class="menu-drawer__link" aria-current={isAbout ? 'page' : undefined}>
+            <span>04 // Metrology Lab &amp; Bio</span>
+            <span class="mono-accent">&rarr;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div>
+      <p class="mono-label" style="margin-bottom: 0.5rem;">{site.availability}</p>
+      <a href={`mailto:${site.email}`} class="btn-detent" style="width: 100%;">
+        <span class="btn-detent__fill" aria-hidden="true"></span>
+        <span>{site.email}</span>
+      </a>
+    </div>
+  </div>
+</header>

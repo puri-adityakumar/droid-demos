@@ -1,0 +1,81 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, projects } from '../data/site';
+---
+<Base
+  title={`404 Out of Tolerance // ${site.name}`}
+  description="Coordinate datum out of tolerance. Return to the main optical inspection bench."
+>
+  <section class="hero-wrapper" aria-label="404 Datum Out of Tolerance">
+    <div class="hero-stage">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="hero-datum-bar" data-reveal="up" data-hero>
+            <span class="hero-datum-badge">ERR 404 // DATUM FAULT</span>
+            <span>DEVIATION &gt; ±42.000 MM</span>
+          </div>
+
+          <h1 class="hero-title" data-split="words" data-hero>
+            Coordinate Out of Tolerance.
+          </h1>
+
+          <p class="hero-lead" data-reveal="up" data-hero data-delay="0.08">
+            This URL does not exist or has moved outside the calibrated Z-travel envelope of {site.studioCode}. Return to the main stage to inspect active hardware specimens.
+          </p>
+
+          <div class="hero-actions" data-reveal="up" data-hero data-delay="0.14">
+            <a href="/" class="btn-detent" data-magnetic="0.2" data-astro-reload>
+              <span class="btn-detent__fill" aria-hidden="true"></span>
+              <span class="roll">
+                <span data-roll="Return to Zeroed Bench">Return to Zeroed Bench</span>
+              </span>
+              <span class="btn-detent__arrow" aria-hidden="true">&rarr;</span>
+            </a>
+
+            <a href={`/work/${projects[0].slug}`} class="btn-detent btn-detent--ghost" data-astro-reload>
+              <span class="btn-detent__fill" aria-hidden="true"></span>
+              <span class="roll">
+                <span data-roll={`Inspect ${projects[0].shortTitle}`}>Inspect {projects[0].shortTitle}</span>
+              </span>
+            </a>
+          </div>
+          <script is:inline>
+            document.querySelectorAll('a[href]').forEach(function (a) {
+              a.setAttribute('data-astro-reload', '');
+            });
+            document.addEventListener('DOMContentLoaded', function () {
+              document.querySelectorAll('a[href]').forEach(function (a) {
+                a.setAttribute('data-astro-reload', '');
+              });
+            });
+          </script>
+        </div>
+
+        <div class="bench-card" style="padding: 1.5rem;">
+          <div class="bench-card__hud-top" style="margin: -1.5rem -1.5rem 1.5rem;">
+            <span>FAULT DIAGNOSTIC // Z-AXIS OVERRUN</span>
+            <span class="mono-accent">STATUS: UNCALIBRATED</span>
+          </div>
+          <svg
+            viewBox="0 0 560 320"
+            style="width: 100%; height: auto; background: #0b0e13; border: 1px solid var(--c-line);"
+            role="img"
+            aria-label="Out-of-tolerance optical vernier reticle diagnostic"
+          >
+            <line x1="280" y1="16" x2="280" y2="304" stroke="rgba(255,85,48,0.45)" stroke-width="1" stroke-dasharray="5 4" />
+            <line x1="24" y1="160" x2="536" y2="160" stroke="rgba(236,234,228,0.22)" stroke-width="1" stroke-dasharray="3 3" />
+            <g data-idle-orbit>
+              <circle cx="280" cy="160" r="112" fill="none" stroke="#ff5530" stroke-width="1.5" stroke-dasharray="10 6" />
+              <circle cx="280" cy="48" r="5" fill="#ff5530" />
+              <circle cx="280" cy="272" r="5" fill="#d9b05b" />
+            </g>
+            <g data-idle-osc>
+              <rect x="220" y="116" width="120" height="88" rx="2" fill="rgba(255,85,48,0.12)" stroke="#eceae4" stroke-width="1.5" />
+              <text x="242" y="166" fill="#eceae4" font-family="JetBrains Mono, monospace" font-size="16" font-weight="600">ERR 404</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,117 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import { site } from '../data/site';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Loader from '../components/Loader.astro';
+import '../styles/tokens.css';
+import '../styles/base.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  schemaType?: 'WebSite' | 'CreativeWork' | 'ProfilePage';
+}
+
+const {
+  title = `${site.name} // ${site.role}`,
+  description = site.description,
+  ogImage = '/og.png',
+  schemaType = 'WebSite',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, site.url).href;
+const ogUrl = new URL(ogImage, site.url).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': schemaType,
+  name: title,
+  description,
+  url: canonical,
+  author: {
+    '@type': 'Person',
+    name: site.name,
+    jobTitle: site.role,
+    url: site.url,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Stockholm',
+      addressCountry: 'SE',
+    },
+  },
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('motion');
+      }
+    </script>
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0b0d10" />
+
+    <!-- Preload critical self-hosted WOFF2 fonts -->
+    <link
+      rel="preload"
+      href="/fonts/clash-display-600-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/general-sans-400-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <ClientRouter fallback="swap" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Loader />
+    <div id="curtain" aria-hidden="true">
+      <div class="curtain__panel">
+        <span class="curtain__reticle">INDEXING OPTICAL DATUM // LINDQVIST.STUDIO</span>
+      </div>
+    </div>
+    <div id="cursor" aria-hidden="true"><span data-cursor-label></span></div>
+
+    <Header />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      import { start } from '../engine/astro';
+      import { setupMotion } from '../motion/setup';
+      start(setupMotion);
+    </script>
+  </body>
+</html>
