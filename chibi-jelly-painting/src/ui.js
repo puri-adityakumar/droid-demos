@@ -7,21 +7,22 @@ const $ = ( selector ) => document.querySelector( selector )
 export function createUI()
 {
     const loader = $( '.loader' )
-    const fill = $( '.loader-fill' )
     const status = $( '.loader-status' )
 
+    // --reveal lives on the loader so the title and the garden both read it
     function progress( value )
     {
-        fill.style.setProperty( '--reveal', value.toFixed( 3 ) )
+        loader.style.setProperty( '--reveal', value.toFixed( 3 ) )
         loader.setAttribute( 'aria-valuenow', Math.round( value * 100 ) )
     }
 
+    // a beat longer than the page used to wait, so the last flower can open
     function ready()
     {
         progress( 1 )
         document.documentElement.dataset.state = 'ready'
-        setTimeout( () => loader.classList.add( 'leaving' ), 180 )
-        setTimeout( () => loader.remove(), 700 )
+        setTimeout( () => loader.classList.add( 'leaving' ), 650 )
+        setTimeout( () => loader.remove(), 1200 )
     }
 
     function fail( message )
