@@ -28,6 +28,7 @@ orthographic CAD schematics.
 - **Stack:** Astro, Three.js (`GLTFLoader`), GSAP (`ScrollTrigger`, `SplitText`), Lenis, TypeScript
 - **3D Assets:** 3 multi-part PBR `.glb` hardware assemblies generated from scratch in Blender (`scripts/generate_models.py`, 109 KB to 287 KB, zero external textures)
 - **Blind `/jury` Score:** 8.00 / 10 weighted overall (8/10 Design, 8/10 Usability, 8/10 Creativity, 8/10 Content, 9/10 WPO, `0 FAIL, 0 WARN` audit)
+- **Model, Tokens & Time:** Gemini 4 Argon (high) across 1 orchestrator + 5 subagents · `~8.24M` uncached tokens (`~37.86M` total including `29.62M` prompt cache reads, `572K` output tokens) · `4h 53m` active compute time
 
 ## Run it
 
