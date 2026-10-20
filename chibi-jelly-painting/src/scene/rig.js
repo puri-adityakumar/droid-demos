@@ -57,6 +57,8 @@ export function createRig( kid, nimbus, farClouds )
     let lookTarget = null
     let lastYaw = 0
     let time = 0
+    let runPhase = 0
+    let lastStep = 0
 
     function startJump()
     {
@@ -124,6 +126,20 @@ export function createRig( kid, nimbus, farClouds )
         squash.target = jump.phase === 'crouch' ? - 0.2 : airborne ? MathUtils.clamp( jump.vy * 0.03, - 0.08, 0.14 ) : 0
         const s = squash.step( dt )
 
+        // a runner (`run`) strides in place: one bounce per footfall, leaning into it,
+        // with the hair kicked up on every step; the stride folds away in the air
+        const run = kid.run
+        const stride = run ? 1 - air.x : 0
+        let runLift = 0
+        if( run )
+        {
+            runPhase += dt * run.cadence * Math.PI * 2
+            const step = Math.sign( Math.sin( runPhase ) )
+            if( step !== lastStep ) { lastStep = step; hairY.v += run.kick ?? 1.2 }
+            runLift = Math.abs( Math.sin( runPhase ) ) * run.bounce * stride
+            kid.body.rotation.x = run.lean * ( 1 - air.x * 0.5 )
+        }
+
         // floating together
         const bob = Math.sin( t * 1.3 ) * 0.07
         const cloudBob = Math.sin( t * 1.3 - 0.45 ) * 0.07
@@ -133,7 +149,7 @@ export function createRig( kid, nimbus, farClouds )
         // a prop that sits on a desk (`grounded`) doesn't float, and doesn't carry anyone with it;
         // its group's origin is the desk top (`baseY`) so squashing it keeps it on the desk
         const grounded = nimbus.grounded ?? false
-        kid.root.position.y = bob * ( kid.bobScale ?? 1 ) + jump.y + ( grounded ? 0 : cloud.x * 0.6 )
+        kid.root.position.y = bob * ( kid.bobScale ?? 1 ) + jump.y + runLift + ( grounded ? 0 : cloud.x * 0.6 )
         kid.root.rotation.z = Math.sin( t * 0.9 ) * 0.025 * ( kid.bobScale ?? 1 )
         const breathe = Math.sin( t * 2.4 ) * 0.012
         kid.body.scale.set( 1 - s * 0.5 - breathe * 0.4, 1 + s + breathe, 1 - s * 0.5 - breathe * 0.4 )
@@ -241,6 +257,8 @@ export function createRig( kid, nimbus, farClouds )
                 shoulderX += Math.sin( t * 3.3 ) * 0.025 * busy
                 elbowX += Math.sin( t * 8.3 + 1 ) * 0.04 * busy
             }
+            // arms pump against the opposite leg
+            if( run ) shoulderX -= Math.sin( runPhase + ( side < 0 ? Math.PI : 0 ) ) * run.arms * stride
             if( side === ( kid.waveSide ?? 1 ) )
             {
                 const pose = kid.wavePose ?? WAVE
@@ -252,6 +270,20 @@ export function createRig( kid, nimbus, farClouds )
             arm.shoulder.rotation.set( shoulderX, 0, shoulderZ )
             arm.elbow.rotation.set( elbowX, 0, elbowZ )
         }
+
+        // legs: hips swing, knees fold on the way forward, both tuck up in a jump
+        if( run && kid.legs )
+        {
+            for( const side of [ - 1, 1 ] )
+            {
+                const leg = side < 0 ? kid.legs.left : kid.legs.right
+                const p = runPhase + ( side < 0 ? 0 : Math.PI )
+                leg.hip.rotation.x = - Math.sin( p ) * run.legs * stride - air.x * 0.35
+                leg.knee.rotation.x = ( 0.15 + Math.max( 0, Math.cos( p ) ) * 1.0 ) * stride + air.x * 0.9
+            }
+        }
+
+        kid.update?.( t, dt )
     }
 
     return { update, startJump, bounceCloud, startWave, setLookTarget, get airborne() { return jump.phase !== 'ground' } }

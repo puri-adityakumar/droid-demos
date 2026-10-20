@@ -4,12 +4,14 @@ import { light } from './materials/painted.js'
 import { sky } from './scene/world.js'
 import { voidLook } from './scene/void.js'
 import { meadowLook } from './scene/frieren.js'
+import { wisteriaLook } from './scene/nezuko.js'
 
 // Two moods per world. The page has one switch, so a mood is a slot ('day' or
 // 'dusk') and each world decides what that slot looks like: Goku's sky goes
 // from day to dusk, Light's room from lamp light to moonlight, Gojo's void
 // from the Unlimited Void to Hollow Purple, Frieren's meadow from a sunlit
-// Flower Field to a starlit Zoltraak spell.
+// Flower Field to a starlit Zoltraak spell, Nezuko's wisteria from sunrise to
+// the pink flames of Exploding Blood.
 const raw = {
     sky: {
         day: {
@@ -219,18 +221,75 @@ const raw = {
             mana: 1,
         },
     },
+    // Nezuko's island under the wisteria. The day slot is the sunrise she
+    // finally stood in; the dusk slot is a crimson night where her Blood Demon
+    // Art, Exploding Blood, burns pink around her.
+    wisteria: {
+        day: {
+            label: 'Sunrise',
+            skyTop: '#7aa6ec',
+            skyHorizon: '#ffd4a8',
+            skyLeft: '#c4a2ec',
+            skyRight: '#ffb4a0',
+            blotch: '#ffffff',
+            haze: '#e2d0ff',
+            hazeAmount: 0.08,
+            sparkle: '#fff2e0',
+            sparkleStrength: 0.8,
+            lightDir: [ 0.62, 0.52, 0.6 ],
+            rimDir: [ - 0.7, 0.35, - 0.6 ],
+            rimColor: '#ffd8a8',
+            bounce: '#d8a2ff',
+            shadowTint: '#7458c8',
+            shadowTintAmount: 0.26,
+            cloud: '#fff4ec',
+            cloudShade: '#c0a4e4',
+            paper: '#ffffff',
+            ink: '#5a4660',
+            flame: '#ff6aa8',
+            blossom: '#dcc0ff',
+            orb: '#fff2c8',
+            blood: 0,
+        },
+        dusk: {
+            label: 'Exploding Blood',
+            skyTop: '#140826',
+            skyHorizon: '#4c0e38',
+            skyLeft: '#3c1a6c',
+            skyRight: '#c2306e',
+            blotch: '#ffb4d4',
+            haze: '#2a0c36',
+            hazeAmount: 0.15,
+            sparkle: '#ffd0e4',
+            sparkleStrength: 1,
+            lightDir: [ - 0.5, 0.6, 0.62 ],
+            rimDir: [ 0.72, 0.35, - 0.58 ],
+            rimColor: '#ff72b0',
+            bounce: '#ff3c8a',
+            shadowTint: '#2c0e5c',
+            shadowTintAmount: 0.45,
+            cloud: '#8a4a8a',
+            cloudShade: '#2e1444',
+            paper: '#ffffff',
+            ink: '#4c2044',
+            flame: '#ff4fa0',
+            blossom: '#ff86c0',
+            orb: '#ffe6f0',
+            blood: 1,
+        },
+    },
 }
 
-const COLOR_KEYS = [ 'skyTop', 'skyHorizon', 'skyLeft', 'skyRight', 'blotch', 'haze', 'sparkle', 'rimColor', 'bounce', 'shadowTint', 'cloud', 'cloudShade', 'paper', 'rays', 'splash', 'petal', 'ring' ]
+const COLOR_KEYS = [ 'skyTop', 'skyHorizon', 'skyLeft', 'skyRight', 'blotch', 'haze', 'sparkle', 'rimColor', 'bounce', 'shadowTint', 'cloud', 'cloudShade', 'paper', 'rays', 'splash', 'petal', 'ring', 'flame', 'blossom', 'orb' ]
 // worlds without ink, speed lines or petals still need a value for the driver to ease from
-const DEFAULTS = { rays: '#ffffff', splash: '#ffffff', petal: '#c8ecff', ring: '#7ad8ff' }
+const DEFAULTS = { rays: '#ffffff', splash: '#ffffff', petal: '#c8ecff', ring: '#7ad8ff', flame: '#ff4fa0', blossom: '#d6b4ff', orb: '#fff0c8' }
 
 export const slots = [ 'day', 'dusk' ]
 
 export const worlds = Object.fromEntries( Object.entries( raw ).map( ( [ world, set ] ) => [ world, Object.fromEntries( Object.entries( set ).map( ( [ slot, t ] ) =>
 {
     const parsed = {
-        slot, label: t.label, ink: t.ink, paperHex: t.paper, lamp: t.lamp ?? 0, purple: t.purple ?? 0, mana: t.mana ?? 0,
+        slot, label: t.label, ink: t.ink, paperHex: t.paper, lamp: t.lamp ?? 0, purple: t.purple ?? 0, mana: t.mana ?? 0, blood: t.blood ?? 0,
         shadowTintAmount: t.shadowTintAmount, hazeAmount: t.hazeAmount, sparkleStrength: t.sparkleStrength,
     }
     for( const k of COLOR_KEYS ) parsed[ k ] = new Color( t[ k ] ?? DEFAULTS[ k ] )
@@ -292,6 +351,10 @@ export function createThemeDriver( { farClouds, sparkles, filter } )
         meadowLook.petal.value.lerp( target.petal, k )
         meadowLook.ring.value.lerp( target.ring, k )
         meadowLook.mana.value += ( target.mana - meadowLook.mana.value ) * k
+        wisteriaLook.flame.value.lerp( target.flame, k )
+        wisteriaLook.blossom.value.lerp( target.blossom, k )
+        wisteriaLook.orb.value.lerp( target.orb, k )
+        wisteriaLook.blood.value += ( target.blood - wisteriaLook.blood.value ) * k
         sparkles.tint.value.lerp( target.sparkle, k )
         sparkles.strength.value += ( target.sparkleStrength - sparkles.strength.value ) * k
         light.rimColor.value.lerp( target.rimColor, k )
