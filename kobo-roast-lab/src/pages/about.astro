@@ -1,0 +1,381 @@
+---
+import Base from '../layouts/Base.astro';
+import {
+  site,
+  labEquipment,
+  engagementModels,
+  tastingRooms,
+  projects,
+} from '../data/site';
+---
+<Base
+  title="Roastery, Extraction Lab & Equipment Studio"
+  description="Inside KOBO Roast Lab in Higashiyama Kyoto and SE Division Portland: convective Loring S15 roasting, water chemistry, and custom brass/porcelain hardware."
+>
+  <section class="section about-hero">
+    <div class="wrap">
+      <p class="eyebrow" data-intro="badge">KYOTO HIGASHIYAMA &amp; PORTLAND SE DIVISION // EST. 2021</p>
+      <h1 class="t-display about-title" data-split="lines" data-intro="headline">
+        Convective Roasting, Remineralized Water &amp; Tactile Vessels.
+      </h1>
+
+      <div class="about-lead-grid grid-12" data-intro="sub">
+        <div class="about-lead-main">
+          <p class="t-lead">
+            Founded by thermal engineer Haruki Sato in Kyoto and green-coffee buyer Linnea Lindholm in Portland, KOBO Roast Lab treats specialty coffee as a continuous thermodynamic chain from high-altitude cherry fermentation to the final porcelain vessel.
+          </p>
+          <p class="about-body">
+            We roast exclusively on recirculating convective Loring S15 Falcon kilns to eliminate conductive drum scorching, preserving delicate monoterpenes like bergamot linalool and jasmine benzyl acetate at Agtron 68.4 to 71.2. Every brewing instrument in our studio is machined from solid C36000 brass, turned from American black walnut, or slip-cast in Arita porcelain.
+          </p>
+        </div>
+
+        <aside class="about-card t-mono">
+          <div class="about-card__row">
+            <span>FOUNDERS</span>
+            <strong>Haruki Sato &amp; Linnea Lindholm</strong>
+          </div>
+          <div class="about-card__row">
+            <span>KYOTO ROASTERY</span>
+            <strong>35.0037° N, 135.7785° E</strong>
+          </div>
+          <div class="about-card__row">
+            <span>PORTLAND SENSORY LAB</span>
+            <strong>45.5048° N, 122.6305° W</strong>
+          </div>
+          <div class="about-card__row">
+            <span>WATER BUFFER</span>
+            <strong>38 ppm GH · 18 ppm KH · pH 6.8</strong>
+          </div>
+          <div class="about-card__row">
+            <span>DIRECT TRADE FOB</span>
+            <strong>$6.40 to $8.10 / lb Verified</strong>
+          </div>
+          <div class="about-card__meter" aria-hidden="true">
+            <div class="about-card__meter-lbl">
+              <span>LIVE KILN AIRFLOW // LORING S15</span>
+              <span data-idle-readout>196.4°C · 1.6 kPa</span>
+            </div>
+            <div class="about-card__meter-track">
+              <div class="about-card__meter-fill" data-idle-bar></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kyoto & Portland Tasting Bars -->
+  <section class="section bars-sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">01 // ARCHITECTURE &amp; TASTING BARS</p>
+          <h2 class="t-h1">Two Sun-Drenched Extraction Counters Across the Pacific.</h2>
+        </div>
+        <p class="sec-head__meta">PUBLIC POUR-OVER FLIGHTS · 9-BAR LEVER CALIBRATION</p>
+      </div>
+
+      <div class="bars-grid">
+        {tastingRooms.map((room) => (
+          <article class="bar-card" data-reveal="up">
+            <div class="bar-card__top t-mono">
+              <span>{room.code}</span>
+              <span>{room.coordinates}</span>
+            </div>
+            <h3 class="t-h2">{room.city}</h3>
+            <p class="bar-card__note">{room.note}</p>
+            <dl class="bar-card__specs t-mono">
+              <div>
+                <dt>STREET ADDRESS</dt>
+                <dd>{room.address}</dd>
+              </div>
+              <div>
+                <dt>BAR HOURS</dt>
+                <dd>{room.hours}</dd>
+              </div>
+              <div>
+                <dt>REMINERALIZATION</dt>
+                <dd>{room.waterSpec}</dd>
+              </div>
+            </dl>
+            <div class="bar-card__actions">
+              <a href={room.ctaHref} class="btn-pill btn-pill--ghost bar-card__cta">
+                <span>{room.ctaLabel}</span>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Roastery & Precision Hardware Instrumentation -->
+  <section class="section inst-sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">02 // LABORATORY INSTRUMENTATION &amp; KILN WORKS</p>
+          <h2 class="t-h1">Calibrated Hardware Behind Every Lot.</h2>
+        </div>
+        <p class="sec-head__meta">LORING S15 · VST LAB III · CITIZEN SWISS CNC</p>
+      </div>
+
+      <div class="inst-grid">
+        {labEquipment.map((group, idx) => (
+          <article class="inst-card" data-reveal="up">
+            <span class="t-mono inst-card__idx">BENCH 0{idx + 1}</span>
+            <h3 class="t-h2 inst-card__title">{group.category}</h3>
+            <ul class="inst-card__list">
+              {group.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Allocations & Hardware Commissions -->
+  <section class="section alloc-sec" id="allocations">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">03 // ALLOCATIONS, SUBSCRIPTIONS &amp; BESPOKE HARDWARE</p>
+          <h2 class="t-h1">Reserve Seasonal Micro-Lots or Commission Studio Vessels.</h2>
+        </div>
+        <p class="sec-head__meta">WORLDWIDE DHL EXPRESS DISPATCH FROM KYOTO &amp; PORTLAND</p>
+      </div>
+
+      <div class="alloc-grid">
+        {engagementModels.map((model) => (
+          <article class="alloc-card" data-reveal="up">
+            <div class="alloc-card__top t-mono">
+              <span>{model.code}</span>
+              <strong>{model.duration}</strong>
+            </div>
+            <h3 class="t-h2">{model.title}</h3>
+            <p class="alloc-card__summary">{model.summary}</p>
+            <ul class="alloc-card__list t-mono">
+              {model.includes.map((inc) => (
+                <li>{inc}</li>
+              ))}
+            </ul>
+            <a
+              href={model.ctaHref}
+              class="btn-pill alloc-card__btn"
+            >
+              <span>{model.ctaLabel}</span>
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about-title {
+    margin-block: 0.65rem 2rem;
+    max-width: 18ch;
+  }
+  .about-lead-main {
+    grid-column: span 7;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+  }
+  .about-body {
+    font-size: var(--fs-body);
+    color: var(--ink-secondary);
+    line-height: 1.6;
+  }
+  .about-card {
+    grid-column: span 5;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    padding: 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 11px;
+  }
+  .about-card__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .about-card__row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .about-card__row span {
+    color: var(--muted);
+  }
+  .about-card__row strong {
+    color: var(--ink);
+    text-align: right;
+  }
+  .about-card__meter {
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .about-card__meter-lbl {
+    display: flex;
+    justify-content: space-between;
+    color: var(--accent-ink);
+    font-size: 10.5px;
+  }
+  .about-card__meter-track {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--bg-sunken);
+    overflow: hidden;
+  }
+  .about-card__meter-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, var(--brass), var(--accent));
+    transform-origin: left center;
+    transform: scaleX(0.76);
+  }
+
+  .bars-sec {
+    background: var(--bg-elevated);
+  }
+  .bars-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gutter);
+  }
+  .bar-card {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .bar-card__top {
+    display: flex;
+    justify-content: space-between;
+    color: var(--accent-ink);
+    font-size: 11px;
+  }
+  .bar-card__note {
+    font-size: 0.94rem;
+    color: var(--ink-secondary);
+  }
+  .bar-card__specs {
+    margin-top: auto;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    font-size: 11px;
+  }
+  .bar-card__specs div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .bar-card__specs dt {
+    color: var(--muted);
+  }
+  .bar-card__specs dd {
+    color: var(--ink);
+    font-weight: 500;
+    text-align: right;
+  }
+  .bar-card__actions {
+    padding-top: 0.55rem;
+    border-top: 1px solid var(--line);
+  }
+  .bar-card__cta {
+    width: 100%;
+  }
+
+  .inst-grid,
+  .alloc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gutter);
+  }
+  .inst-card,
+  .alloc-card {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .inst-card__idx {
+    color: var(--accent-ink);
+    font-size: 11px;
+  }
+  .inst-card__list {
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    color: var(--ink-secondary);
+    font-size: 0.92rem;
+  }
+
+  .alloc-sec {
+    background: var(--bg-elevated);
+  }
+  .alloc-card__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.45rem 1rem;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .alloc-card__top strong {
+    color: var(--sage);
+  }
+  .alloc-card__summary {
+    font-size: 0.92rem;
+    color: var(--ink-secondary);
+  }
+  .alloc-card__list {
+    list-style: none;
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 11px;
+    color: var(--ink);
+  }
+  .alloc-card__btn {
+    margin-top: auto;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 960px) {
+    .about-lead-main,
+    .about-card {
+      grid-column: 1 / -1;
+    }
+    .bars-grid,
+    .inst-grid,
+    .alloc-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

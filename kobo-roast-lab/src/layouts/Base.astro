@@ -1,0 +1,109 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Loader from '../components/Loader.astro';
+import { site } from '../data/site';
+import '../styles/base.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  showLoader?: boolean;
+}
+
+const showLoader = Astro.props.showLoader ?? false;
+
+const rawTitle = Astro.props.title
+  ? `${Astro.props.title} · ${site.shortName} Roast Lab`
+  : `${site.name} · Kyoto and Portland Coffee Lab`;
+const cleanTitle = rawTitle.replace(/&/g, 'and');
+const title = cleanTitle.length > 62 ? cleanTitle.slice(0, 62).trim() : cleanTitle;
+
+const rawDesc = Astro.props.description ?? site.description;
+const description = rawDesc.length > 158 ? `${rawDesc.slice(0, 155).trim()}...` : rawDesc;
+
+const ogImage = new URL(Astro.props.ogImage ?? '/og.png', Astro.site ?? site.url).toString();
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).toString();
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CafeOrCoffeeShop',
+  name: site.name,
+  jobTitle: site.role,
+  url: canonical,
+  email: site.email,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: site.location,
+  },
+  sameAs: site.socials.map((s) => s.href),
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#FAF7F2" />
+
+    <link rel="preload" href="/fonts/fraunces-400_700-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/general-sans-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    {showLoader && <Loader />}
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <div id="curtain" aria-hidden="true" transition:persist>
+      <div class="curtain__panel"></div>
+    </div>
+    <div id="cursor" class="cursor" aria-hidden="true" transition:persist>
+      <div class="cursor__dot" data-cursor-dot></div>
+      <div class="cursor__ring" data-cursor-ring>
+        <span class="cursor__label" data-cursor-label>DRAG</span>
+      </div>
+    </div>
+
+    <script>
+      const bootMotion = () => {
+        Promise.all([import('../engine/astro'), import('../motion/setup')]).then(
+          ([{ start }, { setup }]) => {
+            start(setup);
+          }
+        );
+      };
+      const isCoarse =
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(pointer: coarse)').matches;
+      if (isCoarse && document.readyState !== 'complete') {
+        window.addEventListener('load', bootMotion, { once: true });
+      } else {
+        bootMotion();
+      }
+    </script>
+  </body>
+</html>

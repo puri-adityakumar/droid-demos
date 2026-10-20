@@ -1,0 +1,491 @@
+---
+import Base from '../../layouts/Base.astro';
+import BenchStage from '../../components/BenchStage.astro';
+import { projects, type Project } from '../../data/site';
+
+export function getStaticPaths() {
+  return projects.map((project, i) => ({
+    params: { slug: project.slug },
+    props: {
+      project,
+      next: projects[(i + 1) % projects.length],
+    },
+  }));
+}
+
+interface Props {
+  project: Project;
+  next: Project;
+}
+
+const { project, next } = Astro.props;
+---
+<Base title={project.title} description={project.summary}>
+  <!-- Interactive 3D Specimen Turntable Pre-Loaded with This Vessel -->
+  <BenchStage initialSlug={project.slug} mode="dossier" />
+
+  <!-- Studio Turnaround & Material Sheet + Brew Telemetry -->
+  <section class="section sheet-sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow" data-reveal="fade">STUDIO TURNAROUND &amp; MATERIAL SPECIFICATION BOARD</p>
+          <h2 class="t-h1" data-split="lines">Orthographic Views, Surface Swatches &amp; Brew Targets.</h2>
+        </div>
+        <p class="sec-head__meta">{project.specimenCode} · {project.datumTolerance}</p>
+      </div>
+
+      <div class="sheet-grid grid-12">
+        <figure class="sheet-figure" data-reveal="up">
+          <div class="sheet-figure__frame">
+            <img
+              src={project.sheetImage}
+              alt={project.sheetAlt}
+              width="1200"
+              height="800"
+              loading="lazy"
+              class="sheet-img"
+              data-sheet-crop={project.slug === 'stoneware-s08' ? 'left' : project.slug === 'gedeb-lot04' ? 'right' : undefined}
+            />
+          </div>
+          <figcaption class="sheet-caption t-mono">
+            <span>HIGH-KEY STUDIO TURNAROUND PLATE // {project.title.toUpperCase()}</span>
+            <span>{project.glbSize} GLB · {project.triangleCount}</span>
+          </figcaption>
+        </figure>
+
+        <aside class="sheet-telemetry" data-reveal="up">
+          <span class="t-mono sheet-telemetry__tag">REFERENCE EXTRACTION RECIPE</span>
+          <h3 class="t-h2">Calibrated Bar Parameters</h3>
+          <dl class="sheet-telemetry__list t-mono">
+            <div>
+              <dt>DRY COFFEE DOSE</dt>
+              <dd>{project.brewTelemetry.doseG.toFixed(1)} g</dd>
+            </div>
+            <div>
+              <dt>LIQUID YIELD / WATER</dt>
+              <dd>{project.brewTelemetry.yieldG.toFixed(1)} g</dd>
+            </div>
+            <div>
+              <dt>BREW TEMPERATURE</dt>
+              <dd>{project.brewTelemetry.tempC.toFixed(1)}°C</dd>
+            </div>
+            <div>
+              <dt>HYDRAULIC PRESSURE</dt>
+              <dd>{project.brewTelemetry.pressureBar}</dd>
+            </div>
+            <div>
+              <dt>CONTACT DURATION</dt>
+              <dd>{project.brewTelemetry.timeSec}</dd>
+            </div>
+            <div>
+              <dt>MEDIAN BURR SETTING</dt>
+              <dd>{project.brewTelemetry.grindUm}</dd>
+            </div>
+            <div>
+              <dt>REFRACTOMETER TDS</dt>
+              <dd>{project.brewTelemetry.tdsPct}</dd>
+            </div>
+            <div>
+              <dt>EXTRACTION YIELD</dt>
+              <dd>{project.brewTelemetry.extractionPct}</dd>
+            </div>
+          </dl>
+
+          <div class="sheet-deliverables">
+            <span class="t-mono sheet-telemetry__tag">INCLUDED IN ALLOCATION ({project.priceUsd})</span>
+            <ul>
+              {project.deliverables.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+            <a
+              href={`mailto:lab@kobo-roast.studio?subject=Order%20Allocation%3A%20${encodeURIComponent(project.title)}%20(${encodeURIComponent(project.priceUsd)})`}
+              class="btn-pill sheet-order-cta"
+            >
+              <span>Reserve {project.shortTitle} Allocation ({project.priceUsd})</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3-Chapter Engineering & Sensory Narrative -->
+  <section class="section narrative-sec">
+    <div class="wrap">
+      <div class="narrative-block grid-12">
+        <div class="narrative-label">
+          <span class="eyebrow">01 // EXTRACTION PROBLEM</span>
+          <h2 class="t-h2">Thermodynamic &amp; Fluid Context</h2>
+        </div>
+        <div class="narrative-prose">
+          {project.context.map((p) => (
+            <p class="t-lead">{p}</p>
+          ))}
+        </div>
+      </div>
+
+      <div class="narrative-block grid-12">
+        <div class="narrative-label">
+          <span class="eyebrow">02 // MATERIAL ARCHITECTURE</span>
+          <h2 class="t-h2">Kiln, Lathe &amp; WebGL Twin</h2>
+        </div>
+        <div class="narrative-prose">
+          {project.decision.map((p) => (
+            <p class="t-lead">{p}</p>
+          ))}
+        </div>
+      </div>
+
+      <div class="narrative-block grid-12">
+        <div class="narrative-label">
+          <span class="eyebrow">03 // VERIFIED OUTCOME</span>
+          <h2 class="t-h2">Refractometer &amp; Sensory Proof</h2>
+        </div>
+        <div class="narrative-prose">
+          {project.outcome.map((p) => (
+            <p class="t-lead">{p}</p>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5-Part Bill of Materials Ledger & 3 Craft Plates -->
+  <section class="section bom-sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">04 // SUB-ASSEMBLY BILL OF MATERIALS</p>
+          <h2 class="t-h1">Five Inspectable glTF 2.0 Nodes &amp; Craft Plates.</h2>
+        </div>
+        <p class="sec-head__meta">AXIAL TRAVEL {project.axialTravelMm} MM · ZERO RASTER TEXTURE BLOAT</p>
+      </div>
+
+      <div class="bom-table-wrap">
+        <table class="bom-table">
+          <thead>
+            <tr class="t-mono">
+              <th>IDX</th>
+              <th>GLTF NODE</th>
+              <th>SUB-ASSEMBLY &amp; FUNCTION</th>
+              <th>MATERIAL &amp; FINISH</th>
+              <th>TOLERANCE</th>
+              <th>MASS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {project.parts.map((pt) => (
+              <tr>
+                <td class="t-mono bom-idx">{pt.index}</td>
+                <td class="t-mono bom-node">{pt.nodeName}</td>
+                <td class="bom-desc">
+                  <strong>{pt.label}</strong>
+                  <p class="bom-note">{pt.note}</p>
+                </td>
+                <td class="bom-mat">
+                  <div>{pt.material}</div>
+                  <div class="t-mono bom-finish">{pt.finish}</div>
+                </td>
+                <td class="t-mono bom-tol">{pt.tolerance}</td>
+                <td class="t-mono bom-mass">{pt.mass}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="plates-grid">
+        {project.craftPlates.map((plate) => (
+          <article class="plate-card">
+            <div class="plate-card__top t-mono">
+              <span>{plate.index}</span>
+              <strong>{plate.metric}</strong>
+            </div>
+            <h3 class="plate-card__title">{plate.title}</h3>
+            <p class="plate-card__caption">{plate.caption}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Next Specimen Hand-Off -->
+  <section class="section next-sec">
+    <div class="wrap next-wrap">
+      <div>
+        <p class="eyebrow">NEXT 3D SPECIMEN DOSSIER // {next.index}</p>
+        <h2 class="t-h1 next-title">
+          <a href={`/work/${next.slug}`} class="u-link">{next.title}</a>
+        </h2>
+      </div>
+      <a href={`/work/${next.slug}`} class="btn-pill" data-magnetic="0.22">
+        <span>Inspect {next.shortTitle} ({next.glbSize})</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .sheet-sec {
+    background: var(--bg-elevated);
+  }
+  .sheet-grid {
+    align-items: start;
+  }
+  .sheet-figure {
+    grid-column: span 7;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    overflow: hidden;
+  }
+  .sheet-figure__frame {
+    overflow: hidden;
+    aspect-ratio: 1200 / 800;
+    background: #F6F1E7;
+  }
+  .sheet-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sheet-img[data-sheet-crop='left'] {
+    width: 200%;
+    max-width: none;
+    object-position: left center;
+  }
+  .sheet-img[data-sheet-crop='right'] {
+    width: 200%;
+    max-width: none;
+    margin-left: -100%;
+    object-position: right center;
+  }
+  .sheet-caption {
+    padding: 0.85rem 1.1rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .sheet-telemetry {
+    grid-column: span 5;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .sheet-telemetry__tag {
+    color: var(--accent-ink);
+    font-size: 11px;
+  }
+  .sheet-telemetry__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 11.5px;
+    padding-block: 0.5rem;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .sheet-telemetry__list div {
+    display: flex;
+    justify-content: space-between;
+  }
+  .sheet-telemetry__list dt {
+    color: var(--muted);
+  }
+  .sheet-telemetry__list dd {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .sheet-deliverables ul {
+    margin-top: 0.55rem;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    color: var(--ink-secondary);
+  }
+  .sheet-order-cta {
+    width: 100%;
+    margin-top: 0.9rem;
+  }
+
+  .narrative-block {
+    padding-block: 2.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .narrative-block:first-child {
+    padding-top: 0;
+  }
+  .narrative-block:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .narrative-label {
+    grid-column: span 4;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .narrative-prose {
+    grid-column: span 8;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .bom-sec {
+    background: var(--bg-elevated);
+  }
+  .bom-table-wrap {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    overflow-x: auto;
+  }
+  .bom-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+  .bom-table th,
+  .bom-table td {
+    padding: 0.95rem 1rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  .bom-table th {
+    background: var(--bg);
+    color: var(--muted);
+    font-size: 10.5px;
+  }
+  .bom-idx,
+  .bom-node,
+  .bom-tol,
+  .bom-mass {
+    white-space: nowrap;
+  }
+  .bom-idx {
+    color: var(--accent-ink);
+    font-weight: 600;
+  }
+  .bom-note {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+  .bom-finish {
+    color: var(--muted);
+    font-size: 10.5px;
+    margin-top: 0.15rem;
+  }
+
+  .plates-grid {
+    margin-top: var(--gutter);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gutter);
+  }
+  .plate-card {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .plate-card__top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .plate-card__top strong {
+    color: var(--accent-ink);
+  }
+  .plate-card__title {
+    font-family: var(--f-display);
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+  .plate-card__caption {
+    font-size: 0.86rem;
+    color: var(--ink-secondary);
+  }
+
+  .next-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .next-title {
+    margin-top: 0.35rem;
+  }
+
+  @media (max-width: 960px) {
+    .sheet-figure,
+    .sheet-telemetry,
+    .narrative-label,
+    .narrative-prose {
+      grid-column: 1 / -1;
+    }
+    .plates-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 640px) {
+    .bom-table thead {
+      display: none;
+    }
+    .bom-table,
+    .bom-table tbody {
+      display: block;
+      width: 100%;
+    }
+    .bom-table tr {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 0.35rem 0.75rem;
+      padding: 0.9rem;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+    .bom-table tr:last-child {
+      border-bottom: 0;
+    }
+    .bom-table td {
+      padding: 0;
+      border-bottom: 0;
+    }
+    .bom-desc,
+    .bom-mat {
+      grid-column: 1 / -1;
+    }
+    .bom-tol {
+      grid-column: 1 / 3;
+      color: var(--muted);
+    }
+    .bom-mass {
+      grid-column: 3;
+      justify-self: end;
+      font-weight: 600;
+      color: var(--accent-ink);
+    }
+  }
+</style>

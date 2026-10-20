@@ -1,0 +1,154 @@
+---
+import { site, projects } from '../data/site';
+const year = new Date().getFullYear();
+---
+<footer class="ftr section" id="contact">
+  <div class="wrap">
+    <div class="ftr__top grid-12">
+      <div class="ftr__cta-col">
+        <p class="eyebrow" data-reveal="fade">WHOLESALE · HARDWARE COMMISSIONS · TASTING ROOMS</p>
+        <h2 class="t-h1 ftr__headline" data-split="lines">
+          Calibrate your morning extraction or commission a serialized KOBO L-01 lever bench.
+        </h2>
+        <div class="ftr__actions" data-reveal="up">
+          <a
+            href={`mailto:${site.email}?subject=KOBO%20Roast%20Lab%20Allocation%20Inquiry`}
+            class="btn-pill"
+            data-magnetic="0.25"
+            data-cursor="action"
+          >
+            <span>{site.email}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+          <a href="/about" class="btn-pill btn-pill--ghost" data-magnetic="0.18">
+            <span>Kyoto &amp; Portland Bars</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="ftr__meta-col" data-reveal="up">
+        <div class="ftr__ledger">
+          <div class="ftr__row">
+            <span class="t-mono ftr__key">ROASTERY &amp; LABS</span>
+            <span>{site.location}</span>
+          </div>
+          <div class="ftr__row">
+            <span class="t-mono ftr__key">COORDINATES</span>
+            <span class="t-mono">{site.coordinates}</span>
+          </div>
+          <div class="ftr__row">
+            <span class="t-mono ftr__key">ROAST SCHEDULE</span>
+            <span class="t-mono ftr__ok">{site.availability}</span>
+          </div>
+          <div class="ftr__row">
+            <span class="t-mono ftr__key">3D VESSEL DOSSIERS</span>
+            <ul class="ftr__links">
+              {projects.map((p) => (
+                <li>
+                  <a href={`/work/${p.slug}`} class="u-link t-mono">
+                    {p.index} / {p.shortTitle} ({p.priceUsd})
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ftr__bottom t-mono">
+      <span>&copy; {year} {site.name}. ALL RIGHTS RESERVED.</span>
+      <span>LORING S15 CONVECTIVE ROASTERY · ARITA PORCELAIN · C36000 BRASS</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr {
+    background: var(--bg-elevated);
+  }
+  .ftr__top {
+    align-items: end;
+    padding-bottom: clamp(2.5rem, 5vw, 4.5rem);
+    border-bottom: 1px solid var(--line);
+  }
+  .ftr__cta-col {
+    grid-column: span 7;
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+  }
+  .ftr__headline {
+    max-width: 21ch;
+  }
+  .ftr__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    padding-top: 0.4rem;
+  }
+  .ftr__meta-col {
+    grid-column: span 5;
+  }
+  .ftr__ledger {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.84);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    box-shadow: 0 12px 32px rgba(36, 23, 16, 0.04);
+  }
+  .ftr__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line);
+    font-size: var(--fs-small);
+  }
+  .ftr__row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .ftr__key {
+    color: var(--muted);
+  }
+  .ftr__ok {
+    color: var(--sage);
+    font-weight: 500;
+  }
+  .ftr__links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+  }
+  .ftr__links a {
+    min-height: 28px;
+    padding-block: 4px;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s;
+  }
+  .ftr__links a:hover {
+    transform: translateX(-2px);
+    color: var(--accent-ink);
+  }
+  .ftr__bottom {
+    padding-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    color: var(--muted);
+  }
+  @media (max-width: 960px) {
+    .ftr__cta-col,
+    .ftr__meta-col {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

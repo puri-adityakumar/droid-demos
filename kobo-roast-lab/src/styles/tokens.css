@@ -1,0 +1,68 @@
+/* Self-hosted WOFF2 typefaces: Fraunces (Display Serif), General Sans (Body), JetBrains Mono (Telemetry) */
+@font-face {
+  font-family: 'Fraunces';
+  src: url('/fonts/fraunces-400_700-normal.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/general-sans-400-normal.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/general-sans-600-normal.woff2') format('woff2');
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-400-normal.woff2') format('woff2');
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Sun-Drenched High-Key Daylight Palette (KOBO // ROAST LAB) */
+:root {
+  --bg: #FAF7F2;                  /* Sun-Drenched Warm Alabaster / Morning Linen */
+  --bg-elevated: #F3EDE2;         /* Warm Travertine / Oat Cream */
+  --surface-bright: #FFFFFF;      /* Sunlit Porcelain Card Surface */
+  --ink: #241710;                 /* Deep Espresso Roast (15.2:1 AAA on #FAF7F2) */
+  --ink-secondary: #5C473A;       /* Roasted Walnut Husk (7.4:1 AAA on #FAF7F2) */
+  --muted: #755B4B;               /* Warm Cedar Bark (5.4:1 AA on #FAF7F2 & #F3EDE2) */
+  --accent: #C45A28;              /* Warm Terracotta / Roasted Persimmon */
+  --accent-ink: #9E3E12;          /* Deep Terracotta Ink (6.2:1 AA+ for small text on #FAF7F2/#F3EDE2) */
+  --accent-warm: #9E3E12;         /* Alias for telemetry labels */
+  --brass: #9E7123;               /* Brushed Warm Brass */
+  --brass-ink: #7A5414;           /* Deep Brass Ink (6.3:1 AA+ for small text) */
+  --sage: #3D6347;                /* Highland Washed Process Sage (6.3:1 AA+) */
+  --line: rgba(36, 23, 16, 0.12);         /* 1px Crisp Espresso Hairline */
+  --line-strong: rgba(36, 23, 16, 0.24);  /* Emphasized Card / Stage Border */
+
+  /* Typography */
+  --f-display: 'Fraunces', Georgia, serif;
+  --f-body: 'General Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Fluid Type Scale */
+  --fs-display: clamp(2.65rem, 1.35rem + 4.8vw, 5.6rem);
+  --fs-h1: clamp(2.15rem, 1.25rem + 3.4vw, 4.1rem);
+  --fs-h2: clamp(1.5rem, 1.1rem + 1.65vw, 2.5rem);
+  --fs-lead: clamp(1.04rem, 0.96rem + 0.34vw, 1.24rem);
+  --fs-body: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+  --fs-small: clamp(0.75rem, 0.72rem + 0.14vw, 0.84rem);
+
+  /* Grid & Spatial Rhythm */
+  --pad-x: clamp(1.25rem, 0.6rem + 2.8vw, 4rem);
+  --pad-y: clamp(4.25rem, 2.5rem + 6.5vw, 8.5rem);
+  --gutter: clamp(1rem, 0.6rem + 1.5vw, 2.25rem);
+  --cols: 12;
+  --max-w: 1680px;
+  --radius: 4px;
+}
