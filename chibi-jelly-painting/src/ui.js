@@ -129,7 +129,7 @@ export function createUI()
             modeSwitch.dataset.mode = theme.current
             modeSwitch.dataset.world = theme.world
             hint.textContent = theme.world === 'sukuna'
-                ? 'tap him to switch pose · tap the shrine to open the domain · c character'
+                ? `tap him to switch pose · tap the shrine · t ${ slots.map( ( slot ) => theme.label( slot ).toLowerCase() ).join( ' / ' ) } · c character`
                 : theme.world === 'eren'
                 ? `tap him to jump · tap the wall · t ${ theme.current === 'day' ? 'transform' : 'turn back' } · c character`
                 : `tap to jump · drag to turn · t ${ slots.map( ( slot ) => theme.label( slot ).toLowerCase() ).join( ' / ' ) } · c character`
@@ -137,7 +137,7 @@ export function createUI()
             modeSwitch.title = label
         }
 
-        const toggleTheme = () => { if( theme.world === 'sukuna' ) return; theme.set( next( slots, theme.current ) ); sync() }
+        const toggleTheme = () => { theme.set( next( slots, theme.current ) ); sync() }
         const toggleCharacter = ( id = next( character.ids, character.current ) ) => { character.set( id ); sync() }
         modeSwitch.addEventListener( 'click', toggleTheme )
         for( const card of cards ) card.addEventListener( 'click', () => toggleCharacter( card.dataset.character ) )

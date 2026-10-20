@@ -12,8 +12,7 @@ who bites his hand, is struck by lightning and bursts out of the steam as the At
 live in the browser. One page, one switch for the mood (day and dusk in the sky, lamp
 light and moonlight at the desk, Unlimited Void and Hollow Purple in the void, Flower
 field and Zoltraak in the meadow, Sunrise and Exploding Blood under the wisteria, Scout and
-Attack Titan in Shiganshina; Sukuna
-locks his crimson-and-charcoal King of Curses palette with no mood switch), one
+Attack Titan in Shiganshina, Malevolent Shrine and Fuga in Sukuna's domain), one
 card per character.
 
 <p>
@@ -81,7 +80,8 @@ for Light's desk (lamp light, moonlight), the Infinity sign / a purple orb for G
 void (Unlimited Void, Hollow Purple), a Blue-Moon Weed blossom / Zoltraak magic seal for
 Frieren's meadow (Flower field, Zoltraak), and a rising sun / pink flame for Nezuko's wisteria
 (Sunrise, Exploding Blood); on Eren the wings / lightning bolt button is his transformation
-(Scout, Attack Titan); on Sukuna the mood button hides. The card previews are
+(Scout, Attack Titan); on Sukuna a shrine / flame arrow sets the domain alight (Malevolent
+Shrine, Fuga). The card previews are
 captured from the live pipeline at load. Add `?char=light`, `?char=gojo`, `?char=frieren`, `?char=nezuko`, `?char=sukuna` or `?char=eren` to open on a
 specific character.
 Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku · `2` Light Yagami · `3` Gojo Satoru · `4` Frieren · `5` Nezuko Kamado · `6` Ryomen Sukuna · `7` Eren Yeager · `g` paint settings.
@@ -156,7 +156,7 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
   crimson eyes (his secondary cursed slit pair sits beneath the main eyes and blinks with
   them), a fanged arrogant smirk, black cursed tattoo markings across his forehead, nose,
   cheeks, bare chest, shoulders, back and wrists, clawed hands and pleated white hakama
-  trousers with a dark obi sash and zori sandals. He has no mood toggle; instead he runs a
+  trousers with a dark obi sash and zori sandals. His mood switch sets the domain alight (Fuga); taps run a
   4-pose state machine (`POSES`) that smoothly interpolates every
   joint (and jumps to the next pose when tapped): slouched mid-air King of Curses lounge
   with his chin propped on his right hand, standing Malevolent Shrine (*Fukuma Mizushi*)
@@ -203,8 +203,8 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
 - `src/themes.js` — two moods per world, eased every frame: `sky` (day, dusk), `room`
   (lamp light, moonlight), `void` (Unlimited Void, Hollow Purple), `meadow` (Flower
   field, Zoltraak), `wisteria` (Sunrise, Exploding Blood), `eren` (Scout, Attack Titan;
-  the slot also sets which form he should be in) and `sukuna` (a locked
-  crimson-and-charcoal King of Curses palette). The switch picks a slot; each character's world decides
+  the slot also sets which form he should be in) and `sukuna` (Malevolent Shrine, and Fuga,
+  which sets the domain on fire). The switch picks a slot; each character's world decides
   what it looks like.
 
 Dev-only debug hook: `window.__chibi` (renderer, scene, camera, controls, filter, cast, theme, character, applyView).

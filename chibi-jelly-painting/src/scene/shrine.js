@@ -10,6 +10,9 @@ import { paintedMaterial } from '../materials/painted.js'
 import { glowMaterial } from './glow.js'
 import { seeded, smooth, trs, Parts } from './parts.js'
 
+/** The Fuga mood sets the whole domain alight; the theme driver eases `fire`. */
+export const shrineLook = { fire: 0 }
+
 // Sukuna's Domain Expansion, Malevolent Shrine (Fukuma Mizushi). A warped
 // Buddhist zushi enshrining demons: it squats on a mound of ox skulls, its four
 // doorways are huge mouths with human teeth and lolling tongues, its hip-and-
@@ -465,6 +468,8 @@ export function createMalevolentShrine( camera = null, kid = null )
     // ── domain state, driven by Sukuna's pose ──────────────────────────────
     const state = { throne: 0, power: 0.6, fire: 0, roar: 0, wave: - 1 }
     let lastPose = kid?.pose ?? 1
+    let lit = false
+    const fireGoal = ( pose ) => Math.max( pose === 3 ? 1 : 0, shrineLook.fire )
 
     function expand()
     {
@@ -484,10 +489,13 @@ export function createMalevolentShrine( camera = null, kid = null )
         const pose = kid?.pose ?? 1
         if( pose !== lastPose && pose === 1 ) expand()
         lastPose = pose
+        // the mouths roar whenever the mood flips between the shrine and Fuga
+        const nowLit = shrineLook.fire > 0.5
+        if( nowLit !== lit ) { lit = nowLit; expand() }
         const k = 1 - Math.exp( - dt * 4 )
         state.throne += ( ( pose === 0 ? 1 : 0 ) - state.throne ) * k
         state.power += ( ( pose === 1 || pose === 2 ? 1 : pose === 3 ? 0.3 : 0.55 ) - state.power ) * k
-        state.fire += ( ( pose === 3 ? 1 : 0 ) - state.fire ) * k
+        state.fire += ( fireGoal( pose ) - state.fire ) * k
         state.roar = Math.max( 0, state.roar - dt * 0.7 )
 
         // the skull throne surfaces from the blood
@@ -551,8 +559,16 @@ export function createMalevolentShrine( camera = null, kid = null )
         }
     }
 
+    function snap()
+    {
+        state.fire = fireGoal( kid?.pose ?? 1 )
+        lit = shrineLook.fire > 0.5
+        state.roar = 0
+        state.wave = - 1
+    }
+
     return {
-        group, main: null, tail: null, ground, backdrop, fx, update,
+        group, main: null, tail: null, ground, backdrop, fx, update, snap,
         // tapping the shrine opens the domain again
         onTap: expand,
         grounded: true, baseY: 0,

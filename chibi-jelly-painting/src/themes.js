@@ -6,6 +6,7 @@ import { voidLook } from './scene/void.js'
 import { meadowLook } from './scene/frieren.js'
 import { wisteriaLook } from './scene/nezuko.js'
 import { erenLook } from './scene/eren.js'
+import { shrineLook } from './scene/shrine.js'
 
 // Two moods per world. The page has one switch, so a mood is a slot ('day' or
 // 'dusk') and each world decides what that slot looks like: Goku's sky goes
@@ -281,7 +282,8 @@ const raw = {
         },
     },
     // Sukuna's Domain: a blood-red night over the pool, the sky glowing low
-    // behind the shrine. He has no mood switch, so both slots share one look.
+    // behind the shrine; in the dusk slot he opens Fuga and the whole domain
+    // burns, the sky turning to smoke and embers.
     sukuna: {
         day: {
             label: 'Malevolent Shrine',
@@ -306,26 +308,27 @@ const raw = {
             ink: '#4a1828',
         },
         dusk: {
-            label: 'Malevolent Shrine',
-            skyTop: '#0c0207',
-            skyHorizon: '#a01c2c',
-            skyLeft: '#6a0c1e',
-            skyRight: '#1e050e',
-            blotch: '#e04456',
-            haze: '#2a0812',
-            hazeAmount: 0.12,
-            sparkle: '#ffccd6',
+            label: 'Fuga',
+            skyTop: '#140504',
+            skyHorizon: '#ff7a1c',
+            skyLeft: '#b02a0c',
+            skyRight: '#3a0c08',
+            blotch: '#ffb45a',
+            haze: '#3a1206',
+            hazeAmount: 0.13,
+            sparkle: '#ffe0b0',
             sparkleStrength: 0,
-            lightDir: [ - 0.48, 0.68, 0.62 ],
-            rimDir: [ 0.76, 0.35, - 0.56 ],
-            rimColor: '#ff4c6a',
-            bounce: '#c0203e',
-            shadowTint: '#2a0818',
+            lightDir: [ 0.5, 0.62, 0.6 ],
+            rimDir: [ - 0.74, 0.36, - 0.56 ],
+            rimColor: '#ffa040',
+            bounce: '#ff6a1c',
+            shadowTint: '#3a0c10',
             shadowTintAmount: 0.4,
-            cloud: '#6e2844',
-            cloudShade: '#240a18',
+            cloud: '#8a3a1c',
+            cloudShade: '#2a0a08',
             paper: '#ffffff',
-            ink: '#4a1828',
+            ink: '#4a2010',
+            fuga: 1,
         },
     },
     // Shiganshina under Wall Maria. The day slot is a clear morning for the
@@ -390,7 +393,7 @@ export const slots = [ 'day', 'dusk' ]
 export const worlds = Object.fromEntries( Object.entries( raw ).map( ( [ world, set ] ) => [ world, Object.fromEntries( Object.entries( set ).map( ( [ slot, t ] ) =>
 {
     const parsed = {
-        slot, label: t.label, ink: t.ink, paperHex: t.paper, lamp: t.lamp ?? 0, purple: t.purple ?? 0, mana: t.mana ?? 0, blood: t.blood ?? 0, titan: t.titan ?? 0,
+        slot, label: t.label, ink: t.ink, paperHex: t.paper, lamp: t.lamp ?? 0, purple: t.purple ?? 0, mana: t.mana ?? 0, blood: t.blood ?? 0, titan: t.titan ?? 0, fuga: t.fuga ?? 0,
         shadowTintAmount: t.shadowTintAmount, hazeAmount: t.hazeAmount, sparkleStrength: t.sparkleStrength,
     }
     for( const k of COLOR_KEYS ) parsed[ k ] = new Color( t[ k ] ?? DEFAULTS[ k ] )
@@ -458,6 +461,7 @@ export function createThemeDriver( { farClouds, sparkles, filter } )
         wisteriaLook.blood.value += ( target.blood - wisteriaLook.blood.value ) * k
         // the form is a switch, not a blend: eren.js plays the transformation itself
         if( world === 'eren' ) erenLook.goal = target.titan
+        shrineLook.fire += ( target.fuga - shrineLook.fire ) * k
         sparkles.tint.value.lerp( target.sparkle, k )
         sparkles.strength.value += ( target.sparkleStrength - sparkles.strength.value ) * k
         light.rimColor.value.lerp( target.rimColor, k )

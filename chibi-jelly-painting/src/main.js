@@ -120,6 +120,7 @@ async function start()
             ride: shrine,
             extras: [ shrine.ground, shrine.backdrop, shrine.fx ],
             floor: 0.3,
+            snap: () => shrine.snap(),
             view: { y: 1.8, zoom: 0.88, polar: 1.4 },
             label: 'A painting of a shirtless chibi Ryomen Sukuna with spiky salmon-pink hair over a dark undercut, four glowing crimson eyes, black cursed markings across his face, chest, shoulders and wrists, and white hakama trousers, standing in a pool of blood inside his Domain Expansion, Malevolent Shrine: a crimson Buddhist shrine on a mound of ox skulls, with grinning mouths for doors, bull horns on its roof and skulls hanging from its eaves, while Dismantle slashes flicker through the air. He cycles through four poses: lounging on a throne of skulls, the Enmaten hand sign, a Cleave and Dismantle slash dash, and drawing a Fuga flame arrow. Tap him to jump and switch poses, tap the shrine to open the domain, drag to orbit and scroll to zoom.',
         },
