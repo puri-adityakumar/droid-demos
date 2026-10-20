@@ -28,15 +28,17 @@ const ui = createUI()
 
 async function start()
 {
-    ui.progress( 0.1 )
+    ui.progress( 0.08 )
 
     const forceWebGL = new URLSearchParams( window.location.search ).has( 'webgl' )
     const renderer = new WebGPURenderer( { canvas, antialias: false, forceWebGL } )
     renderer.toneMapping = NoToneMapping
     renderer.setPixelRatio( Math.min( window.devicePixelRatio, 2 ) )
     renderer.setSize( window.innerWidth, window.innerHeight )
-    await renderer.init()
-    ui.progress( 0.3 )
+    // the labels and cards use the web font; don't let them pop in late
+    const fonts = Promise.race( [ document.fonts?.ready, new Promise( ( r ) => setTimeout( r, 4000 ) ) ] )
+    await Promise.all( [ renderer.init(), fonts ] )
+    ui.progress( 0.2 )
 
     const scene = new Scene()
     scene.backgroundNode = skyNode()
@@ -191,7 +193,7 @@ async function start()
     theme.set( 'day' )
     show( active )
     theme.snap()
-    ui.progress( 0.55 )
+    ui.progress( 0.3 )
 
     // Keep the subject filling the painted frame whatever the window shape.
     // `view` is each character's own framing, eased into when they swap.
@@ -318,6 +320,36 @@ async function start()
         onFrameChange: resize,
     } )
 
+    // Draw each character once with every hidden part showing (the titan, the
+    // lightning and steam, the Colossal Titan, the skull throne, the Fuga
+    // fire...), through the real paint pipeline, so all of their shaders are
+    // compiled behind the loader instead of stalling the first time they appear.
+    const warmQueue = []
+    const home = active
+
+    function warmUp( id )
+    {
+        show( id )
+        applyView()
+        const c = cast[ id ]
+        const forced = []
+        for( const root of [ c.kid.root, c.ride.group, ...c.extras ] )
+        {
+            root.traverse( ( o ) =>
+            {
+                forced.push( [ o, o.visible, o.frustumCulled ] )
+                o.visible = true
+                o.frustumCulled = false
+            } )
+        }
+        filter.update()
+        filter.render()
+        for( const [ o, visible, culled ] of forced ) { o.visible = visible; o.frustumCulled = culled }
+        const total = character.ids.length
+        ui.progress( 0.3 + ( ( total - warmQueue.length ) / total ) * 0.35 )
+        if( ! warmQueue.length ) show( home )
+    }
+
     // Paint every character in every time of day into the toggle cards straight
     // from the real pipeline, one combination per frame (render targets refresh
     // once per frame), then settle back on the active one.
@@ -345,7 +377,7 @@ async function start()
         const look = thumbQueue.shift()
         ui.drawThumb( `${ look.id }-${ look.themeId }`, canvas, filter.frameRect(), renderer.getPixelRatio() )
         const total = character.ids.length * slots.length
-        ui.progress( 0.55 + ( ( total - thumbQueue.length ) / total ) * 0.45 )
+        ui.progress( 0.65 + ( ( total - thumbQueue.length ) / total ) * 0.35 )
         if( thumbQueue.length ) applyLook( thumbQueue[ 0 ] )
         else ui.syncPreviews()
     }
@@ -354,7 +386,7 @@ async function start()
     const timer = new Timer()
     timer.connect( document )
     let frames = 0
-    let ready = false
+    let stage = 'boot'
 
     if( import.meta.env.DEV ) window.__chibi = { renderer, scene, camera, controls, filter, cast, theme, character, applyView, get frames() { return frames } }
 
@@ -373,11 +405,20 @@ async function start()
         filter.update()
         filter.render()
 
-        if( thumbQueue.length ) captureThumbnail()
+        // one step of loading per frame: warm each character, then paint the cards
+        if( stage === 'warm' )
+        {
+            warmUp( warmQueue.shift() )
+            if( ! warmQueue.length ) { stage = 'cards'; queueThumbnails() }
+        }
+        else if( stage === 'cards' )
+        {
+            captureThumbnail()
+            if( ! thumbQueue.length ) { stage = 'done'; ui.ready() }
+        }
 
         frames++
-        if( frames === 2 ) queueThumbnails()
-        if( frames > 2 && ! thumbQueue.length && ! ready ) { ready = true; ui.ready() }
+        if( frames === 2 ) { stage = 'warm'; warmQueue.push( ...character.ids ) }
     } )
 }
 

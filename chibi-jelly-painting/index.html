@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
         <meta name="theme-color" content="#ffffff">
         <title>Chibi Jelly Painting</title>
-        <meta name="description" content="Chibi Goku on his cloud, Light Yagami at his desk at night, Gojo Satoru in the void and Frieren in a field of Blue-Moon Weed flowers, painted live in the browser with three.js WebGPU + TSL, in the style of Jelly Painting.">
+        <meta name="description" content="Chibi Goku on his cloud, Light Yagami at his desk at night, Gojo Satoru in the void, Frieren in a field of Blue-Moon Weed flowers, Nezuko under the wisteria, Sukuna in his Malevolent Shrine and Eren Yeager turning into the Attack Titan, painted live in the browser with three.js WebGPU + TSL, in the style of Jelly Painting.">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -49,7 +49,7 @@
                     </g>
 
                     <!-- 1. Goku: Four-Star Dragon Ball (Suushinchuu) -->
-                    <g class="relic" style="--t:.10;--c:#ff921c;--glow:#ffd166" transform="translate(92 38)">
+                    <g class="relic" data-name="Goku" style="--t:.02;--c:#ff921c;--glow:#ffd166" transform="translate(60 38) scale(.88)">
                         <g class="relic-body">
                             <circle class="relic-aura" r="24"/>
                             <circle class="relic-ring" r="20.5"/>
@@ -69,7 +69,7 @@
                     </g>
 
                     <!-- 2. Light Yagami: Death Note & Ryuk's Crimson Apple -->
-                    <g class="relic" style="--t:.34;--c:#e63946;--glow:#ff8fa3" transform="translate(192 38)">
+                    <g class="relic" data-name="Light Yagami" style="--t:.13;--c:#e63946;--glow:#ff8fa3" transform="translate(120 38) scale(.88)">
                         <g class="relic-body">
                             <circle class="relic-aura" r="24"/>
                             <circle class="relic-ring" r="20.5"/>
@@ -93,7 +93,7 @@
                     </g>
 
                     <!-- 3. Gojo Satoru: Infinity & Red / Blue / Hollow Purple -->
-                    <g class="relic" style="--t:.58;--c:#9d4edd;--glow:#72efdd" transform="translate(292 38)">
+                    <g class="relic" data-name="Gojo Satoru" style="--t:.27;--c:#9d4edd;--glow:#72efdd" transform="translate(180 38) scale(.88)">
                         <g class="relic-body">
                             <circle class="relic-aura" r="24"/>
                             <circle class="relic-ring" r="20.5"/>
@@ -114,7 +114,7 @@
                     </g>
 
                     <!-- 4. Frieren: Zoltraak Magic Circle, Crescent Staff & Blue-Moon Weed -->
-                    <g class="relic" style="--t:.80;--c:#38bdf8;--glow:#a78bfa" transform="translate(392 38)">
+                    <g class="relic" data-name="Frieren" style="--t:.42;--c:#38bdf8;--glow:#a78bfa" transform="translate(240 38) scale(.88)">
                         <g class="relic-body">
                             <circle class="relic-aura" r="24"/>
                             <circle class="relic-ring" r="20.5"/>
@@ -147,6 +147,61 @@
                             </g>
                             <g transform="translate(-22 -13) scale(0.82)"><use href="#star4" class="spark s-a"/></g>
                             <g transform="translate(23 -10) scale(0.7)"><use href="#star4" class="spark s-b"/></g>
+                        </g>
+                    </g>
+
+                    <!-- 5. Nezuko Kamado: bamboo muzzle on her hemp-leaf kimono pattern -->
+                    <g class="relic" data-name="Nezuko Kamado" style="--t:.57;--c:#ff6aa8;--glow:#ffb4d4" transform="translate(300 38) scale(.88)">
+                        <g class="relic-body">
+                            <circle class="relic-aura" r="24"/>
+                            <circle class="relic-ring" r="20.5"/>
+                            <circle r="16.5" fill="#ffd6e8" stroke="#6b5647" stroke-width="2"/>
+                            <g fill="none" stroke="#ff6aa8" stroke-width="1.1" opacity="0.85">
+                                <path d="M 0 -14 V 14 M -12.1 -7 L 12.1 7 M -12.1 7 L 12.1 -7"/>
+                                <path d="M 0 -14 L -4 -5 L 0 0 L 4 -5 Z M 12.1 7 L 6.5 0.5 L 0 0 L 2.5 7.5 Z M -12.1 7 L -2.5 7.5 L 0 0 L -6.5 0.5 Z"/>
+                            </g>
+                            <path d="M -15 1 C -15 13 15 13 15 1" fill="none" stroke="#c0392b" stroke-width="1.7" stroke-linecap="round"/>
+                            <rect x="-16.5" y="-5" width="33" height="10" rx="5" fill="#8bc34a" stroke="#6b5647" stroke-width="2"/>
+                            <path d="M -6 -5 V 5 M 6 -5 V 5" stroke="#5a8a2a" stroke-width="1.6"/>
+                            <path d="M -12.5 -2 H -9 M -2.5 -2 H 2.5 M 9 -2 H 12" stroke="#e2f5bc" stroke-width="1.4" stroke-linecap="round"/>
+                            <g transform="translate(-22 -13) scale(0.8)"><use href="#star4" class="spark s-a"/></g>
+                            <g transform="translate(23 -11) scale(0.7)"><use href="#star4" class="spark s-b"/></g>
+                        </g>
+                    </g>
+
+                    <!-- 6. Ryomen Sukuna: one of his twenty cursed fingers, bound by a talisman -->
+                    <g class="relic" data-name="Ryomen Sukuna" style="--t:.71;--c:#d62839;--glow:#ff4c6a" transform="translate(360 38) scale(.88)">
+                        <g class="relic-body">
+                            <circle class="relic-aura" r="24"/>
+                            <circle class="relic-ring" r="20.5"/>
+                            <circle r="16.5" fill="#3a0a14" stroke="#6b5647" stroke-width="2"/>
+                            <path d="M -11 -7 L -6 -9 M -12 -3 L -7 -4 M 11 -7 L 6 -9 M 12 -3 L 7 -4" stroke="#ff4c6a" stroke-width="1.4" stroke-linecap="round" opacity="0.8"/>
+                            <g transform="rotate(-32)">
+                                <rect x="-4.6" y="-14" width="9.2" height="27" rx="4.6" fill="#c49a76" stroke="#2a1014" stroke-width="1.6"/>
+                                <path d="M -3.6 -14.5 Q 0 -20 3.6 -14.5 Q 0 -12.5 -3.6 -14.5 Z" fill="#1a0a0e"/>
+                                <path d="M -4 -5 Q 0 -3.5 4 -5 M -4 2.5 Q 0 4 4 2.5" fill="none" stroke="#7a4e3a" stroke-width="1.1"/>
+                                <rect x="-5.8" y="6" width="11.6" height="5.4" fill="#f6efe0" stroke="#2a1014" stroke-width="1"/>
+                                <path d="M -3.2 8.7 H 3.2" stroke="#d62839" stroke-width="1.3"/>
+                            </g>
+                            <g transform="translate(-22 -13) scale(0.8)"><use href="#star4" class="spark s-a"/></g>
+                            <g transform="translate(23 -11) scale(0.7)"><use href="#star4" class="spark s-b"/></g>
+                        </g>
+                    </g>
+
+                    <!-- 7. Eren Yeager: the Wings of Freedom and the basement key -->
+                    <g class="relic" data-name="Eren Yeager" style="--t:.86;--c:#3c5cae;--glow:#ffd23c" transform="translate(420 38) scale(.88)">
+                        <g class="relic-body">
+                            <circle class="relic-aura" r="24"/>
+                            <circle class="relic-ring" r="20.5"/>
+                            <circle r="16.5" fill="#3e6a4c" stroke="#6b5647" stroke-width="2"/>
+                            <path d="M 1.5 10 C -4 7 -12 -1 -12 -11 C -9 -7 -6.5 -7 -4.5 -9 C -5.5 -5 -3.5 -3 -1.5 -4 C -2.5 0 -1 4 1.5 10 Z" fill="#f6f4ee" stroke="#6b5647" stroke-width="1.3" stroke-linejoin="round"/>
+                            <path d="M -1.5 10 C 4 7 12 -1 12 -11 C 9 -7 6.5 -7 4.5 -9 C 5.5 -5 3.5 -3 1.5 -4 C 2.5 0 1 4 -1.5 10 Z" fill="#3c5cae" stroke="#6b5647" stroke-width="1.3" stroke-linejoin="round"/>
+                            <g transform="translate(10.5 10) rotate(35)" fill="none" stroke="#d9b25a" stroke-width="1.8" stroke-linecap="round">
+                                <circle cy="-4" r="2.6"/>
+                                <path d="M 0 -1.4 V 6 M 0 4 H 2.4 M 0 6 H 2.4"/>
+                            </g>
+                            <g transform="translate(-22 -13) scale(0.8)"><use href="#star4" class="spark s-a"/></g>
+                            <g transform="translate(23 -11) scale(0.7)"><use href="#star4" class="spark s-b"/></g>
                         </g>
                     </g>
                 </svg>
@@ -226,6 +281,7 @@
                         </g>
                     </svg>
                 </div>
+                <p class="loader-caption" aria-live="polite"></p>
             </div>
             <p class="loader-status"></p>
         </div>

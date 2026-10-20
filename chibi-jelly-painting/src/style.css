@@ -29,15 +29,17 @@ canvas.scene {
 }
 
 /* loader: Chibi Goku on his Flying Nimbus (Kinto'un) streaks across the paper,
-   unfurling a golden cloud stream and awakening the 4 anime relics along the
-   way (4-Star Dragon Ball, Death Note & Apple, Gojo's Infinity/Hollow Purple,
-   and Frieren's Crescent Staff & Zoltraak seal). Everything reads --reveal. */
+   unfurling a golden cloud stream and awakening one relic per character along
+   the way (4-Star Dragon Ball, Death Note & Apple, Gojo's Infinity/Hollow Purple,
+   Frieren's Crescent Staff & Zoltraak seal, Nezuko's bamboo muzzle, Sukuna's
+   cursed finger, Eren's Wings of Freedom & key). Everything reads --reveal,
+   which ui.js eases every frame. */
 @property --reveal {
     syntax: '<number>';
     inherits: true;
     initial-value: 0;
 }
-.loader[role] { transition: opacity 0.45s, --reveal 0.65s cubic-bezier(.25, .8, .25, 1); }
+.loader[role] { transition: opacity 0.45s; }
 
 .loader-stage {
     position: relative;
@@ -164,6 +166,23 @@ canvas.scene {
     to { stroke-dashoffset: 28; opacity: 0.35; }
 }
 
+.loader-caption {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 6px 0 0;
+    text-align: center;
+    font: 600 12px/1.2 var(--font);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.75;
+}
+.loader-caption.fresh { animation: caption-in 0.5s cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes caption-in {
+    from { opacity: 0; transform: translateY(6px); }
+}
+.loader.failed .loader-caption { opacity: 0; }
 .loader.failed .loader-stage { opacity: 0.25; }
 @media (prefers-reduced-motion: reduce) {
     .loader-rider > svg, .speed-lines line, .spark { animation: none; }
