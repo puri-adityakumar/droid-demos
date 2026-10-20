@@ -13,7 +13,8 @@ import { createGojo, createInfinity } from './scene/gojo.js'
 import { createVoid } from './scene/void.js'
 import { createFrieren, createFlowerField } from './scene/frieren.js'
 import { createNezuko, createWisteriaPath } from './scene/nezuko.js'
-import { createSukuna, createSukunaStage } from './scene/sukuna.js'
+import { createSukuna } from './scene/sukuna.js'
+import { createMalevolentShrine } from './scene/shrine.js'
 import { createNimbus, createFarClouds, createSparkles, skyNode } from './scene/world.js'
 import { createRig } from './scene/rig.js'
 import { createPaintFilter, paintDefaults } from './post/paintFilter.js'
@@ -57,6 +58,8 @@ async function start()
     const backdrop = createVoid()
     const flowerField = createFlowerField()
     const wisteriaPath = createWisteriaPath( camera )
+    const sukuna = createSukuna()
+    const shrine = createMalevolentShrine( camera, sukuna )
 
     const cast = {
         goku: {
@@ -108,11 +111,11 @@ async function start()
         sukuna: {
             name: 'Ryomen Sukuna',
             world: 'sukuna',
-            kid: createSukuna(),
-            ride: createSukunaStage(),
-            extras: [],
-            view: { y: 0.96, zoom: 1.34, polar: 1.34 },
-            label: 'A painting of a shirtless chibi Ryomen Sukuna with spiky salmon-pink hair over a dark undercut, four glowing crimson eyes, black cursed markings across his face, chest, shoulders and wrists, and white hakama trousers, cycling through three poses: slouched King of Curses, Malevolent Shrine hand sign, and Cleave and Dismantle slash dash. Tap him to jump and switch poses, drag to orbit and scroll to zoom.',
+            kid: sukuna,
+            ride: shrine,
+            extras: [ shrine.ground, shrine.backdrop, shrine.fx ],
+            view: { y: 1.8, zoom: 0.88, polar: 1.4 },
+            label: 'A painting of a shirtless chibi Ryomen Sukuna with spiky salmon-pink hair over a dark undercut, four glowing crimson eyes, black cursed markings across his face, chest, shoulders and wrists, and white hakama trousers, standing in a pool of blood inside his Domain Expansion, Malevolent Shrine: a crimson Buddhist shrine on a mound of ox skulls, with grinning mouths for doors, bull horns on its roof and skulls hanging from its eaves, while Dismantle slashes flicker through the air. He cycles through four poses: lounging on a throne of skulls, the Enmaten hand sign, a Cleave and Dismantle slash dash, and drawing a Fuga flame arrow. Tap him to jump and switch poses, tap the shrine to open the domain, drag to orbit and scroll to zoom.',
         },
     }
     for( const c of Object.values( cast ) )
@@ -263,7 +266,7 @@ async function start()
         {
             const hit = pick( e )
             if( hit === 'kid' ) { cast[ active ].kid.nextPose?.(); cast[ active ].rig.startJump() }
-            else if( hit === 'cloud' ) cast[ active ].rig.bounceCloud()
+            else if( hit === 'cloud' ) { cast[ active ].ride.onTap?.(); cast[ active ].rig.bounceCloud() }
         }
         if( e.pointerType === 'mouse' ) ui.setCursorHover( pick( e ) !== null )
     } )

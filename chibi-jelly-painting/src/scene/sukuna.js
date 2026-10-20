@@ -5,8 +5,9 @@ import {
     MathUtils, Color
 } from 'three/webgpu'
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
+import { uniform, normalView, positionLocal, mix, smoothstep, mx_noise_float } from 'three/tsl'
 
-import { paintedMaterial } from '../materials/painted.js'
+import { paintedMaterial, light } from '../materials/painted.js'
 import {
     mesh, v3, sphereDir, skullRadius, skullGeometry, orient, spikeGeometry, onTorso, stroke,
     TORSO, TORSO_DEPTH, HAIR_RADIUS, UP, Z, deg
@@ -18,11 +19,13 @@ import { glowMaterial } from './glow.js'
 // eyes (the second slit pair sitting under the main ones, blinking with them),
 // black cursed tattoo bands across his forehead, nose, cheeks, bare chest,
 // shoulders, back and wrists, and loose white hakama trousers tied with a dark
-// sash. He has no background environment and no mood switch; instead he cycles
-// through three poses on his own (and leaps to the next whenever tapped):
-//   0 — slouched mid-air King of Curses sit, chin propped on one hand
+// sash. He stands in his Domain, Malevolent Shrine (see shrine.js), with no
+// mood switch; instead he cycles through four poses on his own (and leaps to
+// the next whenever tapped):
+//   0 — King of Curses lounging on a mound of skulls, chin propped on one hand
 //   1 — standing Malevolent Shrine (Fukuma Mizushi) Enmaten hand sign
 //   2 — leaning Cleave & Dismantle slash dash with crimson blade arcs
+//   3 — Fuga ("Open"): drawing Divine Flame back like a burning arrow
 
 export const palette = {
     skin: '#ffe0cf',
@@ -427,6 +430,7 @@ const HAKAMA_DEPTH = 0.84
 // Pose 0: Seated King of Curses (cross-legged mid-air lounge, chin propped on right hand)
 // Pose 1: Standing Malevolent Shrine (Fukuma Mizushi Enmaten hand sign joined at chest)
 // Pose 2: Cleave & Dismantle (dynamic forward slash lunge with crimson crescent blade arcs)
+// Pose 3: Fuga (left arm aimed, right hand drawn back to the chest along a flame arrow)
 const POSES = [
     {
         name: 'throne',
@@ -470,7 +474,73 @@ const POSES = [
         sealGlow: 0.2,
         slashPower: 1.0,
     },
+    {
+        name: 'fuga',
+        bodyY: 0.02,
+        bodyRotX: 0.04,
+        bodyRotY: 0.62,
+        bodyRotZ: 0.02,
+        headTiltZ: - 0.06,
+        leftArm: { shoulderX: - 0.12, shoulderY: 0.0, shoulderZ: - 1.48, elbowX: - 0.08, elbowZ: 0.0, handX: 0.0, handY: 0.0, handZ: 0.2 },
+        rightArm: { shoulderX: - 0.35, shoulderY: 0.0, shoulderZ: 1.3, elbowX: - 1.95, elbowZ: 0.0, handX: 0.0, handY: 0.0, handZ: 0.0 },
+        leftLeg: { hipX: - 0.3, hipY: 0.1, hipZ: - 0.28, kneeX: 0.28, kneeZ: 0.0 },
+        rightLeg: { hipX: 0.22, hipY: - 0.1, hipZ: 0.26, kneeX: 0.12, kneeZ: 0.0 },
+        sealGlow: 0,
+        slashPower: 0,
+        fuga: 1,
+    },
 ]
+
+/** Divine Flame shaped into an arrow along body-local -x, with flame tongues streaming back. */
+function buildFlameArrow( parent )
+{
+    const group = new Group()
+    group.position.set( - 0.42, 0.93, 0.16 )
+    parent.add( group )
+
+    const heat = normalView.z.clamp( 0, 1 ).add( mx_noise_float( positionLocal.mul( 9 ).add( light.time.mul( 3.1 ) ) ).mul( 0.3 ) )
+    const flame = new MeshBasicNodeMaterial()
+    flame.colorNode = mix(
+        mix( uniform( new Color( '#d8280c' ) ), uniform( new Color( '#ff9a1e' ) ), smoothstep( 0.15, 0.55, heat ) ),
+        uniform( new Color( '#fff4c8' ) ),
+        smoothstep( 0.8, 1.05, heat )
+    )
+    const core = paintedMaterial( { color: '#fff6d8', unlit: true } )
+
+    const shaft = mesh( new CylinderGeometry( 0.02, 0.03, 1.5, 10 ), core, group )
+    shaft.rotation.z = Math.PI / 2
+    const sheath = mesh( new CylinderGeometry( 0.05, 0.065, 1.5, 12 ), flame, group )
+    sheath.rotation.z = Math.PI / 2
+    const head = mesh( new ConeGeometry( 0.095, 0.32, 12 ), flame, group, v3( - 0.9, 0, 0 ) )
+    head.rotation.z = Math.PI / 2
+    const headCore = mesh( new ConeGeometry( 0.045, 0.22, 10 ), core, group, v3( - 0.86, 0, 0 ) )
+    headCore.rotation.z = Math.PI / 2
+
+    // flame tongues leaning back toward the drawing hand
+    const tongue = spikeGeometry( 1, 0.16, 0.22, 0.8, 0.6 )
+    const tongues = []
+    for( let i = 0; i < 14; i++ )
+    {
+        const pivot = new Group()
+        pivot.position.set( - 0.75 + ( i / 13 ) * 1.4, 0, 0 )
+        pivot.rotation.set( ( i * 2.4 ) % ( Math.PI * 2 ), 0, - 1.1 )
+        group.add( pivot )
+        const f = mesh( tongue, flame, pivot )
+        tongues.push( { flame: f, height: 0.18 + ( i / 13 ) * 0.16 + ( i % 3 ) * 0.04, width: 0.6 + ( i % 4 ) * 0.12, phase: i * 1.7 } )
+    }
+
+    const glows = [
+        { sprite: new Sprite( glowMaterial( SpriteNodeMaterial, '#ff7a1a', { strength: 0.9, power: 1.2 } ) ), x: - 0.88, size: 0.9 },
+        { sprite: new Sprite( glowMaterial( SpriteNodeMaterial, '#ff9a2e', { strength: 0.5, power: 1.4 } ) ), x: - 0.1, size: 1.7 },
+    ]
+    for( const g of glows )
+    {
+        g.sprite.position.x = g.x
+        group.add( g.sprite )
+    }
+
+    return { group, tongues, glows }
+}
 
 function taperedArcGeometry( curve, tubularSegments, radius, radialSegments = 8 )
 {
@@ -626,10 +696,13 @@ export function createSukuna()
     // Character-attached Cleave & Dismantle slash arcs
     const slashes = buildSlashArcs( body, m )
 
+    // Fuga's flame arrow, drawn in Pose 3
+    const arrow = buildFlameArrow( body )
+
     // ── 3-Pose state machine ────────────────────────────────────────────────
     // Starts in Pose 1 (Malevolent Shrine hand sign) for his signature portrait,
-    // cycles smoothly through all 3 poses (0: Seated King of Curses, 1: Malevolent
-    // Shrine mudra, 2: Cleave & Dismantle slash dash), and also advances whenever
+    // cycles smoothly through all 4 poses (0: King of Curses on his skull throne,
+    // 1: Malevolent Shrine mudra, 2: Cleave & Dismantle slash dash, 3: Fuga), and also advances whenever
     // the user taps him or presses Space.
     let poseIndex = 1
     let poseTimer = 0
@@ -649,6 +722,7 @@ export function createSukuna()
         rightLeg: { ...POSES[ 1 ].rightLeg },
         sealGlow: POSES[ 1 ].sealGlow,
         slashPower: POSES[ 1 ].slashPower,
+        fuga: 0,
     }
     let slashBurst = 0
 
@@ -670,6 +744,7 @@ export function createSukuna()
         Object.assign( cur.rightLeg, p.rightLeg )
         cur.sealGlow = p.sealGlow
         cur.slashPower = p.slashPower
+        cur.fuga = p.fuga ?? 0
         slashBurst = 0
     }
 
@@ -788,6 +863,21 @@ export function createSukuna()
             a.pivot.scale.setScalar( s )
             a.pivot.visible = cur.slashPower > 0.03
         }
+
+        // Fuga: the flame arrow kindles in his hands and flickers while he aims
+        cur.fuga = MathUtils.lerp( cur.fuga, goal.fuga ?? 0, k )
+        arrow.group.visible = cur.fuga > 0.02
+        if( arrow.group.visible )
+        {
+            arrow.group.scale.setScalar( Math.max( 0.001, cur.fuga ) )
+            for( const f of arrow.tongues )
+            {
+                const flicker = 0.8 + Math.sin( t * 11 + f.phase ) * 0.14 + Math.sin( t * 17.3 + f.phase * 2 ) * 0.08
+                const w = f.width * ( 0.9 + Math.sin( t * 8 + f.phase ) * 0.1 )
+                f.flame.scale.set( w, f.height * flicker, w )
+            }
+            for( const g of arrow.glows ) g.sprite.scale.setScalar( g.size * ( 0.92 + Math.sin( t * 9 + g.x ) * 0.08 ) )
+        }
     }
 
     // Apply initial pose immediately so frame 0 / thumbnails are posed cleanly
@@ -811,12 +901,3 @@ export function createSukuna()
     }
 }
 
-/**
- * Bare stage for Sukuna: no background props or environment meshes.
- */
-export function createSukunaStage()
-{
-    const group = new Group()
-    group.name = 'sukuna-stage'
-    return { group, main: null, tail: null, pickables: [] }
-}

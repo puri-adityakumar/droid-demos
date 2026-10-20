@@ -5,8 +5,9 @@ sitting at his desk at night, writing in the Death Note, a chibi Gojo Satoru
 hovering over an Infinity sign in a void of ink, a chibi Frieren standing in a
 floating bed of Blue-Moon Weed flowers with her mage's staff and open grimoire, a
 chibi Nezuko Kamado running down a path between wisteria trees, and a shirtless
-chibi Ryomen Sukuna cycling through three poses (King of Curses lounge, Malevolent
-Shrine hand sign, and Cleave & Dismantle slash dash), painted
+chibi Ryomen Sukuna inside his Malevolent Shrine domain cycling through four poses (King of
+Curses lounge on a skull throne, Malevolent Shrine hand sign, Cleave & Dismantle slash dash,
+and Fuga's Divine Flame arrow), painted
 live in the browser. One page, one switch for the mood (day and dusk in the sky, lamp
 light and moonlight at the desk, Unlimited Void and Hollow Purple in the void, Flower
 field and Zoltraak in the meadow, Sunrise and Exploding Blood under the wisteria; Sukuna
@@ -35,9 +36,12 @@ card per character.
   <img src="screenshots/nezuko-dusk.jpg" width="48%" alt="Nezuko running through the pink flames of Exploding Blood" />
 </p>
 <p>
-  <img src="screenshots/sukuna-throne.jpg" width="32%" alt="Ryomen Sukuna slouched in his King of Curses pose" />
-  <img src="screenshots/sukuna-shrine.jpg" width="32%" alt="Ryomen Sukuna forming the Malevolent Shrine hand sign" />
-  <img src="screenshots/sukuna-cleave.jpg" width="32%" alt="Ryomen Sukuna lunging forward with Cleave and Dismantle slash arcs" />
+  <img src="screenshots/sukuna-throne.jpg" width="48%" alt="Ryomen Sukuna slouched on a skull throne before the Malevolent Shrine" />
+  <img src="screenshots/sukuna-shrine.jpg" width="48%" alt="Ryomen Sukuna forming the Malevolent Shrine hand sign" />
+</p>
+<p>
+  <img src="screenshots/sukuna-cleave.jpg" width="48%" alt="Ryomen Sukuna lunging forward with Cleave and Dismantle slashes" />
+  <img src="screenshots/sukuna-fuga.jpg" width="48%" alt="Ryomen Sukuna drawing Fuga's flame arrow" />
 </p>
 
 - **Live:** [chibi-jelly-painting.vercel.app](https://chibi-jelly-painting.vercel.app)
@@ -59,7 +63,7 @@ npm run build    # static build in dist/
 
 ## Controls
 
-Tap the character to jump (Light only hops in his chair; Sukuna leaps into his next pose), tap the cloud, Light's notebook, Gojo's Infinity sign or Frieren's flower bed to bounce it (Nezuko just keeps running, and Sukuna needs no stage), drag to orbit, scroll to zoom.
+Tap the character to jump (Light only hops in his chair; Sukuna leaps into his next pose), tap the cloud, Light's notebook, Gojo's Infinity sign or Frieren's flower bed to bounce it (Nezuko just keeps running; tap Sukuna's shrine to open the domain and make its mouths roar), drag to orbit, scroll to zoom.
 Six painted cards beside the sheet pick the character, **Goku**, **Light Yagami**,
 **Gojo Satoru**, **Frieren**, **Nezuko Kamado** or **Ryomen Sukuna** (each hops in on arrival); the selected one is outlined. An icon-only
 button in the top right flips the mood: sun / moon for Goku's sky (day, dusk), lamp / moon
@@ -141,12 +145,20 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
   crimson eyes (his secondary cursed slit pair sits beneath the main eyes and blinks with
   them), a fanged arrogant smirk, black cursed tattoo markings across his forehead, nose,
   cheeks, bare chest, shoulders, back and wrists, clawed hands and pleated white hakama
-  trousers with a dark obi sash and zori sandals. He has no environment props and no mood
-  toggle; instead he runs a 3-pose state machine (`POSES`) that smoothly interpolates every
+  trousers with a dark obi sash and zori sandals. He has no mood toggle; instead he runs a
+  4-pose state machine (`POSES`) that smoothly interpolates every
   joint (and jumps to the next pose when tapped): slouched mid-air King of Curses lounge
   with his chin propped on his right hand, standing Malevolent Shrine (*Fukuma Mizushi*)
   Enmaten hand sign with a crimson cursed aura, and a forward Cleave & Dismantle slash lunge
-  surrounded by razor-tapered crimson, white and black-ink crescent blade arcs.
+  surrounded by razor-tapered crimson, white and black-ink crescent blade arcs, and Fuga
+  ("Open"), drawing a burning Divine Flame arrow.
+- `src/scene/shrine.js` — his domain, after the JJK wiki: a warped Buddhist zushi shrine
+  on a mound of ox skulls, with toothed, tongued mouths in its four doorways and gables, a
+  horned hip-and-gable roof crowned by an ox skull, human skulls hanging from the eaves and
+  four gnarled stumps, standing in a blood pool with ripples and floating skulls. A skull
+  throne rises from the blood for his lounge, the domain's crimson aura and Dismantle
+  slashes flare for the hand sign and slash dash, the embers turn to fire for Fuga, and
+  tapping the shrine sends out a shockwave as its mouths roar.
 - `src/scene/glow.js` — the soft round glow shared by the lamp, the moon and the orbs.
 - `src/scene/world.js` — the nimbus cloud (recolorable), far clouds, the painted
   multi-hue sky and the twinkling sparkles.
