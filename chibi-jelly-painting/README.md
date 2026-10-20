@@ -4,7 +4,7 @@ A chibi martial-arts kid riding a wobbly cloud, a smirking chibi Light Yagami
 sitting at his desk at night, writing in the Death Note, a chibi Gojo Satoru
 hovering over an Infinity sign in a void of ink, a chibi Frieren standing in a
 floating bed of Blue-Moon Weed flowers with her mage's staff and open grimoire, and a
-chibi Nezuko Kamado on a floating mossy island under hanging wisteria, painted
+chibi Nezuko Kamado running down a path between wisteria trees, painted
 live in the browser. One page, one switch for the mood (day and dusk in the sky, lamp
 light and moonlight at the desk, Unlimited Void and Hollow Purple in the void, Flower
 field and Zoltraak in the meadow, Sunrise and Exploding Blood under the wisteria), one
@@ -28,8 +28,8 @@ card per character.
   <img src="screenshots/frieren-dusk.jpg" width="48%" alt="Frieren casting Zoltraak" />
 </p>
 <p>
-  <img src="screenshots/nezuko-day.jpg" width="48%" alt="Nezuko under the wisteria at sunrise" />
-  <img src="screenshots/nezuko-dusk.jpg" width="48%" alt="Nezuko wreathed in the pink flames of Exploding Blood" />
+  <img src="screenshots/nezuko-day.jpg" width="48%" alt="Nezuko running along the wisteria path at sunrise" />
+  <img src="screenshots/nezuko-dusk.jpg" width="48%" alt="Nezuko running through the pink flames of Exploding Blood" />
 </p>
 
 - **Live:** [chibi-jelly-painting.vercel.app](https://chibi-jelly-painting.vercel.app)
@@ -51,7 +51,7 @@ npm run build    # static build in dist/
 
 ## Controls
 
-Tap the character to jump (Light only hops in his chair), tap the cloud, Light's notebook, Gojo's Infinity sign, Frieren's flower bed or Nezuko's island to bounce it, drag to orbit, scroll to zoom.
+Tap the character to jump (Light only hops in his chair), tap the cloud, Light's notebook, Gojo's Infinity sign or Frieren's flower bed to bounce it (Nezuko just keeps running), drag to orbit, scroll to zoom.
 Five painted cards beside the sheet pick the character, **Goku**, **Light Yagami**,
 **Gojo Satoru**, **Frieren** or **Nezuko Kamado** (each hops in on arrival); the selected one is outlined. An icon-only
 button in the top right flips the mood: sun / moon for Goku's sky (day, dusk), lamp / moon
@@ -119,10 +119,12 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
   up its edges), a small pink ribbon, big pink eyes with slit pupils and long lashes, the
   bamboo muzzle tied with red cloth, a pale pink asanoha kimono with a red-and-white
   checkered obi, orange obijime and green obiage, a long dark-brown haori hanging open,
-  black kyahan, white tabi and pink-strapped zori. She stands on a floating mossy island
-  strewn with fallen petals beside Tanjiro's wooden box, under a wisteria branch that turns
-  with the camera so it always hangs behind her. In the Exploding Blood mood pink flames and
-  embers burn up around her. Reference: the Demon Slayer wiki and the Nezuko Nendoroid.
+  black kyahan, white tabi and pink-strapped zori. Her legs are jointed at hip and knee and
+  she runs in place (`run` in the rig) while a dirt path streams back under her: petals,
+  pebbles, grass and wisteria trees ride past and wrap around, and a tree that would come
+  between the camera and her bows out of the way. In the Exploding Blood mood pink flames
+  burn around her feet and embers trail off behind her. Reference: the Demon Slayer wiki
+  and the Nezuko Nendoroid.
 - `src/scene/glow.js` — the soft round glow shared by the lamp, the moon and the orbs.
 - `src/scene/world.js` — the nimbus cloud (recolorable), far clouds, the painted
   multi-hue sky and the twinkling sparkles.
@@ -130,8 +132,9 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
   jumps, hair lag, tail swish and the occasional wave. A character can hold an arm
   pose by exposing `armRest` (with `scribble` for a hand that is writing), pick which
   arm waves (`waveSide`, with its own `wavePose` if the default would hide the hand
-  behind the head), bob and hop less (`bobScale`, `jumpScale`) and may have no
-  tail. A prop can be `grounded`: it stays on its desk (`baseY`) and only squashes,
+  behind the head), bob and hop less (`bobScale`, `jumpScale`), run in place
+  (`run`, swinging its `legs` if it has them), tick its own `update(t)`, and may
+  have no tail. A prop can be `grounded`: it stays on its desk (`baseY`) and only squashes,
   and may have an `update(t)` of its own (Gojo's orbs).
 - `src/main.js` — also gives each character their own camera height (`view.polar`),
   so Light is seen from above enough to read the notebook; the camera eases there on

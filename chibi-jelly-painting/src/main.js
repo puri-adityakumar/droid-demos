@@ -12,7 +12,7 @@ import { createRoom, DESK_Y, NOTE_Z } from './scene/room.js'
 import { createGojo, createInfinity } from './scene/gojo.js'
 import { createVoid } from './scene/void.js'
 import { createFrieren, createFlowerField } from './scene/frieren.js'
-import { createNezuko, createWisteriaIsland } from './scene/nezuko.js'
+import { createNezuko, createWisteriaPath } from './scene/nezuko.js'
 import { createNimbus, createFarClouds, createSparkles, skyNode } from './scene/world.js'
 import { createRig } from './scene/rig.js'
 import { createPaintFilter, paintDefaults } from './post/paintFilter.js'
@@ -55,7 +55,7 @@ async function start()
 
     const backdrop = createVoid()
     const flowerField = createFlowerField()
-    const island = createWisteriaIsland( camera )
+    const wisteriaPath = createWisteriaPath( camera )
 
     const cast = {
         goku: {
@@ -99,10 +99,10 @@ async function start()
             name: 'Nezuko Kamado',
             world: 'wisteria',
             kid: createNezuko(),
-            ride: island,
-            extras: [ island.backdrop ],
+            ride: wisteriaPath,
+            extras: [ wisteriaPath.ground, wisteriaPath.backdrop ],
             view: { y: 1.1, zoom: 1.2, polar: 1.36 },
-            label: 'A painting of a chibi Nezuko Kamado with long black hair fading to flame orange, a pink ribbon, pink eyes and a bamboo muzzle, in a pink hemp-leaf kimono with a checkered obi and a long brown haori, standing on a floating mossy island beside Tanjiro\'s wooden box under hanging wisteria. Tap her to make her jump, tap the island to bounce it, drag to orbit and scroll to zoom.',
+            label: 'A painting of a chibi Nezuko Kamado with long black hair fading to flame orange, a pink ribbon, pink eyes and a bamboo muzzle, in a pink hemp-leaf kimono with a checkered obi and a long brown haori, running down a dirt path between wisteria trees. Tap her to make her jump, drag to orbit and scroll to zoom.',
         },
     }
     for( const c of Object.values( cast ) )
