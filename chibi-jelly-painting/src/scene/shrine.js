@@ -1,14 +1,14 @@
 import {
     Group, Mesh, SphereGeometry, CylinderGeometry, ConeGeometry, BoxGeometry, TorusGeometry, LatheGeometry,
     TubeGeometry, CircleGeometry, RingGeometry, BufferGeometry, Float32BufferAttribute,
-    Vector2, Vector3, Matrix4, Quaternion, Euler, CatmullRomCurve3, Color,
+    Vector2, Vector3, CatmullRomCurve3, Color,
     Sprite, SpriteNodeMaterial, MeshBasicNodeMaterial, DoubleSide
 } from 'three/webgpu'
-import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js'
 import { uniform } from 'three/tsl'
 
 import { paintedMaterial } from '../materials/painted.js'
 import { glowMaterial } from './glow.js'
+import { seeded, smooth, trs, Parts } from './parts.js'
 
 // Sukuna's Domain Expansion, Malevolent Shrine (Fukuma Mizushi). A warped
 // Buddhist zushi enshrining demons: it squats on a mound of ox skulls, its four
@@ -20,42 +20,6 @@ import { glowMaterial } from './glow.js'
 // flickering through the air. The domain answers Sukuna's pose: a mound of
 // skulls rises out of the blood for him to sit on, the shrine roars when he
 // forms the Enmaten sign, and the embers turn to fire for Fuga.
-
-const seeded = ( seed ) => () => ( seed = ( seed * 16807 ) % 2147483647 ) / 2147483647
-
-const smooth = ( x ) => x * x * ( 3 - 2 * x )
-
-// yaw first, then pitch and roll in the turned frame, so skulls can face outward and still nod
-function trs( [ x = 0, y = 0, z = 0 ] = [], [ rx = 0, ry = 0, rz = 0 ] = [], s = 1 )
-{
-    const scale = Array.isArray( s ) ? new Vector3( ...s ) : new Vector3( s, s, s )
-    return new Matrix4().compose( new Vector3( x, y, z ), new Quaternion().setFromEuler( new Euler( rx, ry, rz, 'YXZ' ) ), scale )
-}
-
-/** Collects transformed copies per material and merges them into one mesh each. */
-class Parts
-{
-    constructor() { this.lists = {} }
-
-    add( key, geometry, matrix )
-    {
-        const g = geometry.clone()
-        g.applyMatrix4( matrix )
-        ;( this.lists[ key ] ??= [] ).push( g )
-    }
-
-    build( materials, parent )
-    {
-        const meshes = []
-        for( const [ key, list ] of Object.entries( this.lists ) )
-        {
-            const m = new Mesh( mergeGeometries( list ), materials[ key ] )
-            parent.add( m )
-            meshes.push( m )
-        }
-        return meshes
-    }
-}
 
 const G = {
     sphere: new SphereGeometry( 1, 18, 12 ),

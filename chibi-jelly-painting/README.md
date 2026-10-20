@@ -4,13 +4,15 @@ A chibi martial-arts kid riding a wobbly cloud, a smirking chibi Light Yagami
 sitting at his desk at night, writing in the Death Note, a chibi Gojo Satoru
 hovering over an Infinity sign in a void of ink, a chibi Frieren standing in a
 floating bed of Blue-Moon Weed flowers with her mage's staff and open grimoire, a
-chibi Nezuko Kamado running down a path between wisteria trees, and a shirtless
+chibi Nezuko Kamado running down a path between wisteria trees, a shirtless
 chibi Ryomen Sukuna inside his Malevolent Shrine domain cycling through four poses (King of
 Curses lounge on a skull throne, Malevolent Shrine hand sign, Cleave & Dismantle slash dash,
-and Fuga's Divine Flame arrow), painted
+and Fuga's Divine Flame arrow), and a chibi Eren Yeager of the Survey Corps in Shiganshina
+who bites his hand, is struck by lightning and bursts out of the steam as the Attack Titan, painted
 live in the browser. One page, one switch for the mood (day and dusk in the sky, lamp
 light and moonlight at the desk, Unlimited Void and Hollow Purple in the void, Flower
-field and Zoltraak in the meadow, Sunrise and Exploding Blood under the wisteria; Sukuna
+field and Zoltraak in the meadow, Sunrise and Exploding Blood under the wisteria, Scout and
+Attack Titan in Shiganshina; Sukuna
 locks his crimson-and-charcoal King of Curses palette with no mood switch), one
 card per character.
 
@@ -43,6 +45,14 @@ card per character.
   <img src="screenshots/sukuna-cleave.jpg" width="48%" alt="Ryomen Sukuna lunging forward with Cleave and Dismantle slashes" />
   <img src="screenshots/sukuna-fuga.jpg" width="48%" alt="Ryomen Sukuna drawing Fuga's flame arrow" />
 </p>
+<p>
+  <img src="screenshots/eren-scout.jpg" width="48%" alt="Eren Yeager in his Survey Corps uniform in Shiganshina" />
+  <img src="screenshots/eren-lightning.jpg" width="48%" alt="Eren biting his hand as gold lightning strikes" />
+</p>
+<p>
+  <img src="screenshots/eren-steam.jpg" width="48%" alt="The Attack Titan bursting out of the steam" />
+  <img src="screenshots/eren-titan.jpg" width="48%" alt="The Attack Titan roaring while the Colossal Titan looks over Wall Maria" />
+</p>
 
 - **Live:** [chibi-jelly-painting.vercel.app](https://chibi-jelly-painting.vercel.app)
 - **Model:** Opus 5.5 (high) for the build, Sonnet 5.5 (high) for the final polish, video, repo and deploy
@@ -63,17 +73,18 @@ npm run build    # static build in dist/
 
 ## Controls
 
-Tap the character to jump (Light only hops in his chair; Sukuna leaps into his next pose), tap the cloud, Light's notebook, Gojo's Infinity sign or Frieren's flower bed to bounce it (Nezuko just keeps running; tap Sukuna's shrine to open the domain and make its mouths roar), drag to orbit, scroll to zoom.
-Six painted cards beside the sheet pick the character, **Goku**, **Light Yagami**,
-**Gojo Satoru**, **Frieren**, **Nezuko Kamado** or **Ryomen Sukuna** (each hops in on arrival); the selected one is outlined. An icon-only
+Tap the character to jump (Light only hops in his chair; Sukuna leaps into his next pose), tap the cloud, Light's notebook, Gojo's Infinity sign or Frieren's flower bed to bounce it (Nezuko just keeps running; tap Sukuna's shrine to open the domain and make its mouths roar; tap Wall Maria to make the Colossal Titan look over it; tap the Attack Titan to make it roar), drag to orbit, scroll to zoom.
+Seven painted cards beside the sheet pick the character, **Goku**, **Light Yagami**,
+**Gojo Satoru**, **Frieren**, **Nezuko Kamado**, **Ryomen Sukuna** or **Eren Yeager** (each hops in on arrival); the selected one is outlined. An icon-only
 button in the top right flips the mood: sun / moon for Goku's sky (day, dusk), lamp / moon
 for Light's desk (lamp light, moonlight), the Infinity sign / a purple orb for Gojo's
 void (Unlimited Void, Hollow Purple), a Blue-Moon Weed blossom / Zoltraak magic seal for
 Frieren's meadow (Flower field, Zoltraak), and a rising sun / pink flame for Nezuko's wisteria
-(Sunrise, Exploding Blood); on Sukuna the mood button hides. The card previews are
-captured from the live pipeline at load. Add `?char=light`, `?char=gojo`, `?char=frieren`, `?char=nezuko` or `?char=sukuna` to open on a
+(Sunrise, Exploding Blood); on Eren the wings / lightning bolt button is his transformation
+(Scout, Attack Titan); on Sukuna the mood button hides. The card previews are
+captured from the live pipeline at load. Add `?char=light`, `?char=gojo`, `?char=frieren`, `?char=nezuko`, `?char=sukuna` or `?char=eren` to open on a
 specific character.
-Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku · `2` Light Yagami · `3` Gojo Satoru · `4` Frieren · `5` Nezuko Kamado · `6` Ryomen Sukuna · `g` paint settings.
+Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku · `2` Light Yagami · `3` Gojo Satoru · `4` Frieren · `5` Nezuko Kamado · `6` Ryomen Sukuna · `7` Eren Yeager · `g` paint settings.
 
 ## How it works
 
@@ -159,6 +170,22 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
   throne rises from the blood for his lounge, the domain's crimson aura and Dismantle
   slashes flare for the hand sign and slash dash, the embers turn to fire for Fuga, and
   tapping the shrine sends out a shockwave as its mouths roar.
+- `src/scene/eren.js` — Eren Yeager and the Attack Titan, sharing one skeleton. The scout
+  has messy brown hair with a fringe, teal eyes under a scowl, a mid-yell mouth, the tan
+  cropped jacket open over his shirt with the Wings of Freedom on the chest, the ODM harness,
+  belt, hip blade boxes, gas tanks and reel, white trousers and knee boots, a blade in each
+  hand, the green cloak with the wings on its back and the basement key on a string. The
+  titan has long hair with a centre parting, glowing green eyes sunk under a heavy brow,
+  pointed ears, lipless cheeks of raw muscle and two rows of teeth on a jaw that drops when
+  it roars. The mood switch is the transformation: he bites his hand, gold lightning
+  strikes, steam bursts out and the titan grows out of it (and roars); going back, the titan
+  sinks into its steam and Eren drops out. The camera framing (`view`) follows his size.
+- `src/scene/shiganshina.js` — his home district: a cobbled square ringed by
+  half-timbered houses with red gable roofs, barrels and crates, and Wall Maria behind with
+  its outer gate and portcullis. When he turns titan, or when the wall is tapped, the
+  skinless Colossal Titan rises behind the wall, grips the parapet and steams.
+- `src/scene/parts.js` — small helpers shared by the scenery: a seeded random, smoothstep,
+  a transform builder and `Parts`, which merges many primitives into one mesh per material.
 - `src/scene/glow.js` — the soft round glow shared by the lamp, the moon and the orbs.
 - `src/scene/world.js` — the nimbus cloud (recolorable), far clouds, the painted
   multi-hue sky and the twinkling sparkles.
@@ -175,8 +202,9 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
   a swap until you grab it.
 - `src/themes.js` — two moods per world, eased every frame: `sky` (day, dusk), `room`
   (lamp light, moonlight), `void` (Unlimited Void, Hollow Purple), `meadow` (Flower
-  field, Zoltraak), `wisteria` (Sunrise, Exploding Blood) and `sukuna` (a locked
+  field, Zoltraak), `wisteria` (Sunrise, Exploding Blood), `eren` (Scout, Attack Titan;
+  the slot also sets which form he should be in) and `sukuna` (a locked
   crimson-and-charcoal King of Curses palette). The switch picks a slot; each character's world decides
   what it looks like.
 
-Dev-only debug hook: `window.__chibi` (renderer, scene, camera, controls, filter, cast, theme, character).
+Dev-only debug hook: `window.__chibi` (renderer, scene, camera, controls, filter, cast, theme, character, applyView).

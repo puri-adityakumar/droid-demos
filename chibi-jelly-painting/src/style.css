@@ -214,16 +214,25 @@ button {
 button:focus-visible, a:focus-visible { outline: 2px dashed var(--ink); outline-offset: 4px; border-radius: 4px; }
 
 /* one card per character beside the sheet, each a painted preview of that
-   character in the current mood */
+   character in the current mood. Anchored by its bottom edge so the column
+   stays put however many cards there are, with room kept for the last label */
 .presets {
     --thumb: 54px;
-    --cards: 6;
     --gap: 26px;
     display: flex;
     flex-direction: column;
     gap: var(--gap);
     left: calc(var(--fx, 0px) - var(--thumb) - 34px);
-    top: calc(var(--fy, 0px) + var(--fh, 0px) - var(--thumb) * var(--cards) - var(--gap) * (var(--cards) - 1) - 20px);
+    top: calc(var(--fy, 0px) + var(--fh, 0px) - 44px);
+    transform: translateY(-100%);
+    padding-bottom: 26px;
+}
+@media (max-height: 780px) {
+    .presets { --thumb: 42px; --gap: 17px; }
+}
+@media (max-height: 620px) {
+    .presets { --thumb: 34px; --gap: 15px; }
+    .preset-label { font-size: 10px; top: calc(100% + 4px); }
 }
 html[data-layout=below] .presets {
     --thumb: 46px;
@@ -296,7 +305,8 @@ html[data-layout=below] .presets {
 .mode[data-world=room] .mode-icon[data-world~=room],
 .mode[data-world=void] .mode-icon[data-world~=void],
 .mode[data-world=meadow] .mode-icon[data-world~=meadow],
-.mode[data-world=wisteria] .mode-icon[data-world~=wisteria] { display: block; }
+.mode[data-world=wisteria] .mode-icon[data-world~=wisteria],
+.mode[data-world=eren] .mode-icon[data-world~=eren] { display: block; }
 .mode[data-world=sukuna] { display: none; }
 .mode[data-mode=day] .mode-icon[data-mode=dusk] { opacity: 0; transform: rotate(-70deg) scale(0.4); }
 .mode[data-mode=dusk] .mode-icon[data-mode=day] { opacity: 0; transform: rotate(70deg) scale(0.4); }

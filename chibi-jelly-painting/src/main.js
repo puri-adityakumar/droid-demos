@@ -15,6 +15,8 @@ import { createFrieren, createFlowerField } from './scene/frieren.js'
 import { createNezuko, createWisteriaPath } from './scene/nezuko.js'
 import { createSukuna } from './scene/sukuna.js'
 import { createMalevolentShrine } from './scene/shrine.js'
+import { createEren } from './scene/eren.js'
+import { createShiganshina } from './scene/shiganshina.js'
 import { createNimbus, createFarClouds, createSparkles, skyNode } from './scene/world.js'
 import { createRig } from './scene/rig.js'
 import { createPaintFilter, paintDefaults } from './post/paintFilter.js'
@@ -60,6 +62,8 @@ async function start()
     const wisteriaPath = createWisteriaPath( camera )
     const sukuna = createSukuna()
     const shrine = createMalevolentShrine( camera, sukuna )
+    const eren = createEren()
+    const shiganshina = createShiganshina( camera, eren )
 
     const cast = {
         goku: {
@@ -105,6 +109,7 @@ async function start()
             kid: createNezuko(),
             ride: wisteriaPath,
             extras: [ wisteriaPath.ground, wisteriaPath.backdrop ],
+            floor: 0.3,
             view: { y: 1.1, zoom: 1.2, polar: 1.36 },
             label: 'A painting of a chibi Nezuko Kamado with long black hair fading to flame orange, a pink ribbon, pink eyes and a bamboo muzzle, in a pink hemp-leaf kimono with a checkered obi and a long brown haori, running down a dirt path between wisteria trees. Tap her to make her jump, drag to orbit and scroll to zoom.',
         },
@@ -114,8 +119,22 @@ async function start()
             kid: sukuna,
             ride: shrine,
             extras: [ shrine.ground, shrine.backdrop, shrine.fx ],
+            floor: 0.3,
             view: { y: 1.8, zoom: 0.88, polar: 1.4 },
             label: 'A painting of a shirtless chibi Ryomen Sukuna with spiky salmon-pink hair over a dark undercut, four glowing crimson eyes, black cursed markings across his face, chest, shoulders and wrists, and white hakama trousers, standing in a pool of blood inside his Domain Expansion, Malevolent Shrine: a crimson Buddhist shrine on a mound of ox skulls, with grinning mouths for doors, bull horns on its roof and skulls hanging from its eaves, while Dismantle slashes flicker through the air. He cycles through four poses: lounging on a throne of skulls, the Enmaten hand sign, a Cleave and Dismantle slash dash, and drawing a Fuga flame arrow. Tap him to jump and switch poses, tap the shrine to open the domain, drag to orbit and scroll to zoom.',
+        },
+        eren: {
+            name: 'Eren Yeager',
+            world: 'eren',
+            kid: eren,
+            ride: shiganshina,
+            extras: [ shiganshina.ground, shiganshina.backdrop, eren.fx ],
+            floor: 0.3,
+            // his framing follows him as he grows into the titan and back
+            view: eren.view,
+            // the mood is his form, so thumbnails jump straight to it instead of transforming
+            snap: () => { eren.snap(); shiganshina.snap() },
+            label: 'A painting of a chibi Eren Yeager of the Survey Corps with messy brown hair, furious teal eyes, a tan cropped jacket with the Wings of Freedom, white trousers, the ODM gear on his hips, a blade in each hand, a green cloak and his basement key on a string, standing in a cobbled square in Shiganshina with half-timbered houses and Wall Maria behind him. Switch the mood and he bites his hand, gold lightning strikes and he bursts out of the steam as the Attack Titan, while the skinless Colossal Titan rises to look over the wall. Tap him to jump or make the titan roar, tap the wall to call the Colossal Titan, drag to orbit and scroll to zoom.',
         },
     }
     for( const c of Object.values( cast ) )
@@ -147,7 +166,7 @@ async function start()
         // the sky's clouds belong to the sky, meadow and wisteria; the glints are
         // stars in the void, mana motes in the meadow and sparks over the wisteria
         farClouds.group.visible = world === 'sky' || world === 'meadow' || world === 'wisteria'
-        sparkles.group.visible = world !== 'room' && world !== 'sukuna'
+        sparkles.group.visible = world !== 'room' && world !== 'sukuna' && world !== 'eren'
         theme.setWorld( world )
         canvas.setAttribute( 'aria-label', cast[ id ].label )
     }
@@ -186,8 +205,17 @@ async function start()
         const k = dt > 0 ? 1 - Math.exp( - dt * 5 ) : 1
         view.y += ( goal.y - view.y ) * k
         view.zoom += ( goal.zoom - view.zoom ) * k
+        // carry the camera with the target so a framing that changes height
+        // (Eren growing into the titan) doesn't tilt the orbit
+        camera.position.y += view.y - controls.target.y
         controls.target.y = view.y
         camera.zoom = fitZoom * view.zoom
+
+        // worlds standing on the ground keep the camera above it: from below,
+        // the one-sided ground vanishes and its stones float in the sky
+        const { floor } = cast[ active ]
+        const reach = camera.position.distanceTo( controls.target )
+        controls.maxPolarAngle = floor == null ? 1.9 : Math.min( 1.9, Math.acos( Math.max( - 1, Math.min( 1, ( floor - view.y ) / reach ) ) ) )
         camera.updateProjectionMatrix()
 
         if( settling )
@@ -300,6 +328,7 @@ async function start()
         applyView()
         theme.set( themeId )
         theme.snap()
+        cast[ id ].snap?.()
     }
 
     function queueThumbnails()
@@ -326,7 +355,7 @@ async function start()
     let frames = 0
     let ready = false
 
-    if( import.meta.env.DEV ) window.__chibi = { renderer, scene, camera, controls, filter, cast, theme, character, get frames() { return frames } }
+    if( import.meta.env.DEV ) window.__chibi = { renderer, scene, camera, controls, filter, cast, theme, character, applyView, get frames() { return frames } }
 
     renderer.setAnimationLoop( () =>
     {

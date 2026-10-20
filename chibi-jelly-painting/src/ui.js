@@ -130,6 +130,8 @@ export function createUI()
             modeSwitch.dataset.world = theme.world
             hint.textContent = theme.world === 'sukuna'
                 ? 'tap him to switch pose · tap the shrine to open the domain · c character'
+                : theme.world === 'eren'
+                ? `tap him to jump · tap the wall · t ${ theme.current === 'day' ? 'transform' : 'turn back' } · c character`
                 : `tap to jump · drag to turn · t ${ slots.map( ( slot ) => theme.label( slot ).toLowerCase() ).join( ' / ' ) } · c character`
             modeSwitch.setAttribute( 'aria-label', label )
             modeSwitch.title = label
