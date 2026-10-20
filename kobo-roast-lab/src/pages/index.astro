@@ -1,0 +1,1408 @@
+---
+import Base from '../layouts/Base.astro';
+import BenchStage from '../components/BenchStage.astro';
+import {
+  site,
+  projects,
+  originLots,
+  tastingNotes,
+  roastCurvePhases,
+  tastingRooms,
+} from '../data/site';
+
+const initialPhase = roastCurvePhases[3]; // 04 First Crack 196.4°C
+---
+<Base showLoader={true}>
+  <!-- SECTION 01 // SUNLIT 3D EXTRACTION COUNTER & HERO -->
+  <BenchStage initialSlug="lever-l01" mode="home" />
+
+  <!-- SECTION 02 // SINGLE-ORIGIN HARVEST LOTS & BOTANICAL TASTING NOTES -->
+  <section class="section origins-sec" id="origins">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow" data-reveal="fade">02 // SINGLE-ORIGIN MICRO-LOT LEDGER</p>
+          <h2 class="t-h1" data-split="lines">Sun-Dried Harvests &amp; Direct Farm Gate Provenance.</h2>
+        </div>
+        <p class="sec-head__meta">CONVECTIVE LIGHT ROAST · AGTRON 67.2 TO 69.8 · NITROGEN FLUSHED</p>
+      </div>
+
+      <!-- 3 Sunlit Single-Origin Farm Cards -->
+      <div class="origins-grid">
+        {originLots.map((lot) => (
+          <article class="origin-card" data-reveal="up">
+            <div class="origin-card__media">
+              <img
+                src={lot.image}
+                alt={lot.imageAlt}
+                width="700"
+                height="506"
+                loading="lazy"
+                class="origin-card__img"
+              />
+              <div class="origin-card__badges t-mono">
+                <span class="origin-badge origin-badge--light">{lot.lotCode}</span>
+                <span class="origin-badge origin-badge--score">{lot.cuppingScore}</span>
+              </div>
+            </div>
+
+            <div class="origin-card__body">
+              <div class="origin-card__top t-mono">
+                <span>{lot.region}</span>
+                <strong class="origin-card__price">{lot.bagPrice}</strong>
+              </div>
+              <h3 class="t-h2 origin-card__title">{lot.title}</h3>
+
+              <div class="origin-notes" aria-label="Tasting notes">
+                {lot.tastingNotes.map((note) => (
+                  <span class="origin-note-pill t-mono">{note}</span>
+                ))}
+              </div>
+
+              <dl class="origin-specs t-mono">
+                <div>
+                  <dt>PRODUCER</dt>
+                  <dd>{lot.producer}</dd>
+                </div>
+                <div>
+                  <dt>ALTITUDE &amp; VARIETAL</dt>
+                  <dd>{lot.altitude} · {lot.varietal}</dd>
+                </div>
+                <div>
+                  <dt>FERMENTATION</dt>
+                  <dd>{lot.process}</dd>
+                </div>
+                <div>
+                  <dt>ROAST &amp; FOB</dt>
+                  <dd>{lot.agtron} · {lot.fobPrice}</dd>
+                </div>
+              </dl>
+
+              <p class="origin-recipe-text">{lot.recipeSummary}</p>
+
+              <div class="origin-card__actions">
+                <a href={lot.orderHref} class="btn-pill origin-order-btn">
+                  <span>{lot.orderCta}</span>
+                </a>
+                <button
+                  type="button"
+                  class="btn-pill btn-pill--ghost origin-sync-btn"
+                  data-origin-recipe
+                  data-origin-specimen={lot.linkedSpecimen}
+                  data-origin-temp={lot.brewTemp}
+                  data-origin-pressure={lot.pressure}
+                  data-origin-ext={lot.extraction}
+                  data-origin-tds={`${lot.tds} TDS`}
+                  data-origin-title={lot.title}
+                >
+                  <span>Load Brew Recipe on 3D Bar</span>
+                  <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <!-- 4 Botanical Watercolor Tasting Notes Matrix -->
+      <div class="botanical-block">
+        <div class="botanical-hdr">
+          <div>
+            <p class="eyebrow" data-reveal="fade">VOLATILE AROMA ATLAS // GAS CHROMATOGRAPHY</p>
+            <h3 class="t-h2" data-split="lines">Four Botanical Sensory Markers Preserved by Convective Air Roasting.</h3>
+          </div>
+          <span class="t-mono botanical-hdr__meta">ILLUSTRATED PLATES 01 TO 04 · 38 PPM MG-BUFFERED WATER</span>
+        </div>
+
+        <div class="botanical-grid">
+          {tastingNotes.map((note) => (
+            <article class="botanical-card" data-reveal="up">
+              <div class="botanical-card__plate">
+                <img
+                  src={note.image}
+                  alt={note.imageAlt}
+                  width="560"
+                  height="506"
+                  loading="lazy"
+                  class="botanical-card__img"
+                />
+                <span class="botanical-card__code t-mono">{note.code}</span>
+              </div>
+              <div class="botanical-card__body">
+                <span class="t-mono botanical-card__latin">{note.botanicalLatin}</span>
+                <h4 class="botanical-card__title">{note.title}</h4>
+                <p class="botanical-card__summary">{note.summary}</p>
+                <dl class="botanical-card__specs t-mono">
+                  <div>
+                    <dt>PRIMARY COMPOUND</dt>
+                    <dd>{note.compound}</dd>
+                  </div>
+                  <div>
+                    <dt>THERMAL RELEASE</dt>
+                    <dd>{note.volatility}</dd>
+                  </div>
+                  <div>
+                    <dt>DOMINANT LOT</dt>
+                    <dd>{note.foundInLot}</dd>
+                  </div>
+                </dl>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 03 // INTERACTIVE LORING S15 ROAST CURVE & BREW RATIO CALCULATOR -->
+  <section class="section roast-sec" id="roast-curve">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow" data-reveal="fade">03 // THERMODYNAMIC ROAST CURVE &amp; EXTRACTION CALCULATOR</p>
+          <h2 class="t-h1" data-split="lines">Loring S15 Falcon Telemetry &amp; Live Brew Ratio Calibration.</h2>
+        </div>
+        <p class="sec-head__meta">BATCH #042 GEDEB WORKA SAKARO · 14.8% DEVELOPMENT TIME RATIO</p>
+      </div>
+
+      <div class="roast-grid grid-12">
+        <!-- Left 7 Cols: Interactive SVG Roast Curve -->
+        <div class="roast-chart-card" data-roast-lab data-reveal="up">
+          <div class="roast-chart-card__hdr t-mono">
+            <span>LORING S15 RECIRCULATING KILN // 12.0 KG BATCH LOG</span>
+            <div class="roast-legend">
+              <span class="roast-legend__item roast-legend__item--temp">BEAN TEMP (°C)</span>
+              <span class="roast-legend__item roast-legend__item--ror">RATE OF RISE (°C/MIN)</span>
+            </div>
+          </div>
+
+          <!-- 5 Interactive Thermodynamic Phase Buttons -->
+          <div class="roast-phase-tabs" role="tablist" aria-label="Thermodynamic Roast Curve Phases">
+            {roastCurvePhases.map((p) => (
+              <button
+                type="button"
+                role="tab"
+                class:list={['roast-phase-tab', 't-mono', { 'is-active': p.id === initialPhase.id }]}
+                data-roast-phase={p.id}
+                aria-selected={p.id === initialPhase.id ? 'true' : 'false'}
+              >
+                <span class="roast-phase-tab__step">{p.id}</span>
+                <span>{p.timestamp}</span>
+              </button>
+            ))}
+          </div>
+
+          <!-- Dual-Axis SVG Telemetry Graph -->
+          <div class="roast-svg-wrap">
+            <svg
+              viewBox="0 0 680 240"
+              class="roast-svg"
+              role="img"
+              aria-label="Loring S15 Falcon Bean Temperature and Rate of Rise curve across 9 minutes 16 seconds"
+            >
+              <!-- Horizontal Temperature Grid Lines -->
+              <g stroke="rgba(36,23,16,0.10)" stroke-width="1">
+                <line x1="48" y1="36" x2="644" y2="36" />
+                <line x1="48" y1="82" x2="644" y2="82" />
+                <line x1="48" y1="128" x2="644" y2="128" />
+                <line x1="48" y1="174" x2="644" y2="174" />
+                <line x1="48" y1="206" x2="644" y2="206" />
+              </g>
+
+              <!-- Vertical Time Markers -->
+              <g stroke="rgba(36,23,16,0.08)" stroke-dasharray="3 3" stroke-width="1">
+                <line x1="60" y1="24" x2="60" y2="206" />
+                <line x1="168" y1="24" x2="168" y2="206" />
+                <line x1="332" y1="24" x2="332" y2="206" />
+                <line x1="520" y1="24" x2="520" y2="206" />
+                <line x1="620" y1="24" x2="620" y2="206" />
+              </g>
+
+              <!-- Axis Labels -->
+              <g fill="#755B4B" font-family="JetBrains Mono, monospace" font-size="9.5">
+                <text x="8" y="40">220°C</text>
+                <text x="8" y="85">190°C</text>
+                <text x="8" y="131">150°C</text>
+                <text x="8" y="177">100°C</text>
+                <text x="648" y="56">+18°/m</text>
+                <text x="648" y="100">+13°/m</text>
+                <text x="648" y="142">+8°/m</text>
+                <text x="648" y="172">+4°/m</text>
+                <text x="56" y="224" text-anchor="start">00:00 CHARGE</text>
+                <text x="162" y="224" text-anchor="middle">01:24 TP</text>
+                <text x="306" y="224" text-anchor="middle">04:18 DRY END</text>
+                <text x="468" y="224" text-anchor="middle">07:54 1ST CRACK</text>
+                <text x="644" y="224" text-anchor="end">09:16 DROP</text>
+              </g>
+
+              <!-- Maillard & Development Shaded Zones -->
+              <rect x="332" y="24" width="188" height="182" fill="rgba(158, 113, 35, 0.06)" />
+              <rect x="520" y="24" width="100" height="182" fill="rgba(196, 90, 40, 0.09)" />
+
+              <!-- Active Phase Cursor Line -->
+              <line
+                data-roast-cursor-line
+                x1={initialPhase.svgX}
+                y1="24"
+                x2={initialPhase.svgX}
+                y2="206"
+                stroke="#241710"
+                stroke-width="1.5"
+                stroke-dasharray="4 3"
+              />
+
+              <!-- Rate of Rise (RoR °C/min) Curve in Highland Sage -->
+              <path
+                d="M 60 165 C 110 140, 138 54, 168 54 C 235 54, 280 80, 332 96 C 410 116, 468 126, 520 138 C 565 148, 595 156, 620 162"
+                fill="none"
+                stroke="#3D6347"
+                stroke-width="2.2"
+                stroke-dasharray="5 3"
+              />
+
+              <!-- Bean Temperature (°C) Curve in Terracotta -->
+              <path
+                d="M 60 64 C 95 152, 135 176, 168 176 C 228 176, 275 144, 332 122 C 405 96, 468 86, 520 78 C 565 71, 596 68, 620 66"
+                fill="none"
+                stroke="#C45A28"
+                stroke-width="3"
+              />
+
+              <!-- Interactive Phase Nodes -->
+              {roastCurvePhases.map((p) => (
+                <g
+                  class:list={['roast-svg-node', { 'is-active': p.id === initialPhase.id }]}
+                  data-roast-svg-node={p.id}
+                >
+                  <circle cx={p.svgX} cy={p.svgTempY} r="7" class="roast-node-halo" />
+                  <circle cx={p.svgX} cy={p.svgTempY} r="4.5" class="roast-node-temp" />
+                  <circle cx={p.svgX} cy={p.svgRorY} r="3.5" class="roast-node-ror" />
+                </g>
+              ))}
+            </svg>
+          </div>
+
+          <!-- Selected Phase Live Readout Panel -->
+          <div class="roast-readout">
+            <div class="roast-readout__head">
+              <div>
+                <span class="t-mono roast-readout__step" data-phase-step>
+                  {initialPhase.step} // {initialPhase.timestamp}
+                </span>
+                <h3 class="t-h2 roast-readout__title" data-phase-name>{initialPhase.name}</h3>
+              </div>
+              <div class="roast-readout__kpis t-mono">
+                <div>
+                  <span>BEAN TEMP</span>
+                  <strong data-phase-temp>{initialPhase.beanTempC}</strong>
+                </div>
+                <div>
+                  <span>RATE OF RISE</span>
+                  <strong data-phase-ror>{initialPhase.rorCMin}</strong>
+                </div>
+                <div>
+                  <span>BURNER OUTPUT</span>
+                  <strong data-phase-burner>{initialPhase.burnerKpa}</strong>
+                </div>
+                <div>
+                  <span>STAGE TARGET</span>
+                  <strong data-phase-agtron>{initialPhase.agtronTarget}</strong>
+                </div>
+              </div>
+            </div>
+            <p class="roast-readout__summary" data-phase-summary>{initialPhase.summary}</p>
+            <ul class="roast-readout__specs t-mono" data-phase-specs>
+              {initialPhase.specs.map((s) => (
+                <li>{s}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <!-- Right 5 Cols: Interactive Brew Ratio & Extraction Calculator -->
+        <div class="brew-calc-card" data-brew-calc data-reveal="up">
+          <div class="brew-calc__hdr">
+            <p class="eyebrow">PRECISION EXTRACTION CALCULATOR</p>
+            <h3 class="t-h2">Calibrate Dose, Yield &amp; Refractometer Target.</h3>
+            <p class="brew-calc__sub">
+              Select your extraction method and scrub dry coffee mass to compute bloom water, laminar pour targets, and expected VST refractometer yield.
+            </p>
+          </div>
+
+          <div class="brew-mode-switch t-mono" role="group" aria-label="Select extraction method">
+            <button
+              type="button"
+              class="brew-mode-btn is-active"
+              data-brew-mode="pourover"
+              aria-pressed="true"
+            >
+              V60 POUR-OVER (1:16.5)
+            </button>
+            <button
+              type="button"
+              class="brew-mode-btn"
+              data-brew-mode="espresso"
+              aria-pressed="false"
+            >
+              L-01 LEVER ESPRESSO (1:2.1)
+            </button>
+          </div>
+
+          <div class="brew-slider-box">
+            <div class="brew-slider-box__top t-mono">
+              <label for="brew-dose-slider">DRY COFFEE DOSE (GRAMS)</label>
+              <strong class="brew-slider-box__val" data-calc-dose>15.0 g</strong>
+            </div>
+            <input
+              id="brew-dose-slider"
+              type="range"
+              min="12"
+              max="22"
+              step="0.5"
+              value="15.0"
+              class="bench-slider calc-slider"
+              data-brew-dose-input
+            />
+            <div class="brew-slider-box__scale t-mono">
+              <span>12.0g SINGLE</span>
+              <span>15.0g V60 STD</span>
+              <span>18.0g LEVER DOUBLE</span>
+              <span>22.0g CARAFE</span>
+            </div>
+          </div>
+
+          <dl class="brew-calc-results t-mono">
+            <div class="brew-calc-row brew-calc-row--highlight">
+              <dt>TARGET BREW WATER / YIELD</dt>
+              <dd data-calc-yield>248 g</dd>
+            </div>
+            <div class="brew-calc-row">
+              <dt>BLOOM / PRE-INFUSION</dt>
+              <dd data-calc-bloom>45 g (40s Bloom)</dd>
+            </div>
+            <div class="brew-calc-row">
+              <dt>MASS RATIO</dt>
+              <dd data-calc-ratio>1 : 16.5</dd>
+            </div>
+            <div class="brew-calc-row">
+              <dt>WATER TEMPERATURE</dt>
+              <dd data-calc-temp>93.5°C (200.3°F)</dd>
+            </div>
+            <div class="brew-calc-row">
+              <dt>MEDIAN BURR GAP (SSP 98MM)</dt>
+              <dd data-calc-grind>598 µm (EK43 #8.4)</dd>
+            </div>
+            <div class="brew-calc-row">
+              <dt>CONTACT DURATION</dt>
+              <dd data-calc-time>02m 32s Drawdown</dd>
+            </div>
+            <div class="brew-calc-row">
+              <dt>VST REFRACTOMETER TARGET</dt>
+              <dd class="brew-calc-tds" data-calc-tds>1.42% TDS · 21.4% EXT</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 04 // BREWING VESSELS, HARDWARE & STUDIO TURNAROUND SHEETS -->
+  <section class="section equip-sec" id="equipment">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow" data-reveal="fade">04 // BREWING VESSELS &amp; STUDIO TURNAROUND BOARDS</p>
+          <h2 class="t-h1" data-split="lines">Four Custom 3D Hardware &amp; Ceramic Assemblies.</h2>
+        </div>
+        <p class="sec-head__meta">ALL MODELS &lt; 180 KB GLB · 5 SUB-ASSEMBLIES EACH · KYOTO &amp; TSUBAME</p>
+      </div>
+
+      <div class="equip-grid">
+        {projects.map((p) => (
+          <article class="equip-card" data-reveal="up">
+            <div class="equip-card__sheet">
+              <img
+                src={p.sheetImage}
+                alt={p.sheetAlt}
+                width="1200"
+                height="800"
+                loading="lazy"
+                class="equip-card__img"
+                data-sheet-crop={p.slug === 'stoneware-s08' ? 'left' : p.slug === 'gedeb-lot04' ? 'right' : undefined}
+              />
+              <div class="equip-card__overlay t-mono">
+                <span>{p.specimenCode}</span>
+                <span>{p.glbSize} // {p.triangleCount}</span>
+              </div>
+            </div>
+
+            <div class="equip-card__body">
+              <div class="equip-card__meta t-mono">
+                <span>{p.index} // {p.sector}</span>
+                <strong class="equip-card__price">{p.priceUsd}</strong>
+              </div>
+              <h3 class="t-h2 equip-card__title">
+                <a href={`/work/${p.slug}`} class="u-link">{p.title}</a>
+              </h3>
+              <p class="equip-card__summary">{p.summary}</p>
+
+              <div class="equip-parts-strip t-mono" aria-label="5 sub-assemblies">
+                {p.parts.map((pt) => (
+                  <span class="equip-part-pill">{pt.index} {pt.code}</span>
+                ))}
+              </div>
+
+              <div class="equip-card__actions">
+                <button
+                  type="button"
+                  class="btn-pill btn-pill--ghost"
+                  data-load-specimen={p.slug}
+                >
+                  <span>Load on 3D Bar</span>
+                </button>
+                <a
+                  href={`/work/${p.slug}`}
+                  class="btn-pill"
+                >
+                  <span>Open Technical Dossier</span>
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 05 // MATERIAL CRAFT, ORTHOGRAPHIC BLUEPRINTS & TASTING ROOMS -->
+  <section class="section craft-sec" id="craft">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow" data-reveal="fade">05 // FLUID DYNAMICS, THERMAL RETENTION &amp; TASTING BARS</p>
+          <h2 class="t-h1" data-split="lines">Orthographic Craft Plates &amp; Water Chemistry Ledger.</h2>
+        </div>
+        <p class="sec-head__meta">HIGASHIYAMA KYOTO · SE DIVISION PORTLAND · VST LAB VERIFIED</p>
+      </div>
+
+      <!-- 3 Orthographic Blueprint Plates -->
+      <div class="blueprint-grid">
+        <!-- Plate 01.A -->
+        <article class="blueprint-card" data-reveal="up">
+          <div class="blueprint-card__top t-mono">
+            <span>PLATE FIG 01.A // HYDRAULIC DECAY</span>
+            <strong>9.0 → 5.2 BAR</strong>
+          </div>
+          <div class="blueprint-svg-box">
+            <svg viewBox="0 0 360 160" role="img" aria-label="9-Bar Piston Lever Pressure Decay Curve">
+              <g stroke="rgba(36,23,16,0.12)" stroke-width="1">
+                <line x1="30" y1="25" x2="336" y2="25" />
+                <line x1="30" y1="75" x2="336" y2="75" />
+                <line x1="30" y1="125" x2="336" y2="125" />
+              </g>
+              <path
+                d="M 30 125 L 85 110 L 112 28 C 165 30, 240 68, 330 88"
+                fill="none"
+                stroke="#C45A28"
+                stroke-width="2.5"
+              />
+              <circle cx="112" cy="28" r="4" fill="#241710" />
+              <circle cx="330" cy="88" r="4" fill="#9E7123" />
+              <text x="36" y="146" fill="#755B4B" font-family="JetBrains Mono" font-size="9">0-7s 2.0 BAR PRE-INFUSION</text>
+              <text x="195" y="146" fill="#755B4B" font-family="JetBrains Mono" font-size="9">7-31s SPRING TAPER</text>
+            </svg>
+          </div>
+          <h3 class="blueprint-card__title">Direct-Piston Lever Pressure Decay</h3>
+          <p class="blueprint-card__desc">
+            After a 7-second 2.0 bar line saturation, the tempered chrome-silicon spring peaks at 9.0 bar and tapers to 5.2 bar as puck resistance drops, preventing late-shot astringency.
+          </p>
+        </article>
+
+        <!-- Plate 02.B -->
+        <article class="blueprint-card" data-reveal="up">
+          <div class="blueprint-card__top t-mono">
+            <span>PLATE FIG 02.B // SPIRAL BYPASS</span>
+            <strong>16 RIBS · 60° CONE</strong>
+          </div>
+          <div class="blueprint-svg-box">
+            <svg viewBox="0 0 360 160" role="img" aria-label="60 degree spiral flute laminar air bypass geometry">
+              <circle cx="180" cy="80" r="58" fill="none" stroke="#241710" stroke-width="1.5" />
+              <circle cx="180" cy="80" r="18" fill="none" stroke="#C45A28" stroke-width="1.5" />
+              <g stroke="#9E7123" stroke-width="1.2" fill="none">
+                <path d="M 180 62 C 202 62, 222 45, 238 80" />
+                <path d="M 198 80 C 198 102, 215 122, 180 138" />
+                <path d="M 180 98 C 158 98, 138 115, 122 80" />
+                <path d="M 162 80 C 162 58, 145 38, 180 22" />
+              </g>
+              <text x="42" y="146" fill="#755B4B" font-family="JetBrains Mono" font-size="9">2.4MM RELIEF RIBS // ZERO VACUUM LOCK</text>
+            </svg>
+          </div>
+          <h3 class="blueprint-card__title">60° Arita Porcelain Spiral Air Relief</h3>
+          <p class="blueprint-card__desc">
+            Sixteen 2.4 mm knife-edged porcelain ribs suspend the Abaca filter away from the cone wall, venting displaced air and stabilizing a 2:32 laminar drawdown.
+          </p>
+        </article>
+
+        <!-- Plate 03.C -->
+        <article class="blueprint-card" data-reveal="up">
+          <div class="blueprint-card__top t-mono">
+            <span>PLATE FIG 03.C // THERMAL MASS</span>
+            <strong>7.0 → 3.2 MM WALL</strong>
+          </div>
+          <div class="blueprint-svg-box">
+            <svg viewBox="0 0 360 160" role="img" aria-label="Mashiko stoneware parabolic bowl cross section">
+              <path
+                d="M 95 28 C 95 108, 132 126, 180 126 C 228 126, 265 108, 265 28"
+                fill="none"
+                stroke="#241710"
+                stroke-width="6"
+                stroke-linecap="round"
+              />
+              <path
+                d="M 106 46 Q 180 56 254 46"
+                fill="none"
+                stroke="#C45A28"
+                stroke-width="2"
+                stroke-dasharray="4 3"
+              />
+              <text x="48" y="146" fill="#755B4B" font-family="JetBrains Mono" font-size="9">R44MM PARABOLIC FLOOR · 62.0°C MICROFOAM</text>
+            </svg>
+          </div>
+          <h3 class="blueprint-card__title">Mashiko Iron-Clay Thermal Cross-Section</h3>
+          <p class="blueprint-card__desc">
+            A 7.0 mm base wall stores heat beneath the double ristretto while the rim tapers to 3.2 mm for tactile comfort and unbroken microfoam folding.
+          </p>
+        </article>
+      </div>
+
+      <!-- 4-Cell Roastery Verification Strip -->
+      <div class="metrics-strip">
+        {site.benchMetrics.map((m) => (
+          <div class="metric-box" data-reveal="up">
+            <span class="t-mono metric-box__lbl">{m.label}</span>
+            <strong class="metric-box__val">{m.value}</strong>
+            <p class="metric-box__detail">{m.detail}</p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Kyoto & Portland Tasting Bars -->
+      <div class="rooms-grid">
+        {tastingRooms.map((room) => (
+          <article class="room-card" data-reveal="up">
+            <div class="room-card__top t-mono">
+              <span>{room.code}</span>
+              <span>{room.coordinates}</span>
+            </div>
+            <h3 class="t-h2 room-card__city">{room.city}</h3>
+            <p class="room-card__note">{room.note}</p>
+            <dl class="room-card__specs t-mono">
+              <div>
+                <dt>ADDRESS</dt>
+                <dd>{room.address}</dd>
+              </div>
+              <div>
+                <dt>SERVICE HOURS</dt>
+                <dd>{room.hours}</dd>
+              </div>
+              <div>
+                <dt>BREW WATER PROFILE</dt>
+                <dd>{room.waterSpec}</dd>
+              </div>
+            </dl>
+            <div class="room-card__actions">
+              <a href={room.ctaHref} class="btn-pill btn-pill--ghost room-card__cta">
+                <span>{room.ctaLabel}</span>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Section 02: Single-Origin Lots & Botanical Matrix */
+  .origins-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gutter);
+  }
+  .origin-card {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 14px 34px rgba(36, 23, 16, 0.045);
+  }
+  .origin-card__media {
+    position: relative;
+    aspect-ratio: 700 / 506;
+    background: var(--bg-elevated);
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+  }
+  .origin-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .origin-card:hover .origin-card__img {
+    transform: scale(1.03);
+  }
+  .origin-card__badges {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    pointer-events: none;
+  }
+  .origin-badge {
+    padding: 0.28rem 0.6rem;
+    border-radius: var(--radius);
+    font-size: 10.5px;
+    font-weight: 500;
+  }
+  .origin-badge--light {
+    background: rgba(250, 247, 242, 0.92);
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
+  }
+  .origin-badge--score {
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .origin-card__body {
+    padding: 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    flex: 1;
+  }
+  .origin-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .origin-card__price {
+    color: var(--accent-ink);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .origin-card__title {
+    font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.55rem);
+  }
+  .origin-notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .origin-note-pill {
+    padding: 0.24rem 0.55rem;
+    border-radius: 999px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    color: var(--ink-secondary);
+    font-size: 10.5px;
+  }
+  .origin-specs {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.48rem;
+    padding-block: 0.75rem;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    font-size: 11px;
+  }
+  .origin-specs div {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .origin-specs dt {
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .origin-specs dd {
+    color: var(--ink);
+    text-align: right;
+    font-weight: 500;
+  }
+  .origin-recipe-text {
+    font-size: 0.86rem;
+    color: var(--ink-secondary);
+    line-height: 1.48;
+  }
+  .origin-card__actions {
+    margin-top: auto;
+    padding-top: 0.45rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .origin-order-btn,
+  .origin-sync-btn {
+    width: 100%;
+  }
+
+  /* Botanical Watercolor Matrix */
+  .botanical-block {
+    margin-top: clamp(3rem, 5vw, 5rem);
+    padding-top: clamp(2.5rem, 4vw, 4rem);
+    border-top: 1px solid var(--line);
+  }
+  .botanical-hdr {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .botanical-hdr__meta {
+    color: var(--muted);
+  }
+  .botanical-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--gutter);
+  }
+  .botanical-card {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .botanical-card__plate {
+    position: relative;
+    aspect-ratio: 560 / 506;
+    background: #FAF6F0;
+    border-bottom: 1px solid var(--line);
+    padding: 0.65rem;
+  }
+  .botanical-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .botanical-card__code {
+    position: absolute;
+    top: 0.65rem;
+    left: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    background: rgba(250, 247, 242, 0.9);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .botanical-card__body {
+    padding: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    flex: 1;
+  }
+  .botanical-card__latin {
+    color: var(--sage);
+    font-size: 10.5px;
+  }
+  .botanical-card__title {
+    font-family: var(--f-display);
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .botanical-card__summary {
+    font-size: 0.88rem;
+    color: var(--ink-secondary);
+    line-height: 1.5;
+  }
+  .botanical-card__specs {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 0.38rem;
+    font-size: 10.5px;
+  }
+  .botanical-card__specs dt {
+    color: var(--muted);
+  }
+  .botanical-card__specs dd {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* Section 03: Roast Curve & Brew Calculator */
+  .roast-sec {
+    background: var(--bg-elevated);
+  }
+  .roast-grid {
+    align-items: stretch;
+  }
+  .roast-chart-card {
+    grid-column: span 7;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    padding: 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .roast-chart-card__hdr {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    color: var(--muted);
+    font-size: 11px;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .roast-legend {
+    display: inline-flex;
+    gap: 1rem;
+  }
+  .roast-legend__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--ink);
+  }
+  .roast-legend__item::before {
+    content: '';
+    width: 10px;
+    height: 3px;
+    display: inline-block;
+  }
+  .roast-legend__item--temp::before {
+    background: var(--accent);
+  }
+  .roast-legend__item--ror::before {
+    background: var(--sage);
+  }
+
+  .roast-phase-tabs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+  .roast-phase-tab {
+    padding: 0.55rem 0.5rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--ink-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .roast-phase-tab.is-active,
+  .roast-phase-tab:hover {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .roast-phase-tab__step {
+    color: var(--accent-ink);
+    font-weight: 600;
+  }
+  .roast-phase-tab.is-active .roast-phase-tab__step,
+  .roast-phase-tab:hover .roast-phase-tab__step {
+    color: #FFB68E;
+  }
+
+  .roast-svg-wrap {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #FCF9F4;
+    padding: 0.65rem;
+  }
+  .roast-svg {
+    width: 100%;
+    height: auto;
+  }
+  .roast-svg-node {
+    cursor: pointer;
+  }
+  .roast-node-halo {
+    fill: rgba(196, 90, 40, 0);
+    transition: fill 0.2s, r 0.2s;
+  }
+  .roast-svg-node.is-active .roast-node-halo {
+    fill: rgba(196, 90, 40, 0.24);
+    r: 11px;
+  }
+  .roast-node-temp {
+    fill: var(--surface-bright);
+    stroke: var(--accent);
+    stroke-width: 2.5;
+  }
+  .roast-svg-node.is-active .roast-node-temp {
+    fill: var(--accent);
+  }
+  .roast-node-ror {
+    fill: var(--surface-bright);
+    stroke: var(--sage);
+    stroke-width: 2;
+  }
+
+  .roast-readout {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg);
+    padding: 1rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .roast-readout__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .roast-readout__step {
+    color: var(--accent-ink);
+    font-size: 11px;
+  }
+  .roast-readout__title {
+    font-size: 1.35rem;
+    margin-top: 0.1rem;
+  }
+  .roast-readout__kpis {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem 1.1rem;
+    font-size: 10.5px;
+  }
+  .roast-readout__kpis span {
+    display: block;
+    color: var(--muted);
+  }
+  .roast-readout__kpis strong {
+    color: var(--ink);
+  }
+  .roast-readout__summary {
+    font-size: 0.9rem;
+    color: var(--ink-secondary);
+  }
+  .roast-readout__specs {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    font-size: 10.5px;
+    color: var(--muted);
+    padding-top: 0.45rem;
+    border-top: 1px solid var(--line);
+  }
+
+  /* Right 5 Cols: Brew Ratio Calculator */
+  .brew-calc-card {
+    grid-column: span 5;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    padding: 1.45rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+  .brew-calc__hdr {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .brew-calc__sub {
+    font-size: 0.9rem;
+    color: var(--ink-secondary);
+  }
+  .brew-mode-switch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  .brew-mode-btn {
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--ink-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+  }
+  .brew-mode-btn.is-active {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .brew-slider-box {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg);
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .brew-slider-box__top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .brew-slider-box__val {
+    color: var(--accent-ink);
+    font-size: 1rem;
+  }
+  .calc-slider {
+    width: 100%;
+    accent-color: var(--accent);
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(36, 23, 16, 0.14);
+    cursor: pointer;
+  }
+  .calc-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--surface-bright);
+    box-shadow: 0 2px 6px rgba(36, 23, 16, 0.22);
+  }
+  .calc-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--surface-bright);
+    box-shadow: 0 2px 6px rgba(36, 23, 16, 0.22);
+  }
+  .brew-slider-box__scale {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9.5px;
+    color: var(--muted);
+  }
+  .brew-calc-results {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-top: auto;
+  }
+  .brew-calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 11.5px;
+  }
+  .brew-calc-row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .brew-calc-row dt {
+    color: var(--muted);
+  }
+  .brew-calc-row dd {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .brew-calc-row--highlight {
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--radius);
+    background: var(--bg-elevated);
+    border-bottom: 0;
+  }
+  .brew-calc-row--highlight dd {
+    font-size: 1.05rem;
+    color: var(--accent-ink);
+    font-weight: 600;
+  }
+  .brew-calc-tds {
+    color: var(--sage) !important;
+  }
+
+  /* Section 04: Equipment & Turnaround Boards */
+  .equip-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gutter);
+  }
+  .equip-card {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 14px 36px rgba(36, 23, 16, 0.04);
+  }
+  .equip-card__sheet {
+    position: relative;
+    aspect-ratio: 1200 / 800;
+    background: #F6F1E7;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .equip-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .equip-card__img[data-sheet-crop='left'] {
+    width: 200%;
+    max-width: none;
+    object-position: left center;
+  }
+  .equip-card__img[data-sheet-crop='right'] {
+    width: 200%;
+    max-width: none;
+    margin-left: -100%;
+    object-position: right center;
+  }
+  .equip-card:hover .equip-card__img {
+    transform: scale(1.025);
+  }
+  .equip-card__overlay {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.35rem 0.65rem;
+    background: rgba(250, 247, 242, 0.92);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    font-size: 10.5px;
+    color: var(--ink);
+  }
+  .equip-card__body {
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    flex: 1;
+  }
+  .equip-card__meta {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .equip-card__price {
+    color: var(--accent-ink);
+  }
+  .equip-card__summary {
+    font-size: 0.94rem;
+    color: var(--ink-secondary);
+    line-height: 1.55;
+  }
+  .equip-parts-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.38rem;
+    padding-block: 0.4rem;
+  }
+  .equip-part-pill {
+    padding: 0.22rem 0.5rem;
+    border-radius: var(--radius);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .equip-card__actions {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    padding-top: 0.35rem;
+  }
+
+  /* Section 05: Blueprints, Metrics & Tasting Rooms */
+  .blueprint-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gutter);
+  }
+  .blueprint-card {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .blueprint-card__top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .blueprint-card__top strong {
+    color: var(--accent-ink);
+  }
+  .blueprint-svg-box {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #FCF9F4;
+    padding: 0.5rem;
+  }
+  .blueprint-card__title {
+    font-family: var(--f-display);
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  .blueprint-card__desc {
+    font-size: 0.88rem;
+    color: var(--ink-secondary);
+    line-height: 1.5;
+  }
+
+  .metrics-strip {
+    margin-top: var(--gutter);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--gutter);
+  }
+  .metric-box {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--bg-elevated);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .metric-box__lbl {
+    color: var(--muted);
+    font-size: 10.5px;
+  }
+  .metric-box__val {
+    font-family: var(--f-display);
+    font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.45rem);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .metric-box__detail {
+    font-size: 0.84rem;
+    color: var(--ink-secondary);
+  }
+
+  .rooms-grid {
+    margin-top: var(--gutter);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gutter);
+  }
+  .room-card {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .room-card__top {
+    display: flex;
+    justify-content: space-between;
+    color: var(--accent-ink);
+    font-size: 11px;
+  }
+  .room-card__note {
+    font-size: 0.92rem;
+    color: var(--ink-secondary);
+  }
+  .room-card__specs {
+    margin-top: auto;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    font-size: 11px;
+  }
+  .room-card__specs div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .room-card__specs dt {
+    color: var(--muted);
+  }
+  .room-card__specs dd {
+    color: var(--ink);
+    font-weight: 500;
+    text-align: right;
+  }
+  .room-card__actions {
+    padding-top: 0.55rem;
+    border-top: 1px solid var(--line);
+  }
+  .room-card__cta {
+    width: 100%;
+  }
+
+  @media (max-width: 1080px) {
+    .origins-grid,
+    .blueprint-grid {
+      grid-template-columns: 1fr;
+    }
+    .botanical-grid,
+    .metrics-strip,
+    .equip-grid,
+    .rooms-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .roast-chart-card,
+    .brew-calc-card {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 680px) {
+    .botanical-grid,
+    .metrics-strip,
+    .equip-grid,
+    .rooms-grid {
+      grid-template-columns: 1fr;
+    }
+    .roast-phase-tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

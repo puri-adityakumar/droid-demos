@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base
+  title="404 Calibration Out of Range"
+  description="Requested harvest lot or brewing vessel dossier could not be located on the KOBO Roast Lab extraction bar."
+>
+  <section class="section err-sec">
+    <div class="wrap err-wrap">
+      <p class="eyebrow">ERROR 404 // REFRACTOMETER OUT OF RANGE</p>
+      <h1 class="t-display err-title">Lot Not Found on the Extraction Bar.</h1>
+      <p class="t-lead">
+        The harvest lot, roast telemetry log, or 3D vessel dossier you requested has either sold through its seasonal allocation or moved to a new specimen code.
+      </p>
+      <div class="err-meter t-mono" aria-hidden="true">
+        <div class="err-meter__lbl">
+          <span>REFRACTOMETER SCAN // ZERO SAMPLE</span>
+          <span>0.00% TDS · 93.5°C</span>
+        </div>
+        <div class="err-meter__track">
+          <div class="err-meter__fill" data-idle-bar></div>
+        </div>
+      </div>
+      <div class="err-actions">
+        <a href="/" class="btn-pill" data-magnetic="0.22">
+          <span>Return to 3D Extraction Bar</span>
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="/work/lever-l01" class="btn-pill btn-pill--ghost">
+          <span>Inspect KOBO L-01 Lever Machine</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .err-sec {
+    min-height: 68vh;
+    display: flex;
+    align-items: center;
+  }
+  .err-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 64ch;
+  }
+  .err-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    padding-top: 0.5rem;
+  }
+  .err-meter {
+    max-width: 420px;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface-bright);
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    font-size: 11px;
+  }
+  .err-meter__lbl {
+    display: flex;
+    justify-content: space-between;
+    color: var(--accent-ink);
+  }
+  .err-meter__track {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--bg-sunken);
+    overflow: hidden;
+  }
+  .err-meter__fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, var(--brass), var(--accent));
+    transform-origin: left center;
+    transform: scaleX(0.68);
+  }
+</style>

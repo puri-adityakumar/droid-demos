@@ -1,0 +1,800 @@
+---
+import { projects, site, type Project } from '../data/site';
+
+interface Props {
+  initialSlug?: Project['slug'];
+  mode?: 'home' | 'dossier';
+}
+
+const initialSlug = Astro.props.initialSlug ?? 'lever-l01';
+const mode = Astro.props.mode ?? 'home';
+const initialProject = projects.find((p) => p.slug === initialSlug) ?? projects[0];
+---
+<section
+  class:list={['bench-sec', { 'bench-sec--dossier': mode === 'dossier' }]}
+  id="stage"
+  aria-label="Interactive 3D Daylight Extraction Counter"
+>
+  <div class="wrap">
+    <div class="bench-layout grid-12">
+      <!-- Left Editorial + Brew Telemetry + 5-Part Sub-Assembly Inspector -->
+      <div class="bench-editorial">
+        {mode === 'home' ? (
+          <>
+            <p class="eyebrow" data-intro="badge">
+              <span>HARVEST 2025 // ROAST BATCH #042 · LOT-04 GEDEB &amp; HUILA PINK BOURBON</span>
+            </p>
+            <h1 class="t-display bench-title" data-split="lines" data-intro="headline">
+              Sunlit Extraction &amp; Tactile Craft.
+            </h1>
+            <p class="t-lead bench-lead" data-intro="sub">
+              {site.heroLead}
+            </p>
+            <p class="bench-subcopy" data-intro="meta">
+              {site.heroSub}
+            </p>
+
+            <!-- Live 4-Cell Brew Telemetry Strip -->
+            <div class="brew-telemetry-card" data-intro="cta" aria-label="Live Extraction Bar Telemetry">
+              <div class="brew-telemetry__hdr t-mono">
+                <span class="brew-telemetry__dot" data-pulse-dot aria-hidden="true"></span>
+                <span>ACTIVE BAR PROFILE //</span>
+                <strong data-brew-active-label>{initialProject.specimenCode} // {initialProject.shortTitle.toUpperCase()}</strong>
+              </div>
+              <div class="brew-telemetry__grid">
+                <div class="brew-cell">
+                  <span class="t-mono brew-cell__lbl">BREW TEMP</span>
+                  <strong class="brew-cell__val" data-brew-temp>{initialProject.brewTelemetry.tempC.toFixed(1)}°C</strong>
+                </div>
+                <div class="brew-cell">
+                  <span class="t-mono brew-cell__lbl">PRESSURE</span>
+                  <strong class="brew-cell__val" data-brew-pressure>{initialProject.brewTelemetry.pressureBar}</strong>
+                </div>
+                <div class="brew-cell">
+                  <span class="t-mono brew-cell__lbl">EXTRACTION</span>
+                  <strong class="brew-cell__val" data-brew-ext>{initialProject.brewTelemetry.extractionPct}</strong>
+                </div>
+                <div class="brew-cell">
+                  <span class="t-mono brew-cell__lbl">REFRACTOMETER</span>
+                  <strong class="brew-cell__val" data-brew-tds>{initialProject.brewTelemetry.tdsPct} TDS</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="bench-cta-row">
+              <a
+                href="#origins"
+                class="btn-pill"
+                data-magnetic="0.22"
+              >
+                <span>Explore 2025 Micro-Lots</span>
+                <span aria-hidden="true">→</span>
+              </a>
+              <a
+                href={`/work/${initialProject.slug}`}
+                class="btn-pill btn-pill--ghost"
+                data-hud-dossier-link
+                data-magnetic="0.16"
+              >
+                Inspect {initialProject.shortTitle} Dossier →
+              </a>
+            </div>
+          </>
+        ) : (
+          <>
+            <div class="dossier-crumb t-mono">
+              <a href="/" class="u-link">← Return to Extraction Counter</a>
+              <span>//</span>
+              <span>{initialProject.specimenCode}</span>
+            </div>
+            <h1 class="t-h1 bench-title" data-split="lines" data-intro="headline">
+              {initialProject.title}
+            </h1>
+            <p class="t-lead bench-lead" data-intro="sub">
+              {initialProject.summary}
+            </p>
+            <dl class="dossier-specs t-mono" data-intro="meta">
+              <div>
+                <dt>CLIENT / MAKER</dt>
+                <dd>{initialProject.client}</dd>
+              </div>
+              <div>
+                <dt>ALLOCATION PRICE</dt>
+                <dd>{initialProject.priceUsd}</dd>
+              </div>
+              <div>
+                <dt>DATUM TOLERANCE</dt>
+                <dd>{initialProject.datumTolerance}</dd>
+              </div>
+              <div>
+                <dt>3D TWIN PAYLOAD</dt>
+                <dd>{initialProject.glbSize} ({initialProject.triangleCount})</dd>
+              </div>
+            </dl>
+
+            <!-- Live 4-Cell Brew Telemetry Strip -->
+            <div class="brew-telemetry-card" data-intro="cta" aria-label="Live Extraction Bar Telemetry">
+              <div class="brew-telemetry__hdr t-mono">
+                <span class="brew-telemetry__dot" data-pulse-dot aria-hidden="true"></span>
+                <span>ACTIVE BAR PROFILE //</span>
+                <strong data-brew-active-label>{initialProject.specimenCode} // {initialProject.shortTitle.toUpperCase()}</strong>
+              </div>
+              <div class="brew-telemetry__grid">
+                <div class="brew-cell">
+                  <span class="t-mono brew-cell__lbl">BREW TEMP</span>
+                  <strong class="brew-cell__val" data-brew-temp>{initialProject.brewTelemetry.tempC.toFixed(1)}°C</strong>
+                </div>
+                <div class="brew-cell">
+                  <span class="t-mono brew-cell__lbl">PRESSURE</span>
+                  <strong class="brew-cell__val" data-brew-pressure>{initialProject.brewTelemetry.pressureBar}</strong>
+                </div>
+                <div class="brew-cell">
+                  <span class="t-mono brew-cell__lbl">EXTRACTION</span>
+                  <strong class="brew-cell__val" data-brew-ext>{initialProject.brewTelemetry.extractionPct}</strong>
+                </div>
+                <div class="brew-cell">
+                  <span class="t-mono brew-cell__lbl">REFRACTOMETER</span>
+                  <strong class="brew-cell__val" data-brew-tds>{initialProject.brewTelemetry.tdsPct} TDS</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="bench-cta-row">
+              <a
+                href={`mailto:lab@kobo-roast.studio?subject=Order%20Allocation%3A%20${encodeURIComponent(initialProject.title)}%20(${encodeURIComponent(initialProject.priceUsd)})`}
+                class="btn-pill"
+                data-magnetic="0.2"
+              >
+                <span>Order {initialProject.shortTitle} ({initialProject.priceUsd})</span>
+                <span aria-hidden="true">→</span>
+              </a>
+              <a
+                href="/about#allocations"
+                class="btn-pill btn-pill--ghost"
+              >
+                <span>View Subscriptions &amp; Kits →</span>
+              </a>
+            </div>
+          </>
+        )}
+
+        {mode === 'home' && (
+          <!-- Interactive 5-Part Bill of Materials Inspector (Home Desktop Left Column) -->
+          <div class="parts-panel" aria-label="5-Part Sub-Assembly Inspector">
+            <div class="parts-panel__hdr t-mono">
+              <span>5-PART SUB-ASSEMBLY INSPECTOR (CLICK TO ISOLATE)</span>
+              <span>MASS / TOLERANCE</span>
+            </div>
+            <div class="parts-list" data-parts-list>
+              {initialProject.parts.map((part) => (
+                <button
+                  type="button"
+                  class="part-row"
+                  data-part-item={part.nodeName}
+                  aria-pressed="false"
+                >
+                  <span class="part-row__idx">{part.index}</span>
+                  <span class="part-row__main">
+                    <span class="part-row__title">{part.label}</span>
+                    <span class="part-row__meta">{part.code} · {part.material}</span>
+                  </span>
+                  <span class="part-row__tol">{part.mass}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <!-- Right Sunlit 3D Extraction Turntable & HUD -->
+      <div class="bench-viewport-col">
+        <div
+          class="bench-stage"
+          data-bench-stage
+          data-initial-slug={initialProject.slug}
+        >
+          <!-- Top Specimen Selector Tabs -->
+          <div class="bench-tabs" role="tablist" aria-label="Select 3D Brewing Vessel or Reserve Lot">
+            {projects.map((p) => (
+              <button
+                type="button"
+                role="tab"
+                class:list={['bench-tab', 't-mono', { 'is-active': p.slug === initialProject.slug }]}
+                data-specimen-select={p.slug}
+                aria-selected={p.slug === initialProject.slug ? 'true' : 'false'}
+              >
+                <span class="bench-tab__idx">{p.index}</span>
+                <span class="bench-tab__name">{p.shortTitle}</span>
+              </button>
+            ))}
+          </div>
+
+          <!-- Top HUD Telemetry Strip -->
+          <div class="bench-hud-top t-mono">
+            <div class="bench-hud-top__left">
+              <span class="bench-hud-dot" data-pulse-dot aria-hidden="true"></span>
+              <span data-hud-code>{initialProject.specimenCode}</span>
+              <span class="bench-hud-sep">//</span>
+              <strong data-hud-title>{initialProject.title}</strong>
+            </div>
+            <div class="bench-hud-top__right">
+              <span>GLB <strong data-hud-size>{initialProject.glbSize}</strong></span>
+              <span>MESH <strong data-hud-tris>{initialProject.triangleCount}</strong></span>
+              <span>TOL <strong data-hud-tolerance>{initialProject.datumTolerance}</strong></span>
+            </div>
+          </div>
+
+          <!-- 3D WebGL Canvas + Sunlit Window Gobo Frame -->
+          <div class="bench-canvas-wrap" data-cursor="ORBIT 3D">
+            <canvas
+              id="workbench-canvas"
+              class="bench-canvas"
+              data-bench-canvas
+              aria-label="Interactive 3D coffee brewing vessel and single-origin packaging turntable"
+            ></canvas>
+
+            <!-- Corner Brass Calibration Fiducials -->
+            <span class="fiducial fiducial--tl" aria-hidden="true"></span>
+            <span class="fiducial fiducial--tr" aria-hidden="true"></span>
+            <span class="fiducial fiducial--bl" aria-hidden="true"></span>
+            <span class="fiducial fiducial--br" aria-hidden="true"></span>
+
+            <div class="bench-orbit-hint t-mono" aria-hidden="true">
+              <span>DRAG TO ORBIT 360° · CLICK PART TO ISOLATE · SUNLIT ACES 1.08EV</span>
+            </div>
+          </div>
+
+          <!-- Bottom Explode & View Controls + Active Part Readout -->
+          <div class="bench-controls">
+            <div class="bench-explode-bar">
+              <div class="bench-explode-meta t-mono">
+                <label for="explode-slider">AXIAL EXPLOSION</label>
+                <span class="bench-explode-vals">
+                  <strong data-explode-readout>0%</strong>
+                  <span>//</span>
+                  <span data-travel-readout>0.0 mm</span>
+                </span>
+              </div>
+              <input
+                id="explode-slider"
+                type="range"
+                min="0"
+                max="100"
+                value="0"
+                step="1"
+                class="bench-slider"
+                data-explode-range
+                aria-label="Explode 3D assembly along axial vectors"
+              />
+              <div class="bench-detents t-mono" role="group" aria-label="Explosion presets">
+                <button type="button" class="bench-chip is-active" data-explode-preset="0" aria-pressed="true">0% ASSEMBLED</button>
+                <button type="button" class="bench-chip" data-explode-preset="55" aria-pressed="false">55% INSPECT</button>
+                <button type="button" class="bench-chip" data-explode-preset="100" aria-pressed="false">100% EXPLODED</button>
+                <button type="button" class="bench-chip" data-toggle-wireframe aria-pressed="false">WIREFRAME</button>
+                <button type="button" class="bench-chip" data-reset-camera>RESET VIEW</button>
+              </div>
+            </div>
+
+            <div class="bench-part-card">
+              <div class="bench-part-card__top t-mono">
+                <span class="bench-part-card__code" data-hud-part-code>
+                  PART {initialProject.parts[0].index} // {initialProject.parts[0].code}
+                </span>
+                <span class="bench-part-card__tol" data-hud-part-tolerance>
+                  {initialProject.parts[0].tolerance} · {initialProject.parts[0].mass}
+                </span>
+              </div>
+              <div class="bench-part-card__title" data-hud-part-label>
+                {initialProject.parts[0].label}
+              </div>
+              <div class="bench-part-card__mat t-mono" data-hud-part-material>
+                {initialProject.parts[0].material} · {initialProject.parts[0].finish}
+              </div>
+              <p class="bench-part-card__note" data-hud-part-note>
+                Select any of the 5 sub-assemblies to isolate its 3D mesh and inspect machining tolerances.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {mode === 'dossier' && (
+          <!-- Interactive 5-Part Bill of Materials Inspector Directly Below 3D Stage -->
+          <div class="parts-panel parts-panel--stage" aria-label="5-Part Sub-Assembly Inspector">
+            <div class="parts-panel__hdr t-mono">
+              <span>5-PART SUB-ASSEMBLY INSPECTOR (CLICK TO ISOLATE)</span>
+              <span>MASS / TOLERANCE</span>
+            </div>
+            <div class="parts-list" data-parts-list>
+              {initialProject.parts.map((part) => (
+                <button
+                  type="button"
+                  class="part-row"
+                  data-part-item={part.nodeName}
+                  aria-pressed="false"
+                >
+                  <span class="part-row__idx">{part.index}</span>
+                  <span class="part-row__main">
+                    <span class="part-row__title">{part.label}</span>
+                    <span class="part-row__meta">{part.code} · {part.material}</span>
+                  </span>
+                  <span class="part-row__tol">{part.mass}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bench-sec {
+    padding-block: clamp(1.75rem, 3.2vw, 3.25rem) clamp(3.5rem, 6vw, 6rem);
+    position: relative;
+  }
+  .bench-layout {
+    align-items: start;
+  }
+  .bench-editorial {
+    grid-column: span 5;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+  }
+  .bench-title {
+    margin-top: 0.15rem;
+  }
+  .bench-lead {
+    color: var(--ink);
+  }
+  .bench-subcopy {
+    font-size: var(--fs-body);
+    color: var(--ink-secondary);
+    line-height: 1.55;
+  }
+
+  /* Live Brew Telemetry Strip */
+  .brew-telemetry-card {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(10px);
+    padding: 0.9rem 1rem;
+    box-shadow: 0 8px 24px rgba(36, 23, 16, 0.04);
+  }
+  .brew-telemetry__hdr {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 11px;
+    color: var(--muted);
+    padding-bottom: 0.6rem;
+    margin-bottom: 0.65rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .brew-telemetry__hdr strong {
+    color: var(--accent-ink);
+    font-weight: 500;
+  }
+  .brew-telemetry__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sage);
+  }
+  .brew-telemetry__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+  .brew-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .brew-cell__lbl {
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .brew-cell__val {
+    font-family: var(--f-mono);
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .bench-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 0.15rem;
+  }
+  .dossier-crumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--muted);
+  }
+  .dossier-specs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.85);
+  }
+  .dossier-specs dt {
+    color: var(--muted);
+    font-size: 10px;
+  }
+  .dossier-specs dd {
+    color: var(--ink);
+    margin-top: 0.2rem;
+    font-weight: 500;
+  }
+
+  /* 5-Part BOM List */
+  .parts-panel {
+    margin-top: 0.35rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.82);
+    overflow: hidden;
+  }
+  .parts-panel--stage {
+    margin-top: 1rem;
+  }
+  .parts-panel__hdr {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.65rem 0.9rem;
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 10.5px;
+  }
+  .parts-list {
+    display: flex;
+    flex-direction: column;
+  }
+  :global(.part-row) {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 2.1rem 1fr auto;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 0.9rem;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.2s, color 0.2s, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  :global(.part-row:last-child) {
+    border-bottom: 0;
+  }
+  :global(.part-row:hover) {
+    background: var(--bg-elevated);
+    transform: translateX(3px);
+  }
+  :global(.part-row.is-active) {
+    background: var(--bg-elevated);
+  }
+  :global(.part-row.is-active:hover) {
+    transform: translateX(3px);
+  }
+  :global(.part-row__idx) {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    color: var(--accent-ink);
+    font-weight: 500;
+  }
+  :global(.part-row__main) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.14rem;
+    min-width: 0;
+  }
+  :global(.part-row__title) {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+    white-space: normal;
+    line-height: 1.3;
+  }
+  :global(.part-row__meta) {
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    color: var(--muted);
+    white-space: normal;
+    line-height: 1.35;
+  }
+  :global(.part-row__tol) {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    color: var(--ink-secondary);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Right 3D Stage Card */
+  .bench-viewport-col {
+    grid-column: span 7;
+    position: sticky;
+    top: 5.2rem;
+  }
+  .bench-sec--dossier .bench-editorial {
+    position: sticky;
+    top: 5.2rem;
+  }
+  .bench-sec--dossier .bench-viewport-col {
+    position: static;
+  }
+  .bench-stage {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background:
+      radial-gradient(circle at 60% 28%, #FFFFFF 0%, #FAF6EE 54%, #EFE6D6 100%);
+    box-shadow:
+      0 22px 54px rgba(36, 23, 16, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+  }
+  .bench-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-elevated);
+  }
+  .bench-tab {
+    padding: 0.78rem 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border-right: 1px solid var(--line);
+    color: var(--muted);
+    transition: background 0.2s, color 0.2s, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bench-tab:last-child {
+    border-right: 0;
+  }
+  .bench-tab:hover {
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.55);
+    transform: translateY(-1.5px);
+  }
+  .bench-tab.is-active {
+    color: var(--ink);
+    background: var(--surface-bright);
+    box-shadow: inset 0 -2px 0 var(--accent);
+    font-weight: 500;
+  }
+  .bench-tab.is-active:hover {
+    transform: translateY(-1.5px);
+  }
+  .bench-tab__idx {
+    color: var(--accent-ink);
+  }
+
+  .bench-hud-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.72);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .bench-hud-top__left {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--ink);
+  }
+  .bench-hud-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .bench-hud-sep {
+    color: var(--muted);
+  }
+  .bench-hud-top__right {
+    display: inline-flex;
+    gap: 0.9rem;
+  }
+  .bench-hud-top__right strong {
+    color: var(--ink);
+  }
+
+  .bench-canvas-wrap {
+    position: relative;
+    height: clamp(350px, 46vh, 480px);
+    width: 100%;
+    cursor: grab;
+    touch-action: pan-y;
+    background:
+      linear-gradient(125deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 252, 245, 0.15) 45%, rgba(243, 237, 226, 0.55) 100%),
+      radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.95) 0%, rgba(243, 237, 226, 0.65) 75%);
+  }
+  .bench-canvas-wrap:active {
+    cursor: grabbing;
+  }
+  .bench-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .fiducial {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: var(--brass);
+    pointer-events: none;
+    opacity: 0.65;
+  }
+  .fiducial--tl { top: 12px; left: 12px; border-top: 1.5px solid; border-left: 1.5px solid; }
+  .fiducial--tr { top: 12px; right: 12px; border-top: 1.5px solid; border-right: 1.5px solid; }
+  .fiducial--bl { bottom: 12px; left: 12px; border-bottom: 1.5px solid; border-left: 1.5px solid; }
+  .fiducial--br { bottom: 12px; right: 12px; border-bottom: 1.5px solid; border-right: 1.5px solid; }
+
+  .bench-orbit-hint {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 10px;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  /* Bottom Explode & Active Component Controls */
+  .bench-controls {
+    border-top: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 1rem;
+    align-items: center;
+  }
+  .bench-explode-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .bench-explode-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .bench-explode-vals strong {
+    color: var(--accent-ink);
+  }
+  .bench-slider {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .bench-detents {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .bench-chip {
+    padding: 0.32rem 0.58rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--ink-secondary);
+    font-size: 10px;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bench-chip:hover {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+    transform: translateY(-1.5px);
+  }
+  .bench-chip.is-active {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .bench-chip.is-active:hover {
+    transform: translateY(-1.5px);
+  }
+
+  .bench-part-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg);
+    padding: 0.75rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.22rem;
+  }
+  .bench-part-card__top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5px;
+    color: var(--accent-ink);
+  }
+  .bench-part-card__tol {
+    color: var(--muted);
+  }
+  .bench-part-card__title {
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+  .bench-part-card__mat {
+    font-size: 10.5px;
+    color: var(--ink-secondary);
+  }
+  .bench-part-card__note {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.42;
+    margin-top: 0.1rem;
+  }
+
+  @media (max-width: 1080px) {
+    .bench-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .bench-editorial {
+      display: contents;
+    }
+    .bench-viewport-col {
+      order: 2;
+      width: 100%;
+      position: static;
+    }
+    .parts-panel {
+      order: 3;
+      width: 100%;
+      margin-top: 0;
+    }
+    .parts-panel--stage {
+      margin-top: 1rem;
+    }
+    .bench-controls {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 640px) {
+    .bench-tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .brew-telemetry__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 560px) {
+    .bench-orbit-hint {
+      max-width: calc(100% - 1.5rem);
+      width: max-content;
+      white-space: normal;
+      text-align: center;
+      font-size: 0.62rem;
+      line-height: 1.35;
+      padding: 0.25rem 0.6rem;
+    }
+  }
+</style>

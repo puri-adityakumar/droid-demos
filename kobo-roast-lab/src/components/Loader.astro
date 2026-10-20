@@ -1,0 +1,172 @@
+---
+import { site } from '../data/site';
+---
+<div id="loader" class="kobo-loader" data-kobo-loader data-inline-managed="true" aria-hidden="true">
+  <div class="loader__inner wrap">
+    <div class="loader__top" data-loader-out>
+      <span class="t-mono loader__tag">{site.name} · ROAST BATCH #042 TELEMETRY</span>
+      <span class="t-mono loader__loc">LORING S15 CONVECTIVE KILN // KYOTO & PORTLAND</span>
+    </div>
+
+    <div class="loader__center" data-loader-out>
+      <div class="loader__readout">
+        <span class="loader__unit t-mono">FIRST CRACK TARGET // ROAST BATCH #042</span>
+        <div class="loader__num" data-loader-count>196.4°C</div>
+        <span class="loader__sub t-mono">AGTRON 68.4 BEAN · 38 PPM GH WATER · 9.0 → 5.2 BAR LEVER</span>
+      </div>
+    </div>
+
+    <div class="loader__bottom" data-loader-out>
+      <div class="loader__bar">
+        <div class="loader__fill" data-loader-bar></div>
+      </div>
+      <div class="loader__scale t-mono">
+        <span>00:00 CHARGE 205.0°C → 92.4°C</span>
+        <span>04:18 MAILLARD 152.0°C</span>
+        <span>07:54 CRACK 196.4°C</span>
+        <span>09:16 DROP 204.2°C</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    const root = document.getElementById('loader');
+    if (!root) return;
+    let visited = false;
+    try {
+      visited = !!sessionStorage.getItem('kobo_visited');
+    } catch {}
+    const reduced =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouch =
+      typeof window.matchMedia === 'function' &&
+      (window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 820);
+    const closeNow = () => {
+      try {
+        sessionStorage.setItem('kobo_visited', '1');
+      } catch {}
+      root.hidden = true;
+      root.style.display = 'none';
+      document.documentElement.classList.add('is-loaded');
+    };
+    if (reduced || visited || isTouch || location.search.includes('audit')) {
+      closeNow();
+      return;
+    }
+    const count = root.querySelector('[data-loader-count]');
+    const bar = root.querySelector('[data-loader-bar]');
+    const dur = 160;
+    const start = performance.now();
+    const step = (now) => {
+      if (root.hidden) return;
+      const p = Math.min(1, (now - start) / dur);
+      const deg = 92.4 + p * (196.4 - 92.4);
+      if (count) count.textContent = deg.toFixed(1) + '°C';
+      if (bar) bar.style.transform = 'scaleX(' + p.toFixed(3) + ')';
+      if (p < 1) {
+        requestAnimationFrame(step);
+      }
+    };
+    requestAnimationFrame(step);
+    setTimeout(closeNow, 180);
+  })();
+</script>
+
+<style>
+  .kobo-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 850;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 70% 20%, rgba(255, 255, 255, 0.92) 0%, rgba(250, 247, 242, 0) 70%),
+      linear-gradient(125deg, #FFFDF9 0%, #FAF7F2 55%, #F3EDE2 100%);
+    color: var(--ink);
+    display: grid;
+    padding: 0 24px;
+    max-width: 100%;
+    overflow: hidden;
+    clip-path: inset(0% 0% 0% 0%);
+  }
+  .kobo-loader[hidden] {
+    display: none;
+  }
+  .loader__inner {
+    width: 100%;
+    max-width: 100%;
+    padding-block: clamp(1.25rem, 3vw, 2.5rem);
+    padding-inline: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .loader__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    color: var(--muted);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.9rem;
+  }
+  .loader__tag {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .loader__center {
+    margin-block: auto;
+    padding-block: 1.5rem;
+    max-width: 100%;
+  }
+  .loader__readout {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    max-width: 100%;
+  }
+  .loader__unit {
+    color: var(--accent-ink);
+  }
+  .loader__num {
+    font-family: var(--f-display);
+    font-size: clamp(2.75rem, 9vw, 6.8rem);
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+  .loader__sub {
+    color: var(--muted);
+  }
+  .loader__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .loader__bar {
+    height: 3px;
+    background: var(--line);
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .loader__fill {
+    height: 100%;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  .loader__scale {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: 11px;
+  }
+</style>
