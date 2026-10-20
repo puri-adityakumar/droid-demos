@@ -114,12 +114,15 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
   red crescent mage's staff. She stands in a floating bed of Blue-Moon Weed blossoms with an
   open floating grimoire and drifting petals; in the Zoltraak mood, glowing geometric spell
   circles unfurl behind her, around the meadow and at her staff tip.
-- `src/scene/nezuko.js` — Nezuko Kamado: long black hair that turns flame-orange toward the
-  tips (each lock is an orange blade under a slightly larger black one, so the orange licks
-  up its edges), a small pink ribbon, big pink eyes with slit pupils and long lashes, the
-  bamboo muzzle tied with red cloth, a pale pink asanoha kimono with a red-and-white
-  checkered obi, orange obijime and green obiage, a long dark-brown haori hanging open,
-  black kyahan, white tabi and pink-strapped zori. Her legs are jointed at hip and knee and
+- `src/scene/nezuko.js` — Nezuko Kamado, modelled on her Nendoroid: a slightly oversized
+  head, a short choppy fringe parted at the centre so her forehead shows, and a full, wavy
+  fall of black hair that turns flame-orange toward the tips (each lock is an orange blade
+  under a slightly larger black one that ripples along the same curve, so the orange licks
+  up its edges). She has a pale pink ribbon, big round glossy pink eyes with a rose ring and
+  two catch-lights, thin high brows, a chunky bamboo muzzle wrapped in red cloth, a pale
+  pink asanoha kimono with a red-and-white checkered obi, orange obijime and green obiage,
+  a long black haori hanging open, striped black kyahan, white tabi and pink-strapped
+  zori. Her legs are jointed at hip and knee and
   she runs in place (`run` in the rig) while a dirt path streams back under her: petals,
   pebbles, grass and wisteria trees ride past and wrap around, and a tree that would come
   between the camera and her bows out of the way. In the Exploding Blood mood pink flames

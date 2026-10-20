@@ -1,5 +1,5 @@
 import {
-    Group, Mesh, Object3D, SphereGeometry, CapsuleGeometry, CylinderGeometry, TorusGeometry,
+    Group, Mesh, Object3D, SphereGeometry, CapsuleGeometry, CylinderGeometry, TorusGeometry, ConeGeometry,
     LatheGeometry, TubeGeometry, CircleGeometry, ShapeGeometry, BoxGeometry, PlaneGeometry,
     Shape, Vector2, CatmullRomCurve3, Sprite, SpriteNodeMaterial, MeshBasicNodeMaterial,
     DoubleSide, Color
@@ -19,7 +19,7 @@ import { glowMaterial } from './glow.js'
 // hair that turns flame-orange toward the tips, a small pink ribbon, pink eyes
 // with slit pupils, the bamboo muzzle tied with red cloth, a pale pink asanoha
 // (hemp-leaf) kimono with a red-and-white checkered obi, an orange obijime and
-// a green obiage, a long dark-brown haori, black kyahan leg wraps, white tabi
+// a green obiage, a long black haori, black kyahan leg wraps, white tabi
 // and pink-strapped zori. She runs along a path lined with wisteria trees (the
 // flower demons cannot bear); in the Exploding Blood mood her Blood Demon Art
 // sets pink flames burning around her feet as she goes.
@@ -38,13 +38,13 @@ export const RUN = { cadence: 1.6, bounce: 0.09, lean: 0.15, arms: 0.95, legs: 0
 export const palette = {
     skin: '#ffe8de',
     hair: '#1c1620',
-    tips: '#ff7a3c',
-    ribbon: '#ff8fb8',
+    tips: '#f2603a',
+    ribbon: '#ffaecb',
     kimono: '#f9bfd0',
     kimonoDeep: '#e98aa8',
     lining: '#fff0f4',
-    haori: '#5c3a2e',
-    haoriEdge: '#2e1c1c',
+    haori: '#2e2226',
+    haoriEdge: '#150d12',
     obiRed: '#d8344a',
     obiWhite: '#fff6f0',
     obijime: '#ff9a3a',
@@ -56,29 +56,31 @@ export const palette = {
     tabi: '#ffffff',
     zori: '#c89a6a',
     sclera: '#fff8fa',
-    iris: '#e8508c',
-    irisLow: '#ffb4d0',
-    pupil: '#5e0c30',
+    iris: '#f2689e',
+    irisRing: '#b82a64',
+    irisLow: '#ffc6dc',
+    pupil: '#8a1846',
+    brow: '#5a3038',
     lash: '#1e1426',
     blush: '#ff9ab0',
 }
 
 function makeMaterials()
 {
-    const haori = paintedMaterial( { color: palette.haori, shade: '#2a1a1e', highlight: '#a8765c', rim: 0.55, gloss: 0.3, scale: 2.8 } )
+    const haori = paintedMaterial( { color: palette.haori, shade: '#100a0e', highlight: '#76585c', rim: 0.55, gloss: 0.3, scale: 2.8 } )
     // the haori hangs open in front, so its inside shows
     haori.side = DoubleSide
 
     return {
         skin: paintedMaterial( { color: palette.skin, shade: '#eea4a2', rim: 0.55, gloss: 0.25, scale: 2.4 } ),
         hair: paintedMaterial( { color: palette.hair, shade: '#0a070e', highlight: '#56506e', rim: 0.7, gloss: 0.6, scale: 3.0, terminator: 0.48 } ),
-        tips: paintedMaterial( { color: palette.tips, shade: '#e0502a', highlight: '#ffc884', rim: 0.6, gloss: 0.55, scale: 3 } ),
-        ribbon: paintedMaterial( { color: palette.ribbon, shade: '#d65a8a', highlight: '#ffe0ec', gloss: 0.6, rim: 0.6, scale: 2.6 } ),
+        tips: paintedMaterial( { color: palette.tips, shade: '#b8301e', highlight: '#ffb27a', rim: 0.6, gloss: 0.55, scale: 3 } ),
+        ribbon: paintedMaterial( { color: palette.ribbon, shade: '#e08aae', highlight: '#fff4f8', gloss: 0.6, rim: 0.6, scale: 2.6 } ),
         kimono: paintedMaterial( { color: palette.kimono, shade: '#d4709a', highlight: '#fff2f6', rim: 0.55, gloss: 0.3, scale: 2.8, terminator: 0.44 } ),
         kimonoDeep: paintedMaterial( { color: palette.kimonoDeep, shade: '#b04a78', highlight: '#ffc4d8', rim: 0.3, gloss: 0.1, brush: 0.4, scale: 3 } ),
         lining: paintedMaterial( { color: palette.lining, shade: '#d8a8c4', highlight: '#ffffff', rim: 0.4, scale: 3 } ),
         haori,
-        haoriEdge: paintedMaterial( { color: palette.haoriEdge, shade: '#140c10', highlight: '#6a4a40', rim: 0.5, scale: 3 } ),
+        haoriEdge: paintedMaterial( { color: palette.haoriEdge, shade: '#08050a', highlight: '#4e3a40', rim: 0.5, scale: 3 } ),
         obiRed: paintedMaterial( { color: palette.obiRed, shade: '#8a1430', highlight: '#ff8a8a', rim: 0.5, gloss: 0.4, scale: 3 } ),
         obiWhite: paintedMaterial( { color: palette.obiWhite, shade: '#d4b0c0', highlight: '#ffffff', rim: 0.5, gloss: 0.4, scale: 3 } ),
         obijime: paintedMaterial( { color: palette.obijime, shade: '#c45a24', highlight: '#ffd28a', gloss: 0.6, scale: 3 } ),
@@ -92,9 +94,11 @@ function makeMaterials()
         zori: paintedMaterial( { color: palette.zori, shade: '#7a5034', highlight: '#f0d0a0', scale: 3 } ),
         sclera: paintedMaterial( { color: palette.sclera, shade: '#e4c8dc', rim: 0, gloss: 0, brush: 0.2, haze: 0 } ),
         iris: paintedMaterial( { color: palette.iris, unlit: true } ),
+        irisRing: paintedMaterial( { color: palette.irisRing, unlit: true } ),
         irisLow: paintedMaterial( { color: palette.irisLow, unlit: true } ),
         pupil: paintedMaterial( { color: palette.pupil, unlit: true } ),
         lash: paintedMaterial( { color: palette.lash, shade: '#0e0a14', rim: 0, gloss: 0, brush: 0.3, haze: 0.2 } ),
+        brow: paintedMaterial( { color: palette.brow, shade: '#3a1c24', rim: 0, gloss: 0, brush: 0.3, haze: 0.2 } ),
         white: paintedMaterial( { color: '#ffffff', unlit: true } ),
         blush: paintedMaterial( { color: palette.blush, shade: '#f07c92', rim: 0, gloss: 0, brush: 0.4 } ),
     }
@@ -124,20 +128,47 @@ function asanoha( placements, size, material, parent )
     return mesh( mergeGeometries( geoms ), material, parent )
 }
 
+/**
+ * A hair lock like `spikeGeometry`, but rippling side to side along its length.
+ * `span` is the length the wave and bend are measured over, so a shorter blade
+ * laid over a longer one follows exactly the same curve.
+ */
+function wavyLock( length, radius, bend, flat, fullness, wave = 0, waves = 2, span = length )
+{
+    const g = new ConeGeometry( radius, length, 14, 28 )
+    g.translate( 0, length * 0.5, 0 )
+    const pos = g.attributes.position
+    for( let i = 0; i < pos.count; i++ )
+    {
+        const y = pos.getY( i )
+        const t = y / length
+        const s = y / span
+        const widen = t < 1 ? ( 1 - t ) ** ( fullness - 1 ) : 1
+        const ripple = wave * Math.sin( s * waves * Math.PI ) * Math.min( 1, s * 2.5 ) * span
+        pos.setX( i, pos.getX( i ) * widen + bend * s * s * span + ripple )
+        pos.setZ( i, pos.getZ( i ) * widen * flat )
+    }
+    g.computeVertexNormals()
+    return g
+}
+
 function buildHair( head, m )
 {
     const hair = new Group()
     head.add( hair )
 
-    const cap = mesh( new SphereGeometry( HAIR_RADIUS + 0.03, 48, 32, 0, Math.PI * 2, 0, 1.8 ), m.hair, hair )
-    cap.rotation.x = - 0.74
+    // a slightly puffed cap, wider than the skull so the hair reads soft and full
+    const cap = mesh( new SphereGeometry( HAIR_RADIUS + 0.045, 48, 32, 0, Math.PI * 2, 0, 1.8 ), m.hair, hair )
+    // tipped back so the hairline sits high and her forehead shows under the fringe
+    cap.rotation.x = - 0.84
+    cap.scale.set( 1.05, 1, 1 )
     // full mass of hair at the back of the head, hiding where the cap ends and the long locks begin
-    mesh( new SphereGeometry( 1, 40, 28 ), m.hair, hair, v3( 0, - 0.12, - 0.2 ), v3( 0.63, 0.62, 0.5 ) )
+    mesh( new SphereGeometry( 1, 40, 28 ), m.hair, hair, v3( 0, - 0.12, - 0.2 ), v3( 0.67, 0.63, 0.52 ) )
 
     const spikes = []
     // `tip` > 0 makes a two-tone lock: a full flame-orange blade with a slightly
     // larger black blade over its upper part, so the orange licks up the edges
-    const add = ( base, direction, length, radius, bend, curl, { inset = 0.5, flat = 0.5, fullness = 0.7, weight = length, tip = 0 } = {} ) =>
+    const add = ( base, direction, length, radius, bend, curl, { inset = 0.5, flat = 0.5, fullness = 0.7, weight = length, tip = 0, wave = 0, waves = 2 } = {} ) =>
     {
         const pivot = new Group()
         pivot.position.copy( base.clone().multiplyScalar( inset ) )
@@ -146,53 +177,66 @@ function buildHair( head, m )
         if( tip > 0 )
         {
             const f = 1 - tip
-            mesh( spikeGeometry( length, radius, bend, flat, fullness ), m.tips, pivot )
-            mesh( spikeGeometry( length * f, radius * 1.08, bend * f, flat * 1.04, fullness * 0.75 ), m.hair, pivot )
+            mesh( wavyLock( length, radius, bend, flat, fullness, wave, waves ), m.tips, pivot )
+            mesh( wavyLock( length * f, radius * 1.08, bend, flat * 1.04, fullness * 0.75, wave, waves, length ), m.hair, pivot )
         }
-        else mesh( spikeGeometry( length, radius, bend, flat, fullness ), m.hair, pivot )
+        else mesh( wavyLock( length, radius, bend, flat, fullness, wave, waves ), m.hair, pivot )
         spikes.push( { pivot, rest: pivot.quaternion.clone(), weight } )
         return pivot
     }
     const at = ( yaw, pitch ) => sphereDir( yaw * deg, pitch * deg )
 
-    // Full, softly side-swept bangs down to the brows
+    // Short, choppy fringe parted at the centre, sitting high so her forehead
+    // shows; uneven lengths give the little zigzag hairline of her Nendoroid
     const bangs = [
-        [ - 60, 44, 0.48, 0.15, - 1, 0.22 ],
-        [ - 40, 55, 0.56, 0.16, - 1, 0.2 ],
-        [ - 20, 62, 0.6, 0.16, - 1, 0.1 ],
-        [ 2, 64, 0.58, 0.16, 1, 0.14 ],
-        [ 22, 61, 0.58, 0.16, 1, 0.2 ],
-        [ 42, 54, 0.54, 0.16, 1, 0.24 ],
-        [ 61, 44, 0.48, 0.15, 1, 0.26 ],
+        [ - 66, 42, 0.42, 0.13, - 1 ],
+        [ - 50, 50, 0.36, 0.13, - 1 ],
+        [ - 34, 56, 0.42, 0.14, - 1 ],
+        [ - 17, 60, 0.35, 0.13, - 1 ],
+        [ 0, 61, 0.31, 0.11, 1 ],
+        [ 17, 60, 0.36, 0.13, 1 ],
+        [ 34, 56, 0.41, 0.14, 1 ],
+        [ 50, 50, 0.35, 0.13, 1 ],
+        [ 66, 42, 0.41, 0.13, 1 ],
     ]
-    for( const [ yaw, pitch, length, radius, side, sweep ] of bangs )
+    for( const [ yaw, pitch, length, radius, side ] of bangs )
     {
         const n = at( yaw, pitch )
         const down = UP.clone().sub( n.clone().multiplyScalar( n.y ) ).normalize().negate()
-        const dir = down.clone().sub( n.clone().multiplyScalar( 0.4 ) ).add( v3( side * sweep + 0.06, 0, 0 ) )
-        add( n, dir, length, radius, 0.2, v3( side, 0, 0 ), { inset: 0.61, flat: 0.4, fullness: 0.58, weight: 0.45 } )
+        const dir = down.clone().sub( n.clone().multiplyScalar( 0.5 ) ).add( v3( side * 0.16, 0, 0 ) )
+        add( n, dir, length, radius, 0.12, v3( side, 0, 0 ), { inset: 0.6, flat: 0.4, fullness: 0.62, weight: 0.3 } )
     }
 
-    // Long face-framing locks falling over the chest, orange at the ends
+    // A soft curtain framing her face down past the cheeks, rippling a little,
+    // with flame-coloured ends that flare out
     for( const side of [ - 1, 1 ] )
     {
         add(
-            at( side * 58, 8 ),
-            v3( side * 0.05, - 1, 0.1 ),
-            1.0, 0.13, 0.12, v3( - side, 0, 0.3 ),
-            { inset: 0.56, flat: 0.45, fullness: 0.62, weight: 0.6, tip: 0.38 }
+            at( side * 66, 22 ),
+            v3( side * 0.1, - 1, 0.04 ),
+            1.08, 0.15, 0.14, v3( side, 0, 0.2 ),
+            { inset: 0.52, flat: 0.45, fullness: 0.6, weight: 0.6, tip: 0.27, wave: 0.035, waves: 2.4 }
         )
     }
 
-    // Sides: long locks over the ears that fall behind the shoulders
+    // Sides: a wide, wavy fall behind the ears that spreads past her shoulders,
+    // so her silhouette is all soft hair like the figure's
+    const sides = [
+        [ 88, 24, 1.14, 0.21, 0.18, - 0.06 ],
+        [ 108, 26, 1.24, 0.23, 0.2, - 0.18 ],
+        [ 130, 28, 1.32, 0.24, 0.14, - 0.28 ],
+    ]
     for( const side of [ - 1, 1 ] )
     {
-        add(
-            at( side * 96, 18 ),
-            v3( side * 0.3, - 1, - 0.28 ),
-            1.08, 0.2, 0.1, v3( 0, 0, - 1 ),
-            { inset: 0.5, flat: 0.48, fullness: 0.62, weight: 0.55, tip: 0.34 }
-        )
+        for( const [ yaw, pitch, length, radius, spread, back ] of sides )
+        {
+            add(
+                at( side * yaw, pitch ),
+                v3( side * spread, - 1, back ),
+                length, radius, 0.14, v3( side, 0, - 0.2 ),
+                { inset: 0.44, flat: 0.48, fullness: 0.6, weight: 0.55, tip: 0.24, wave: 0.045, waves: 2.6 }
+            )
+        }
     }
 
     // Back: a long, full fall of black hair down her back, flame-orange at the ends
@@ -202,18 +246,16 @@ function buildHair( head, m )
         [ - 160, 30, 1.48, 0.3 ],
         [ 140, 30, 1.42, 0.29 ],
         [ - 140, 30, 1.42, 0.29 ],
-        [ 120, 30, 1.32, 0.27 ],
-        [ - 120, 30, 1.32, 0.27 ],
     ]
     for( const [ yaw, pitch, length, radius ] of back )
     {
         const n = at( yaw, pitch )
         // rooted deep in the head so no blade top shows, and bent back in toward
         // her so the hair falls along the haori rather than off it
-        add( n, v3( n.x * 0.3, - 1, - 0.22 ), length, radius, - 0.06, n, { inset: 0.35, flat: 0.5, fullness: 0.56, weight: 0.5, tip: 0.24 } )
+        add( n, v3( n.x * 0.3, - 1, - 0.22 ), length, radius, - 0.06, n, { inset: 0.35, flat: 0.5, fullness: 0.56, weight: 0.5, tip: 0.26, wave: 0.03, waves: 2.2 } )
     }
 
-    // Small pink ribbon on the left of her head
+    // Small pale-pink ribbon on the left of her head
     const bow = new Group()
     const dir = at( 46, 48 )
     bow.position.copy( dir.clone().multiplyScalar( HAIR_RADIUS + 0.03 ) )
@@ -257,62 +299,68 @@ function buildFace( head, m )
     const eyes = []
     for( const side of [ - 1, 1 ] )
     {
-        // Big round pink eyes, paler at the bottom, with a demon's slit pupil
+        // Big, round, glossy pink eyes: a deeper rose ring, a soft oval pupil,
+        // a pale glow at the bottom and two bright catch-lights
         const eye = new Group()
-        part( m.sclera, [ 0.108, 0.115, 0.05 ], [ 0, 0, 0 ], eye )
-        part( m.iris, [ 0.086, 0.1, 0.03 ], [ 0, - 0.006, 0.026 ], eye )
-        part( m.irisLow, [ 0.064, 0.036, 0.02 ], [ 0, - 0.052, 0.05 ], eye )
-        part( m.pupil, [ 0.016, 0.058, 0.02 ], [ 0, 0.004, 0.056 ], eye )
-        part( m.white, [ 0.03, 0.034, 0.015 ], [ side * 0.03, 0.04, 0.07 ], eye )
-        part( m.white, [ 0.013, 0.013, 0.01 ], [ - side * 0.032, - 0.036, 0.072 ], eye )
+        part( m.sclera, [ 0.128, 0.142, 0.05 ], [ 0, 0, 0 ], eye )
+        part( m.irisRing, [ 0.108, 0.13, 0.03 ], [ side * 0.004, - 0.006, 0.026 ], eye )
+        part( m.iris, [ 0.09, 0.11, 0.03 ], [ side * 0.004, - 0.01, 0.034 ], eye )
+        part( m.irisLow, [ 0.07, 0.042, 0.02 ], [ side * 0.004, - 0.062, 0.052 ], eye )
+        part( m.pupil, [ 0.032, 0.05, 0.02 ], [ side * 0.004, 0.004, 0.058 ], eye )
+        part( m.white, [ 0.042, 0.046, 0.015 ], [ side * 0.036, 0.046, 0.074 ], eye )
+        part( m.white, [ 0.018, 0.018, 0.01 ], [ - side * 0.042, - 0.05, 0.074 ], eye )
 
-        // Long, dark upper lashes that flick out at the corner
+        // A neat upper lash line hugging the top of the eye, with one little flick
+        // at the outer corner; no droop, so she looks bright rather than sleepy
         const lash = [
-            [ - 0.112, 0.036 ],
-            [ - 0.05, 0.1 ],
-            [ 0.04, 0.106 ],
-            [ 0.115, 0.07 ],
-            [ 0.158, 0.098 ],
-        ].map( ( [ x, y ] ) => v3( x * side, y, 0.018 ) )
-        eye.add( new Mesh( new TubeGeometry( new CatmullRomCurve3( lash ), 28, 0.026, 8 ), m.lash ) )
-        const lower = [ [ 0.06, - 0.1 ], [ 0.11, - 0.06 ] ].map( ( [ x, y ] ) => v3( x * side, y, 0.016 ) )
-        eye.add( new Mesh( new TubeGeometry( new CatmullRomCurve3( lower ), 8, 0.01, 6 ), m.lash ) )
+            [ - 0.13, 0.04 ],
+            [ - 0.08, 0.118 ],
+            [ 0.0, 0.146 ],
+            [ 0.08, 0.124 ],
+            [ 0.13, 0.07 ],
+            [ 0.168, 0.094 ],
+        ].map( ( [ x, y ] ) => v3( x * side, y, 0.024 ) )
+        eye.add( new Mesh( new TubeGeometry( new CatmullRomCurve3( lash ), 32, 0.017, 8 ), m.lash ) )
+        const lower = [ [ 0.05, - 0.13 ], [ 0.1, - 0.1 ], [ 0.122, - 0.07 ] ].map( ( [ x, y ] ) => v3( x * side, y, 0.016 ) )
+        eye.add( new Mesh( new TubeGeometry( new CatmullRomCurve3( lower ), 10, 0.007, 6 ), m.lash ) )
 
-        place( eye, side * 0.33, - 0.08, 0.018, - side * 0.04 )
+        place( eye, side * 0.35, - 0.06, 0.018, - side * 0.02 )
         eyes.push( eye )
 
-        const brow = [ [ - 0.07, 0.004 ], [ 0, 0.018 ], [ 0.075, 0.004 ] ].map( ( [ x, y ] ) => v3( x * side, y, 0 ) )
-        place( new Mesh( new TubeGeometry( new CatmullRomCurve3( brow ), 16, 0.012, 8 ), m.lash ), side * 0.33, 0.21, 0.004 )
+        // thin, softly arched brows sitting high
+        const brow = [ [ - 0.065, - 0.008 ], [ 0, 0.014 ], [ 0.07, 0.002 ] ].map( ( [ x, y ] ) => v3( x * side, y, 0 ) )
+        place( new Mesh( new TubeGeometry( new CatmullRomCurve3( brow ), 16, 0.008, 8 ), m.brow ), side * 0.34, 0.29, 0.004 )
 
-        part( m.blush, [ 0.075, 0.034, 0.02 ], [ 0, 0, 0 ], place( new Group(), side * 0.55, - 0.22, 0.01 ) )
+        part( m.blush, [ 0.085, 0.04, 0.02 ], [ 0, 0, 0 ], place( new Group(), side * 0.56, - 0.26, 0.01 ) )
     }
 
     const nose = new Mesh( sphere, m.skin )
-    nose.scale.set( 0.026, 0.02, 0.024 )
-    place( nose, 0, - 0.12, 0.012 )
+    nose.scale.set( 0.022, 0.017, 0.02 )
+    place( nose, 0, - 0.17, 0.012 )
 
-    // Bamboo muzzle held in her mouth: a green tube with nodes and pale cut ends
-    const gag = place( new Group(), 0, - 0.34, - 0.014 )
+    // Bamboo muzzle held in her mouth: a short, chunky green tube with nodes and
+    // pale cut ends, wrapped in red cloth where it meets her cheeks
+    const gag = place( new Group(), 0, - 0.4, - 0.03 )
     const tube = new Group()
     tube.rotation.z = Math.PI / 2
     gag.add( tube )
-    mesh( new CylinderGeometry( 0.046, 0.046, 0.54, 20 ), [ m.bamboo, m.bambooEnd, m.bambooEnd ], tube )
-    for( const y of [ - 0.14, 0.14 ] )
-        mesh( new CylinderGeometry( 0.051, 0.051, 0.018, 20 ), m.bambooNode, tube, v3( 0, y, 0 ) )
-    for( const y of [ - 0.22, 0.22 ] )
-        mesh( new CylinderGeometry( 0.054, 0.054, 0.045, 20 ), m.cloth, tube, v3( 0, y, 0 ) )
+    mesh( new CylinderGeometry( 0.064, 0.064, 0.48, 24 ), [ m.bamboo, m.bambooEnd, m.bambooEnd ], tube )
+    for( const y of [ - 0.12, 0.12 ] )
+        mesh( new CylinderGeometry( 0.069, 0.069, 0.02, 24 ), m.bambooNode, tube, v3( 0, y, 0 ) )
+    for( const y of [ - 0.215, 0.215 ] )
+        mesh( new SphereGeometry( 1, 20, 14 ), m.cloth, tube, v3( 0, y, - 0.01 ), v3( 0.082, 0.055, 0.08 ) )
 
     // Red cloth ties running from the tube's ends around her cheeks to the back of her head
     for( const side of [ - 1, 1 ] )
     {
-        const end = v3( side * 0.22, 0, 0 ).applyQuaternion( gag.quaternion ).add( gag.position )
+        const end = v3( side * 0.21, 0, 0 ).applyQuaternion( gag.quaternion ).add( gag.position )
         const points = [ end ]
-        for( const yaw of [ 38, 62, 90, 120, 150, 178 ] )
+        for( const yaw of [ 40, 64, 90, 120, 150, 178 ] )
         {
-            const d = sphereDir( side * yaw * deg, - 0.3 )
+            const d = sphereDir( side * yaw * deg, - 0.36 )
             points.push( d.multiplyScalar( skullRadius( d ) + 0.022 ) )
         }
-        stroke( points, 0.022, m.cloth, head )
+        stroke( points, 0.024, m.cloth, head )
     }
 
     return { eyes }
@@ -392,14 +440,14 @@ export function createNezuko()
         hip.position.set( side * 0.125, 0.32, 0 )
         body.add( hip )
         mesh( new CylinderGeometry( 0.092, 0.098, 0.18, 20 ), m.kyahan, hip, v3( 0, - 0.08, 0 ) )
-        mesh( new TorusGeometry( 0.097, 0.008, 6, 24 ), m.haoriEdge, hip, v3( 0, - 0.1, 0 ) ).rotation.x = Math.PI / 2
+        mesh( new TorusGeometry( 0.097, 0.009, 6, 24 ), m.lining, hip, v3( 0, - 0.1, 0 ) ).rotation.x = Math.PI / 2
 
         const knee = new Group()
         knee.position.set( 0, - 0.16, 0 )
         hip.add( knee )
         mesh( new SphereGeometry( 0.094, 18, 12 ), m.kyahan, knee )
         mesh( new CylinderGeometry( 0.098, 0.088, 0.12, 24 ), m.kyahan, knee, v3( 0, - 0.03, 0 ) )
-        mesh( new TorusGeometry( 0.094, 0.008, 6, 24 ), m.haoriEdge, knee, v3( 0, - 0.02, 0 ) ).rotation.x = Math.PI / 2
+        mesh( new TorusGeometry( 0.094, 0.009, 6, 24 ), m.lining, knee, v3( 0, - 0.02, 0 ) ).rotation.x = Math.PI / 2
         mesh( new SphereGeometry( 1, 24, 16 ), m.tabi, knee, v3( side * 0.005, - 0.095, 0.045 ), v3( 0.11, 0.07, 0.18 ) )
         mesh( new RoundedBoxGeometry( 0.2, 0.03, 0.36, 2, 0.012 ), m.zori, knee, v3( side * 0.005, - 0.148, 0.05 ) )
         stroke( [ v3( - 0.085, - 0.12, 0.0 ), v3( 0, - 0.045, 0.15 ), v3( 0.085, - 0.12, 0.0 ) ], 0.016, m.ribbon, knee )
@@ -467,7 +515,7 @@ export function createNezuko()
     ring( 0.36, 0.016, 0.65, m.obijime )
     mesh( new SphereGeometry( 0.032, 14, 10 ), m.obijime, body, v3( 0, 0.65, 0.305 ), v3( 1.4, 1, 0.7 ) )
 
-    // Long dark-brown haori, open down the front, with a darker band along its
+    // Long black haori, open down the front, with a darker band along its
     // edges; it hangs from a pivot at the shoulders so it can flap as she runs
     const coatPivot = new Group()
     coatPivot.position.y = 1.05
@@ -502,7 +550,9 @@ export function createNezuko()
     neck.position.set( 0, 1.12, 0 )
     body.add( neck )
     const head = new Group()
-    head.position.set( 0, 0.48, 0.02 )
+    head.position.set( 0, 0.5, 0.02 )
+    // a touch bigger than the shared skull: the oversized head is most of a chibi's charm
+    head.scale.setScalar( 1.07 )
     neck.add( head )
     mesh( skullGeometry(), m.skin, head )
 
