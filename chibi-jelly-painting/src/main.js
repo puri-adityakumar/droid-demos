@@ -13,6 +13,7 @@ import { createGojo, createInfinity } from './scene/gojo.js'
 import { createVoid } from './scene/void.js'
 import { createFrieren, createFlowerField } from './scene/frieren.js'
 import { createNezuko, createWisteriaPath } from './scene/nezuko.js'
+import { createSukuna, createSukunaStage } from './scene/sukuna.js'
 import { createNimbus, createFarClouds, createSparkles, skyNode } from './scene/world.js'
 import { createRig } from './scene/rig.js'
 import { createPaintFilter, paintDefaults } from './post/paintFilter.js'
@@ -104,6 +105,15 @@ async function start()
             view: { y: 1.1, zoom: 1.2, polar: 1.36 },
             label: 'A painting of a chibi Nezuko Kamado with long black hair fading to flame orange, a pink ribbon, pink eyes and a bamboo muzzle, in a pink hemp-leaf kimono with a checkered obi and a long brown haori, running down a dirt path between wisteria trees. Tap her to make her jump, drag to orbit and scroll to zoom.',
         },
+        sukuna: {
+            name: 'Ryomen Sukuna',
+            world: 'sukuna',
+            kid: createSukuna(),
+            ride: createSukunaStage(),
+            extras: [],
+            view: { y: 0.96, zoom: 1.34, polar: 1.34 },
+            label: 'A painting of a shirtless chibi Ryomen Sukuna with spiky salmon-pink hair over a dark undercut, four glowing crimson eyes, black cursed markings across his face, chest, shoulders and wrists, and white hakama trousers, cycling through three poses: slouched King of Curses, Malevolent Shrine hand sign, and Cleave and Dismantle slash dash. Tap him to jump and switch poses, drag to orbit and scroll to zoom.',
+        },
     }
     for( const c of Object.values( cast ) )
     {
@@ -134,7 +144,7 @@ async function start()
         // the sky's clouds belong to the sky, meadow and wisteria; the glints are
         // stars in the void, mana motes in the meadow and sparks over the wisteria
         farClouds.group.visible = world === 'sky' || world === 'meadow' || world === 'wisteria'
-        sparkles.group.visible = world !== 'room'
+        sparkles.group.visible = world !== 'room' && world !== 'sukuna'
         theme.setWorld( world )
         canvas.setAttribute( 'aria-label', cast[ id ].label )
     }
@@ -252,7 +262,7 @@ async function start()
         if( moved < 6 && performance.now() - down.t < 400 )
         {
             const hit = pick( e )
-            if( hit === 'kid' ) cast[ active ].rig.startJump()
+            if( hit === 'kid' ) { cast[ active ].kid.nextPose?.(); cast[ active ].rig.startJump() }
             else if( hit === 'cloud' ) cast[ active ].rig.bounceCloud()
         }
         if( e.pointerType === 'mouse' ) ui.setCursorHover( pick( e ) !== null )
@@ -271,7 +281,7 @@ async function start()
         filter,
         theme,
         character,
-        onJump: () => cast[ active ].rig.startJump(),
+        onJump: () => { cast[ active ].kid.nextPose?.(); cast[ active ].rig.startJump() },
         onWave: () => cast[ active ].rig.startWave(),
         onFrameChange: resize,
     } )

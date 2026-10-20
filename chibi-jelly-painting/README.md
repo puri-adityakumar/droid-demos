@@ -3,11 +3,14 @@
 A chibi martial-arts kid riding a wobbly cloud, a smirking chibi Light Yagami
 sitting at his desk at night, writing in the Death Note, a chibi Gojo Satoru
 hovering over an Infinity sign in a void of ink, a chibi Frieren standing in a
-floating bed of Blue-Moon Weed flowers with her mage's staff and open grimoire, and a
-chibi Nezuko Kamado running down a path between wisteria trees, painted
+floating bed of Blue-Moon Weed flowers with her mage's staff and open grimoire, a
+chibi Nezuko Kamado running down a path between wisteria trees, and a shirtless
+chibi Ryomen Sukuna cycling through three poses (King of Curses lounge, Malevolent
+Shrine hand sign, and Cleave & Dismantle slash dash), painted
 live in the browser. One page, one switch for the mood (day and dusk in the sky, lamp
 light and moonlight at the desk, Unlimited Void and Hollow Purple in the void, Flower
-field and Zoltraak in the meadow, Sunrise and Exploding Blood under the wisteria), one
+field and Zoltraak in the meadow, Sunrise and Exploding Blood under the wisteria; Sukuna
+locks his crimson-and-charcoal King of Curses palette with no mood switch), one
 card per character.
 
 <p>
@@ -31,6 +34,11 @@ card per character.
   <img src="screenshots/nezuko-day.jpg" width="48%" alt="Nezuko running along the wisteria path at sunrise" />
   <img src="screenshots/nezuko-dusk.jpg" width="48%" alt="Nezuko running through the pink flames of Exploding Blood" />
 </p>
+<p>
+  <img src="screenshots/sukuna-throne.jpg" width="32%" alt="Ryomen Sukuna slouched in his King of Curses pose" />
+  <img src="screenshots/sukuna-shrine.jpg" width="32%" alt="Ryomen Sukuna forming the Malevolent Shrine hand sign" />
+  <img src="screenshots/sukuna-cleave.jpg" width="32%" alt="Ryomen Sukuna lunging forward with Cleave and Dismantle slash arcs" />
+</p>
 
 - **Live:** [chibi-jelly-painting.vercel.app](https://chibi-jelly-painting.vercel.app)
 - **Model:** Opus 5.5 (high) for the build, Sonnet 5.5 (high) for the final polish, video, repo and deploy
@@ -51,17 +59,17 @@ npm run build    # static build in dist/
 
 ## Controls
 
-Tap the character to jump (Light only hops in his chair), tap the cloud, Light's notebook, Gojo's Infinity sign or Frieren's flower bed to bounce it (Nezuko just keeps running), drag to orbit, scroll to zoom.
-Five painted cards beside the sheet pick the character, **Goku**, **Light Yagami**,
-**Gojo Satoru**, **Frieren** or **Nezuko Kamado** (each hops in on arrival); the selected one is outlined. An icon-only
+Tap the character to jump (Light only hops in his chair; Sukuna leaps into his next pose), tap the cloud, Light's notebook, Gojo's Infinity sign or Frieren's flower bed to bounce it (Nezuko just keeps running, and Sukuna needs no stage), drag to orbit, scroll to zoom.
+Six painted cards beside the sheet pick the character, **Goku**, **Light Yagami**,
+**Gojo Satoru**, **Frieren**, **Nezuko Kamado** or **Ryomen Sukuna** (each hops in on arrival); the selected one is outlined. An icon-only
 button in the top right flips the mood: sun / moon for Goku's sky (day, dusk), lamp / moon
 for Light's desk (lamp light, moonlight), the Infinity sign / a purple orb for Gojo's
-void (Unlimited Void, Hollow Purple), and a Blue-Moon Weed blossom / Zoltraak magic seal for
+void (Unlimited Void, Hollow Purple), a Blue-Moon Weed blossom / Zoltraak magic seal for
 Frieren's meadow (Flower field, Zoltraak), and a rising sun / pink flame for Nezuko's wisteria
-(Sunrise, Exploding Blood). The card previews are
-captured from the live pipeline at load. Add `?char=light`, `?char=gojo`, `?char=frieren` or `?char=nezuko` to open on a
+(Sunrise, Exploding Blood); on Sukuna the mood button hides. The card previews are
+captured from the live pipeline at load. Add `?char=light`, `?char=gojo`, `?char=frieren`, `?char=nezuko` or `?char=sukuna` to open on a
 specific character.
-Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku · `2` Light Yagami · `3` Gojo Satoru · `4` Frieren · `5` Nezuko Kamado · `g` paint settings.
+Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku · `2` Light Yagami · `3` Gojo Satoru · `4` Frieren · `5` Nezuko Kamado · `6` Ryomen Sukuna · `g` paint settings.
 
 ## How it works
 
@@ -128,6 +136,17 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
   between the camera and her bows out of the way. In the Exploding Blood mood pink flames
   burn around her feet and embers trail off behind her. Reference: the Demon Slayer wiki
   and the Nezuko Nendoroid.
+- `src/scene/sukuna.js` — Ryomen Sukuna in his shirtless Domain look: swept-back spiky
+  salmon-pink hair over a dark charcoal undercut with two loose front strands, four glowing
+  crimson eyes (his secondary cursed slit pair sits beneath the main eyes and blinks with
+  them), a fanged arrogant smirk, black cursed tattoo markings across his forehead, nose,
+  cheeks, bare chest, shoulders, back and wrists, clawed hands and pleated white hakama
+  trousers with a dark obi sash and zori sandals. He has no environment props and no mood
+  toggle; instead he runs a 3-pose state machine (`POSES`) that smoothly interpolates every
+  joint (and jumps to the next pose when tapped): slouched mid-air King of Curses lounge
+  with his chin propped on his right hand, standing Malevolent Shrine (*Fukuma Mizushi*)
+  Enmaten hand sign with a crimson cursed aura, and a forward Cleave & Dismantle slash lunge
+  surrounded by razor-tapered crimson, white and black-ink crescent blade arcs.
 - `src/scene/glow.js` — the soft round glow shared by the lamp, the moon and the orbs.
 - `src/scene/world.js` — the nimbus cloud (recolorable), far clouds, the painted
   multi-hue sky and the twinkling sparkles.
@@ -144,7 +163,8 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
   a swap until you grab it.
 - `src/themes.js` — two moods per world, eased every frame: `sky` (day, dusk), `room`
   (lamp light, moonlight), `void` (Unlimited Void, Hollow Purple), `meadow` (Flower
-  field, Zoltraak) and `wisteria` (Sunrise, Exploding Blood). The switch picks a slot; each character's world decides
+  field, Zoltraak), `wisteria` (Sunrise, Exploding Blood) and `sukuna` (a locked
+  crimson-and-charcoal King of Curses palette). The switch picks a slot; each character's world decides
   what it looks like.
 
 Dev-only debug hook: `window.__chibi` (renderer, scene, camera, controls, filter, cast, theme, character).

@@ -128,12 +128,14 @@ export function createUI()
             const label = `Switch to ${ theme.label( next( slots, theme.current ) ).toLowerCase() }`
             modeSwitch.dataset.mode = theme.current
             modeSwitch.dataset.world = theme.world
-            hint.textContent = `tap to jump · drag to turn · t ${ slots.map( ( slot ) => theme.label( slot ).toLowerCase() ).join( ' / ' ) } · c character`
+            hint.textContent = theme.world === 'sukuna'
+                ? 'tap to switch pose · drag to turn · c character'
+                : `tap to jump · drag to turn · t ${ slots.map( ( slot ) => theme.label( slot ).toLowerCase() ).join( ' / ' ) } · c character`
             modeSwitch.setAttribute( 'aria-label', label )
             modeSwitch.title = label
         }
 
-        const toggleTheme = () => { theme.set( next( slots, theme.current ) ); sync() }
+        const toggleTheme = () => { if( theme.world === 'sukuna' ) return; theme.set( next( slots, theme.current ) ); sync() }
         const toggleCharacter = ( id = next( character.ids, character.current ) ) => { character.set( id ); sync() }
         modeSwitch.addEventListener( 'click', toggleTheme )
         for( const card of cards ) card.addEventListener( 'click', () => toggleCharacter( card.dataset.character ) )
