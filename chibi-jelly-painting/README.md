@@ -2,11 +2,13 @@
 
 A chibi martial-arts kid riding a wobbly cloud, a smirking chibi Light Yagami
 sitting at his desk at night, writing in the Death Note, a chibi Gojo Satoru
-hovering over an Infinity sign in a void of ink, and a chibi Frieren standing in a
-floating bed of Blue-Moon Weed flowers with her mage's staff and open grimoire, painted
+hovering over an Infinity sign in a void of ink, a chibi Frieren standing in a
+floating bed of Blue-Moon Weed flowers with her mage's staff and open grimoire, and a
+chibi Nezuko Kamado on a floating mossy island under hanging wisteria, painted
 live in the browser. One page, one switch for the mood (day and dusk in the sky, lamp
 light and moonlight at the desk, Unlimited Void and Hollow Purple in the void, Flower
-field and Zoltraak in the meadow), one card per character.
+field and Zoltraak in the meadow, Sunrise and Exploding Blood under the wisteria), one
+card per character.
 
 <p>
   <img src="screenshots/day.jpg" width="32%" alt="Day" />
@@ -24,6 +26,10 @@ field and Zoltraak in the meadow), one card per character.
 <p>
   <img src="screenshots/frieren-day.jpg" width="48%" alt="Frieren in a field of Blue-Moon Weed flowers" />
   <img src="screenshots/frieren-dusk.jpg" width="48%" alt="Frieren casting Zoltraak" />
+</p>
+<p>
+  <img src="screenshots/nezuko-day.jpg" width="48%" alt="Nezuko under the wisteria at sunrise" />
+  <img src="screenshots/nezuko-dusk.jpg" width="48%" alt="Nezuko wreathed in the pink flames of Exploding Blood" />
 </p>
 
 - **Live:** [chibi-jelly-painting.vercel.app](https://chibi-jelly-painting.vercel.app)
@@ -45,16 +51,17 @@ npm run build    # static build in dist/
 
 ## Controls
 
-Tap the character to jump (Light only hops in his chair), tap the cloud, Light's notebook, Gojo's Infinity sign or Frieren's flower bed to bounce it, drag to orbit, scroll to zoom.
-Four painted cards beside the sheet pick the character, **Goku**, **Light Yagami**,
-**Gojo Satoru** or **Frieren** (each hops in on arrival); the selected one is outlined. An icon-only
+Tap the character to jump (Light only hops in his chair), tap the cloud, Light's notebook, Gojo's Infinity sign, Frieren's flower bed or Nezuko's island to bounce it, drag to orbit, scroll to zoom.
+Five painted cards beside the sheet pick the character, **Goku**, **Light Yagami**,
+**Gojo Satoru**, **Frieren** or **Nezuko Kamado** (each hops in on arrival); the selected one is outlined. An icon-only
 button in the top right flips the mood: sun / moon for Goku's sky (day, dusk), lamp / moon
 for Light's desk (lamp light, moonlight), the Infinity sign / a purple orb for Gojo's
 void (Unlimited Void, Hollow Purple), and a Blue-Moon Weed blossom / Zoltraak magic seal for
-Frieren's meadow (Flower field, Zoltraak). The card previews are
-captured from the live pipeline at load. Add `?char=light`, `?char=gojo` or `?char=frieren` to open on a
+Frieren's meadow (Flower field, Zoltraak), and a rising sun / pink flame for Nezuko's wisteria
+(Sunrise, Exploding Blood). The card previews are
+captured from the live pipeline at load. Add `?char=light`, `?char=gojo`, `?char=frieren` or `?char=nezuko` to open on a
 specific character.
-Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku · `2` Light Yagami · `3` Gojo Satoru · `4` Frieren · `g` paint settings.
+Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku · `2` Light Yagami · `3` Gojo Satoru · `4` Frieren · `5` Nezuko Kamado · `g` paint settings.
 
 ## How it works
 
@@ -107,6 +114,15 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
   red crescent mage's staff. She stands in a floating bed of Blue-Moon Weed blossoms with an
   open floating grimoire and drifting petals; in the Zoltraak mood, glowing geometric spell
   circles unfurl behind her, around the meadow and at her staff tip.
+- `src/scene/nezuko.js` — Nezuko Kamado: long black hair that turns flame-orange toward the
+  tips (each lock is an orange blade under a slightly larger black one, so the orange licks
+  up its edges), a small pink ribbon, big pink eyes with slit pupils and long lashes, the
+  bamboo muzzle tied with red cloth, a pale pink asanoha kimono with a red-and-white
+  checkered obi, orange obijime and green obiage, a long dark-brown haori hanging open,
+  black kyahan, white tabi and pink-strapped zori. She stands on a floating mossy island
+  strewn with fallen petals beside Tanjiro's wooden box, under a wisteria branch that turns
+  with the camera so it always hangs behind her. In the Exploding Blood mood pink flames and
+  embers burn up around her. Reference: the Demon Slayer wiki and the Nezuko Nendoroid.
 - `src/scene/glow.js` — the soft round glow shared by the lamp, the moon and the orbs.
 - `src/scene/world.js` — the nimbus cloud (recolorable), far clouds, the painted
   multi-hue sky and the twinkling sparkles.
@@ -121,8 +137,8 @@ Keys: `space`/`j` jump · `w` wave · `t` mood · `c` next character · `1` Goku
   so Light is seen from above enough to read the notebook; the camera eases there on
   a swap until you grab it.
 - `src/themes.js` — two moods per world, eased every frame: `sky` (day, dusk), `room`
-  (lamp light, moonlight), `void` (Unlimited Void, Hollow Purple) and `meadow` (Flower
-  field, Zoltraak). The switch picks a slot; each character's world decides
+  (lamp light, moonlight), `void` (Unlimited Void, Hollow Purple), `meadow` (Flower
+  field, Zoltraak) and `wisteria` (Sunrise, Exploding Blood). The switch picks a slot; each character's world decides
   what it looks like.
 
 Dev-only debug hook: `window.__chibi` (renderer, scene, camera, controls, filter, cast, theme, character).

@@ -12,6 +12,7 @@ import { createRoom, DESK_Y, NOTE_Z } from './scene/room.js'
 import { createGojo, createInfinity } from './scene/gojo.js'
 import { createVoid } from './scene/void.js'
 import { createFrieren, createFlowerField } from './scene/frieren.js'
+import { createNezuko, createWisteriaIsland } from './scene/nezuko.js'
 import { createNimbus, createFarClouds, createSparkles, skyNode } from './scene/world.js'
 import { createRig } from './scene/rig.js'
 import { createPaintFilter, paintDefaults } from './post/paintFilter.js'
@@ -54,6 +55,7 @@ async function start()
 
     const backdrop = createVoid()
     const flowerField = createFlowerField()
+    const island = createWisteriaIsland( camera )
 
     const cast = {
         goku: {
@@ -93,6 +95,15 @@ async function start()
             view: { y: 1.08, zoom: 1.22, polar: 1.36 },
             label: 'A painting of a chibi Frieren with silver-white twin-tails, pointed elf ears with red drop earrings, emerald eyes, a white gold-trimmed capelet and her red crescent staff, standing in a floating bed of Blue-Moon Weed flowers beside an open grimoire. Tap her to make her jump, tap the flower bed to bounce it, drag to orbit and scroll to zoom.',
         },
+        nezuko: {
+            name: 'Nezuko Kamado',
+            world: 'wisteria',
+            kid: createNezuko(),
+            ride: island,
+            extras: [ island.backdrop ],
+            view: { y: 1.1, zoom: 1.2, polar: 1.36 },
+            label: 'A painting of a chibi Nezuko Kamado with long black hair fading to flame orange, a pink ribbon, pink eyes and a bamboo muzzle, in a pink hemp-leaf kimono with a checkered obi and a long brown haori, standing on a floating mossy island beside Tanjiro\'s wooden box under hanging wisteria. Tap her to make her jump, tap the island to bounce it, drag to orbit and scroll to zoom.',
+        },
     }
     for( const c of Object.values( cast ) )
     {
@@ -120,10 +131,10 @@ async function start()
             c.ride.group.visible = on
             for( const e of c.extras ) e.visible = on
         }
-        // the sky's clouds belong to the sky and meadow; the glints are stars in
-        // the void and mana motes in the meadow as well
-        farClouds.group.visible = world === 'sky' || world === 'meadow'
-        sparkles.group.visible = world === 'sky' || world === 'void' || world === 'meadow'
+        // the sky's clouds belong to the sky, meadow and wisteria; the glints are
+        // stars in the void, mana motes in the meadow and sparks over the wisteria
+        farClouds.group.visible = world === 'sky' || world === 'meadow' || world === 'wisteria'
+        sparkles.group.visible = world !== 'room'
         theme.setWorld( world )
         canvas.setAttribute( 'aria-label', cast[ id ].label )
     }
