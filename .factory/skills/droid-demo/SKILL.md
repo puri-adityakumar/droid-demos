@@ -8,7 +8,7 @@ description: Record and render demo and comparison videos for droid-demos projec
 Record deterministic 30 fps demo captures and render showcase or comparison videos for projects in `droid-demos`.
 
 **Skill root:** the directory containing this file (`$SKILL`).
-**Output root:** `/home/factory-user/droid-demo-videos/<slug>/` (keep generated heavy MP4s outside the git repo unless explicitly asked to place a clip inside a project's `screenshots/` folder).
+**Output root:** `~/droid-demo-videos/<slug>/` (keep generated heavy MP4s outside the git repo unless explicitly asked to place a clip inside a project's `screenshots/` folder).
 
 ---
 
@@ -46,7 +46,7 @@ Record deterministic 30 fps demo captures and render showcase or comparison vide
 [option] Chibi 1:1 Square (1080×1080 pure #ffffff, no text or tokens)
 ```
 
-### 2. Create `spec.json` in `/home/factory-user/droid-demo-videos/<slug>/`
+### 2. Create `spec.json` in `~/droid-demo-videos/<slug>/`
 
 #### A. For `chibi-oktaku` (`chibi-jelly-painting`) — 1:1 Pure White, No Text, No Tokens
 
@@ -145,7 +145,7 @@ Headless Chromium under SwiftShader renders WebGL/WebGPU-fallback at ~1–3 fps 
 Run `render-demo.mjs`:
 
 ```bash
-node "$SKILL/scripts/render-demo.mjs" /home/factory-user/droid-demo-videos/<slug> --format <chibi|single-landscape|single-vertical|single-both|landscape|vertical|both>
+node "$SKILL/scripts/render-demo.mjs" ~/droid-demo-videos/<slug> --format <chibi|single-landscape|single-vertical|single-both|landscape|vertical|both>
 ```
 
 - Always inspect the generated poster PNG(s) with `Read` before finishing to verify sharp edges (`rx="0"`) and, for `chibi-oktaku`, a clean 1:1 `#ffffff` canvas with no text or token overlays.

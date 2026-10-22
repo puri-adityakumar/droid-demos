@@ -1,12 +1,29 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// <repo>/.factory/skills/droid-demo/scripts -> <repo>
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..');
+
+function playwrightCandidates() {
+  const found = [];
+  const roots = [REPO_ROOT];
+  try {
+    for (const d of readdirSync(REPO_ROOT, { withFileTypes: true })) {
+      if (d.isDirectory() && !d.name.startsWith('.') && d.name !== 'node_modules') {
+        roots.push(resolve(REPO_ROOT, d.name));
+      }
+    }
+  } catch {
+    // repo root unreadable; fall back to bare import
+  }
+  for (const r of roots) found.push(resolve(r, 'node_modules/playwright/index.mjs'));
+  return found;
+}
 
 async function loadChromium() {
-  const candidates = [
-    'playwright',
-    '/home/factory-user/droid-demos/kobo-roast-lab/node_modules/playwright/index.mjs',
-    '/home/factory-user/bell-loop/node_modules/playwright/index.mjs',
-  ];
+  const candidates = ['playwright', ...playwrightCandidates()];
   for (const c of candidates) {
     try {
       if (c.startsWith('/') && !existsSync(c)) continue;

@@ -9,4 +9,4 @@
   - **1:1 square (`1080×1080`)** aspect ratio.
   - **Pure white (`#ffffff`)** background.
   - **No text, no headers, no token/stats overlays.**
-- **External Output Directory (`/home/factory-user/droid-demo-videos/`):** Store generated MP4s, posters, overlay PNGs, and `spec.json` files in `/home/factory-user/droid-demo-videos/<slug>/`.
+- **External Output Directory (`~/droid-demo-videos/`):** Store generated MP4s, posters, overlay PNGs, and `spec.json` files in `~/droid-demo-videos/<slug>/`.

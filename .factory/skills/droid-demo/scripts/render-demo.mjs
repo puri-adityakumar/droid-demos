@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { launch } from './common.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const DEMOS_ROOT = '/home/factory-user/droid-demo-videos';
+const DEMOS_ROOT = process.env.DROID_DEMO_VIDEOS_DIR || resolve(homedir(), 'droid-demo-videos');
 const args = process.argv.slice(2);
 const slugOrPath = args.find((a) => !a.startsWith('--'));
 if (!slugOrPath) {
