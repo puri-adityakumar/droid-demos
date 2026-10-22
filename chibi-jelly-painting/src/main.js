@@ -12,6 +12,11 @@ import { createRoom, DESK_Y, NOTE_Z } from './scene/room.js'
 import { createGojo, createInfinity } from './scene/gojo.js'
 import { createVoid } from './scene/void.js'
 import { createFrieren, createFlowerField } from './scene/frieren.js'
+import { createNezuko, createWisteriaPath } from './scene/nezuko.js'
+import { createSukuna } from './scene/sukuna.js'
+import { createMalevolentShrine } from './scene/shrine.js'
+import { createEren } from './scene/eren.js'
+import { createShiganshina } from './scene/shiganshina.js'
 import { createNimbus, createFarClouds, createSparkles, skyNode } from './scene/world.js'
 import { createRig } from './scene/rig.js'
 import { createPaintFilter, paintDefaults } from './post/paintFilter.js'
@@ -23,15 +28,17 @@ const ui = createUI()
 
 async function start()
 {
-    ui.progress( 0.1 )
+    ui.progress( 0.08 )
 
     const forceWebGL = new URLSearchParams( window.location.search ).has( 'webgl' )
     const renderer = new WebGPURenderer( { canvas, antialias: false, forceWebGL } )
     renderer.toneMapping = NoToneMapping
     renderer.setPixelRatio( Math.min( window.devicePixelRatio, 2 ) )
     renderer.setSize( window.innerWidth, window.innerHeight )
-    await renderer.init()
-    ui.progress( 0.3 )
+    // the labels and cards use the web font; don't let them pop in late
+    const fonts = Promise.race( [ document.fonts?.ready, new Promise( ( r ) => setTimeout( r, 4000 ) ) ] )
+    await Promise.all( [ renderer.init(), fonts ] )
+    ui.progress( 0.2 )
 
     const scene = new Scene()
     scene.backgroundNode = skyNode()
@@ -54,6 +61,11 @@ async function start()
 
     const backdrop = createVoid()
     const flowerField = createFlowerField()
+    const wisteriaPath = createWisteriaPath( camera )
+    const sukuna = createSukuna()
+    const shrine = createMalevolentShrine( camera, sukuna )
+    const eren = createEren()
+    const shiganshina = createShiganshina( camera, eren )
 
     const cast = {
         goku: {
@@ -93,6 +105,40 @@ async function start()
             view: { y: 1.08, zoom: 1.22, polar: 1.36 },
             label: 'A painting of a chibi Frieren with silver-white twin-tails, pointed elf ears with red drop earrings, emerald eyes, a white gold-trimmed capelet and her red crescent staff, standing in a floating bed of Blue-Moon Weed flowers beside an open grimoire. Tap her to make her jump, tap the flower bed to bounce it, drag to orbit and scroll to zoom.',
         },
+        nezuko: {
+            name: 'Nezuko Kamado',
+            world: 'wisteria',
+            kid: createNezuko(),
+            ride: wisteriaPath,
+            extras: [ wisteriaPath.ground, wisteriaPath.backdrop ],
+            floor: 0.3,
+            view: { y: 1.1, zoom: 1.2, polar: 1.36 },
+            label: 'A painting of a chibi Nezuko Kamado with long black hair fading to flame orange, a pink ribbon, pink eyes and a bamboo muzzle, in a pink hemp-leaf kimono with a checkered obi and a long brown haori, running down a dirt path between wisteria trees. Tap her to make her jump, drag to orbit and scroll to zoom.',
+        },
+        sukuna: {
+            name: 'Ryomen Sukuna',
+            world: 'sukuna',
+            kid: sukuna,
+            ride: shrine,
+            extras: [ shrine.ground, shrine.backdrop, shrine.fx ],
+            floor: 0.3,
+            snap: () => shrine.snap(),
+            view: { y: 1.8, zoom: 0.88, polar: 1.4 },
+            label: 'A painting of a shirtless chibi Ryomen Sukuna with spiky salmon-pink hair over a dark undercut, four glowing crimson eyes, black cursed markings across his face, chest, shoulders and wrists, and white hakama trousers, standing in a pool of blood inside his Domain Expansion, Malevolent Shrine: a crimson Buddhist shrine on a mound of ox skulls, with grinning mouths for doors, bull horns on its roof and skulls hanging from its eaves, while Dismantle slashes flicker through the air. He cycles through four poses: lounging on a throne of skulls, the Enmaten hand sign, a Cleave and Dismantle slash dash, and drawing a Fuga flame arrow. Tap him to jump and switch poses, tap the shrine to open the domain, drag to orbit and scroll to zoom.',
+        },
+        eren: {
+            name: 'Eren Yeager',
+            world: 'eren',
+            kid: eren,
+            ride: shiganshina,
+            extras: [ shiganshina.ground, shiganshina.backdrop, eren.fx ],
+            floor: 0.3,
+            // his framing follows him as he grows into the titan and back
+            view: eren.view,
+            // the mood is his form, so thumbnails jump straight to it instead of transforming
+            snap: () => { eren.snap(); shiganshina.snap() },
+            label: 'A painting of a chibi Eren Yeager of the Survey Corps with messy brown hair, furious teal eyes, a tan cropped jacket with the Wings of Freedom, white trousers, the ODM gear on his hips, a blade in each hand, a green cloak and his basement key on a string, standing in a cobbled square in Shiganshina with half-timbered houses and Wall Maria behind him. Switch the mood and he bites his hand, gold lightning strikes and he bursts out of the steam as the Attack Titan, while the skinless Colossal Titan rises to look over the wall. Tap him to jump or make the titan roar, tap the wall to call the Colossal Titan, drag to orbit and scroll to zoom.',
+        },
     }
     for( const c of Object.values( cast ) )
     {
@@ -120,10 +166,10 @@ async function start()
             c.ride.group.visible = on
             for( const e of c.extras ) e.visible = on
         }
-        // the sky's clouds belong to the sky and meadow; the glints are stars in
-        // the void and mana motes in the meadow as well
-        farClouds.group.visible = world === 'sky' || world === 'meadow'
-        sparkles.group.visible = world === 'sky' || world === 'void' || world === 'meadow'
+        // the sky's clouds belong to the sky, meadow and wisteria; the glints are
+        // stars in the void, mana motes in the meadow and sparks over the wisteria
+        farClouds.group.visible = world === 'sky' || world === 'meadow' || world === 'wisteria'
+        sparkles.group.visible = world !== 'room' && world !== 'sukuna' && world !== 'eren'
         theme.setWorld( world )
         canvas.setAttribute( 'aria-label', cast[ id ].label )
     }
@@ -147,7 +193,7 @@ async function start()
     theme.set( 'day' )
     show( active )
     theme.snap()
-    ui.progress( 0.55 )
+    ui.progress( 0.3 )
 
     // Keep the subject filling the painted frame whatever the window shape.
     // `view` is each character's own framing, eased into when they swap.
@@ -162,8 +208,17 @@ async function start()
         const k = dt > 0 ? 1 - Math.exp( - dt * 5 ) : 1
         view.y += ( goal.y - view.y ) * k
         view.zoom += ( goal.zoom - view.zoom ) * k
+        // carry the camera with the target so a framing that changes height
+        // (Eren growing into the titan) doesn't tilt the orbit
+        camera.position.y += view.y - controls.target.y
         controls.target.y = view.y
         camera.zoom = fitZoom * view.zoom
+
+        // worlds standing on the ground keep the camera above it: from below,
+        // the one-sided ground vanishes and its stones float in the sky
+        const { floor } = cast[ active ]
+        const reach = camera.position.distanceTo( controls.target )
+        controls.maxPolarAngle = floor == null ? 1.9 : Math.min( 1.9, Math.acos( Math.max( - 1, Math.min( 1, ( floor - view.y ) / reach ) ) ) )
         camera.updateProjectionMatrix()
 
         if( settling )
@@ -241,8 +296,8 @@ async function start()
         if( moved < 6 && performance.now() - down.t < 400 )
         {
             const hit = pick( e )
-            if( hit === 'kid' ) cast[ active ].rig.startJump()
-            else if( hit === 'cloud' ) cast[ active ].rig.bounceCloud()
+            if( hit === 'kid' ) { cast[ active ].kid.nextPose?.(); cast[ active ].rig.startJump() }
+            else if( hit === 'cloud' ) { cast[ active ].ride.onTap?.(); cast[ active ].rig.bounceCloud() }
         }
         if( e.pointerType === 'mouse' ) ui.setCursorHover( pick( e ) !== null )
     } )
@@ -260,10 +315,40 @@ async function start()
         filter,
         theme,
         character,
-        onJump: () => cast[ active ].rig.startJump(),
+        onJump: () => { cast[ active ].kid.nextPose?.(); cast[ active ].rig.startJump() },
         onWave: () => cast[ active ].rig.startWave(),
         onFrameChange: resize,
     } )
+
+    // Draw each character once with every hidden part showing (the titan, the
+    // lightning and steam, the Colossal Titan, the skull throne, the Fuga
+    // fire...), through the real paint pipeline, so all of their shaders are
+    // compiled behind the loader instead of stalling the first time they appear.
+    const warmQueue = []
+    const home = active
+
+    function warmUp( id )
+    {
+        show( id )
+        applyView()
+        const c = cast[ id ]
+        const forced = []
+        for( const root of [ c.kid.root, c.ride.group, ...c.extras ] )
+        {
+            root.traverse( ( o ) =>
+            {
+                forced.push( [ o, o.visible, o.frustumCulled ] )
+                o.visible = true
+                o.frustumCulled = false
+            } )
+        }
+        filter.update()
+        filter.render()
+        for( const [ o, visible, culled ] of forced ) { o.visible = visible; o.frustumCulled = culled }
+        const total = character.ids.length
+        ui.progress( 0.3 + ( ( total - warmQueue.length ) / total ) * 0.35 )
+        if( ! warmQueue.length ) show( home )
+    }
 
     // Paint every character in every time of day into the toggle cards straight
     // from the real pipeline, one combination per frame (render targets refresh
@@ -276,6 +361,7 @@ async function start()
         applyView()
         theme.set( themeId )
         theme.snap()
+        cast[ id ].snap?.()
     }
 
     function queueThumbnails()
@@ -291,7 +377,7 @@ async function start()
         const look = thumbQueue.shift()
         ui.drawThumb( `${ look.id }-${ look.themeId }`, canvas, filter.frameRect(), renderer.getPixelRatio() )
         const total = character.ids.length * slots.length
-        ui.progress( 0.55 + ( ( total - thumbQueue.length ) / total ) * 0.45 )
+        ui.progress( 0.65 + ( ( total - thumbQueue.length ) / total ) * 0.35 )
         if( thumbQueue.length ) applyLook( thumbQueue[ 0 ] )
         else ui.syncPreviews()
     }
@@ -300,9 +386,9 @@ async function start()
     const timer = new Timer()
     timer.connect( document )
     let frames = 0
-    let ready = false
+    let stage = 'boot'
 
-    if( import.meta.env.DEV ) window.__chibi = { renderer, scene, camera, controls, filter, cast, theme, character, get frames() { return frames } }
+    if( import.meta.env.DEV ) window.__chibi = { renderer, scene, camera, controls, filter, cast, theme, character, applyView, get frames() { return frames } }
 
     renderer.setAnimationLoop( () =>
     {
@@ -319,11 +405,20 @@ async function start()
         filter.update()
         filter.render()
 
-        if( thumbQueue.length ) captureThumbnail()
+        // one step of loading per frame: warm each character, then paint the cards
+        if( stage === 'warm' )
+        {
+            warmUp( warmQueue.shift() )
+            if( ! warmQueue.length ) { stage = 'cards'; queueThumbnails() }
+        }
+        else if( stage === 'cards' )
+        {
+            captureThumbnail()
+            if( ! thumbQueue.length ) { stage = 'done'; ui.ready() }
+        }
 
         frames++
-        if( frames === 2 ) queueThumbnails()
-        if( frames > 2 && ! thumbQueue.length && ! ready ) { ready = true; ui.ready() }
+        if( frames === 2 ) { stage = 'warm'; warmQueue.push( ...character.ids ) }
     } )
 }
 

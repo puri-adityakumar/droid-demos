@@ -8,25 +8,77 @@ export function createUI()
 {
     const loader = $( '.loader' )
     const status = $( '.loader-status' )
+    const caption = $( '.loader-caption' )
+    const relics = [ ...loader.querySelectorAll( '.relic[data-name]' ) ]
+        .map( ( el ) => ( { name: el.dataset.name, t: parseFloat( el.style.getPropertyValue( '--t' ) ) } ) )
 
-    // --reveal lives on the loader so the title and the garden both read it
+    // Goku never crosses the trail faster than this, even with everything
+    // cached, so each relic gets its moment; if loading is slower he waits
+    // wherever the real progress has reached.
+    const JOURNEY = 5200
+    const born = performance.now()
+    let target = 0
+    let shown = 0
+    let last = born
+    let finishing = false
+    let stopped = false
+    let named = ''
+
     function progress( value )
     {
-        loader.style.setProperty( '--reveal', value.toFixed( 3 ) )
-        loader.setAttribute( 'aria-valuenow', Math.round( value * 100 ) )
+        target = Math.max( target, value )
     }
 
-    // a beat longer than the page used to wait, so the last flower can open
+    function setCaption( text )
+    {
+        if( text === named ) return
+        named = text
+        caption.textContent = text
+        caption.classList.remove( 'fresh' )
+        void caption.offsetWidth
+        caption.classList.add( 'fresh' )
+    }
+
+    // --reveal lives on the loader so the trail, the relics and the rider all read it
+    function tick( now )
+    {
+        if( stopped ) return
+        const dt = Math.min( ( now - last ) / 1000, 0.1 )
+        last = now
+        const goal = Math.min( target, ( now - born ) / JOURNEY )
+        shown += ( goal - shown ) * ( 1 - Math.exp( - dt * 6 ) )
+        if( Math.abs( goal - shown ) < 0.002 ) shown = goal
+        loader.style.setProperty( '--reveal', shown.toFixed( 4 ) )
+        loader.setAttribute( 'aria-valuenow', Math.round( shown * 100 ) )
+
+        const woken = relics.filter( ( r ) => shown >= r.t + 0.05 ).pop()
+        setCaption( shown >= 1 ? 'Ready' : woken?.name ?? '' )
+
+        if( finishing && shown >= 1 ) { stopped = true; leave() }
+        else requestAnimationFrame( tick )
+    }
+    requestAnimationFrame( tick )
+
+    // a beat on "Ready" so the last relic can open, then fade out
+    function leave()
+    {
+        setTimeout( () =>
+        {
+            document.documentElement.dataset.state = 'ready'
+            loader.classList.add( 'leaving' )
+        }, 500 )
+        setTimeout( () => loader.remove(), 1050 )
+    }
+
     function ready()
     {
         progress( 1 )
-        document.documentElement.dataset.state = 'ready'
-        setTimeout( () => loader.classList.add( 'leaving' ), 650 )
-        setTimeout( () => loader.remove(), 1200 )
+        finishing = true
     }
 
     function fail( message )
     {
+        stopped = true
         status.textContent = message
         loader.classList.add( 'failed' )
     }
@@ -128,7 +180,11 @@ export function createUI()
             const label = `Switch to ${ theme.label( next( slots, theme.current ) ).toLowerCase() }`
             modeSwitch.dataset.mode = theme.current
             modeSwitch.dataset.world = theme.world
-            hint.textContent = `tap to jump · drag to turn · t ${ slots.map( ( slot ) => theme.label( slot ).toLowerCase() ).join( ' / ' ) } · c character`
+            hint.textContent = theme.world === 'sukuna'
+                ? `tap him to switch pose · tap the shrine · t ${ slots.map( ( slot ) => theme.label( slot ).toLowerCase() ).join( ' / ' ) } · c character`
+                : theme.world === 'eren'
+                ? `tap him to jump · tap the wall · t ${ theme.current === 'day' ? 'transform' : 'turn back' } · c character`
+                : `tap to jump · drag to turn · t ${ slots.map( ( slot ) => theme.label( slot ).toLowerCase() ).join( ' / ' ) } · c character`
             modeSwitch.setAttribute( 'aria-label', label )
             modeSwitch.title = label
         }

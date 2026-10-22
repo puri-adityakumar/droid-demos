@@ -2,6 +2,7 @@
     --paper: #ffffff;
     --ink: #6b5647;
     --font: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-cute: 'Mochiy Pop One', var(--font);
 }
 
 * { box-sizing: border-box; }
@@ -29,15 +30,17 @@ canvas.scene {
 }
 
 /* loader: Chibi Goku on his Flying Nimbus (Kinto'un) streaks across the paper,
-   unfurling a golden cloud stream and awakening the 4 anime relics along the
-   way (4-Star Dragon Ball, Death Note & Apple, Gojo's Infinity/Hollow Purple,
-   and Frieren's Crescent Staff & Zoltraak seal). Everything reads --reveal. */
+   unfurling a golden cloud stream and awakening one relic per character along
+   the way (4-Star Dragon Ball, Death Note & Apple, Gojo's Infinity/Hollow Purple,
+   Frieren's Crescent Staff & Zoltraak seal, Nezuko's bamboo muzzle, Sukuna's
+   cursed finger, Eren's Wings of Freedom & key). Everything reads --reveal,
+   which ui.js eases every frame. */
 @property --reveal {
     syntax: '<number>';
     inherits: true;
     initial-value: 0;
 }
-.loader[role] { transition: opacity 0.45s, --reveal 0.65s cubic-bezier(.25, .8, .25, 1); }
+.loader[role] { transition: opacity 0.45s; }
 
 .loader-stage {
     position: relative;
@@ -164,6 +167,23 @@ canvas.scene {
     to { stroke-dashoffset: 28; opacity: 0.35; }
 }
 
+.loader-caption {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 6px 0 0;
+    text-align: center;
+    font: 600 12px/1.2 var(--font);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.75;
+}
+.loader-caption.fresh { animation: caption-in 0.5s cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes caption-in {
+    from { opacity: 0; transform: translateY(6px); }
+}
+.loader.failed .loader-caption { opacity: 0; }
 .loader.failed .loader-stage { opacity: 0.25; }
 @media (prefers-reduced-motion: reduce) {
     .loader-rider > svg, .speed-lines line, .spark { animation: none; }
@@ -184,24 +204,28 @@ canvas.scene {
 .loader.failed .loader-status { opacity: 1; padding: 0 24px; }
 
 /* chrome sits on the paper, outside the painting */
+html:not([data-state=ready]) .brand,
 html:not([data-state=ready]) .presets,
 html:not([data-state=ready]) .mode,
 html:not([data-state=ready]) .hint { opacity: 0; }
 
-.presets, .hint {
+.brand, .presets, .hint {
     position: fixed;
     z-index: 5;
     transition: opacity 0.6s 0.2s;
 }
 
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+.brand {
+    top: 22px;
+    left: 24px;
+    margin: 0;
+    font: 400 18px/1.1 var(--font-cute);
+    letter-spacing: 0.03em;
+    color: var(--ink);
+    user-select: none;
+    transition: opacity 0.6s 0.2s, transform 0.25s cubic-bezier(.3, 1.6, .5, 1);
 }
+.brand:hover { transform: translateY(-2px) rotate(-2deg); }
 
 button {
     font: 600 13px/1 var(--font);
@@ -214,20 +238,29 @@ button {
 button:focus-visible, a:focus-visible { outline: 2px dashed var(--ink); outline-offset: 4px; border-radius: 4px; }
 
 /* one card per character beside the sheet, each a painted preview of that
-   character in the current mood */
+   character in the current mood. Anchored by its bottom edge so the column
+   stays put however many cards there are, with room kept for the last label */
 .presets {
-    --thumb: 70px;
-    --cards: 4;
-    --gap: 28px;
+    --thumb: 54px;
+    --gap: 26px;
     display: flex;
     flex-direction: column;
     gap: var(--gap);
     left: calc(var(--fx, 0px) - var(--thumb) - 34px);
-    top: calc(var(--fy, 0px) + var(--fh, 0px) - var(--thumb) * var(--cards) - var(--gap) * (var(--cards) - 1) - 20px);
+    top: calc(var(--fy, 0px) + var(--fh, 0px) - 44px);
+    transform: translateY(-100%);
+    padding-bottom: 26px;
+}
+@media (max-height: 780px) {
+    .presets { --thumb: 42px; --gap: 17px; }
+}
+@media (max-height: 620px) {
+    .presets { --thumb: 34px; --gap: 15px; }
+    .preset-label { font-size: 10px; top: calc(100% + 4px); }
 }
 html[data-layout=below] .presets {
-    --thumb: 54px;
-    --gap: 24px;
+    --thumb: 46px;
+    --gap: 16px;
     flex-direction: row;
     left: 50%;
     top: calc(var(--fy, 0px) + var(--fh, 0px) + 22px);
@@ -295,7 +328,10 @@ html[data-layout=below] .presets {
 .mode[data-world=sky] .mode-icon[data-world~=sky],
 .mode[data-world=room] .mode-icon[data-world~=room],
 .mode[data-world=void] .mode-icon[data-world~=void],
-.mode[data-world=meadow] .mode-icon[data-world~=meadow] { display: block; }
+.mode[data-world=meadow] .mode-icon[data-world~=meadow],
+.mode[data-world=wisteria] .mode-icon[data-world~=wisteria],
+.mode[data-world=eren] .mode-icon[data-world~=eren],
+.mode[data-world=sukuna] .mode-icon[data-world~=sukuna] { display: block; }
 .mode[data-mode=day] .mode-icon[data-mode=dusk] { opacity: 0; transform: rotate(-70deg) scale(0.4); }
 .mode[data-mode=dusk] .mode-icon[data-mode=day] { opacity: 0; transform: rotate(70deg) scale(0.4); }
 
