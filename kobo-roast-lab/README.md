@@ -30,6 +30,7 @@ roast curve, or compute real-time dose-to-yield refractometer targets.
 - **Stack:** Astro, Three.js (`GLTFLoader`), GSAP (`ScrollTrigger`), Lenis, TypeScript
 - **3D & Visual Assets:** 4 multi-part PBR `.glb` coffee assemblies generated from scratch in Blender (`scripts/generate_models.py`, 102 KB to 197 KB) plus 10 sunlit botanical watercolor, single-origin farm, and turnaround specification plates (`public/images/`)
 - **Blind `/jury` Score:** 8.01 / 10 on blind Pass 2 -> 8.61 / 10 final post-fix verification (`0 FAIL, 0 WARN` static audit, `728 KB` total page weight, `6 KB gz` initial JS, `0` axe violations, `0.000` mobile CLS)
+- **Model, Tokens & Time:** Gemini 4 Argon (high) across 1 orchestrator + 4 subagents (`worker`, 2 blind `/jury` critics, 1 specialty coffee copy critic) · `~6.63M` uncached tokens (`~34.93M` total including `28.29M` prompt cache reads, `455K` output tokens) · `3h 54m` active compute time
 
 ## Run it
 

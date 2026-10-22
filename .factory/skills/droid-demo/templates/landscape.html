@@ -1,0 +1,54 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;background:transparent;font-family:Geist,'Liberation Sans',sans-serif;color:#111}
+.sheet{position:absolute;inset:0;}
+svg{position:absolute;inset:0}
+.name{position:absolute;top:172px;display:flex;align-items:baseline;gap:16px}
+.name b{font-size:40px;font-weight:650;letter-spacing:-.02em}
+.name span{font-size:22px;color:#6b6b6b}
+.stats{position:absolute;top:782px;width:928px;display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid #111}
+.stat{padding:18px 0 0 0}
+.stat i{display:block;font-style:normal;font-family:'Geist Mono',monospace;font-size:16px;letter-spacing:.12em;text-transform:uppercase;color:#6b6b6b}
+.stat em{display:block;font-style:normal;font-size:38px;font-weight:600;letter-spacing:-.02em;margin-top:8px}
+.stat small{display:block;font-size:17px;color:#8a8a8a;margin-top:6px}
+</style></head><body><div class="sheet">
+<svg width="1920" height="1080" viewBox="0 0 1920 1080"><defs><mask id="m"><rect width="1920" height="1080" fill="#fff"/><rect x="24" y="238" width="928" height="522" rx="0" fill="#000"/><rect x="968" y="238" width="928" height="522" rx="0" fill="#000"/></mask></defs><rect width="1920" height="1080" fill="#fafaf8" mask="url(#m)"/><rect x="24" y="238" width="928" height="522" fill="none" stroke="#111" stroke-opacity="0.14" stroke-width="1"/><rect x="968" y="238" width="928" height="522" fill="none" stroke="#111" stroke-opacity="0.14" stroke-width="1"/></svg>
+<div class="name" id="name-a" style="left:24px"><b>Lindqvist CMM-04</b><span>Gemini 4 Argon (high) · Factory Droid</span></div>
+<div class="name" id="name-b" style="left:968px"><b>KOBO Roast Lab</b><span>Gemini 4 Argon (high) · Factory Droid</span></div>
+<div class="stats" id="stats-a" style="left:24px">
+ <div class="stat"><i>Time</i><em>4 h 53 min</em><small>active time</small></div>
+ <div class="stat"><i>Tokens</i><em>~8.24M</em><small>uncached</small></div>
+ <div class="stat"><i>Jury</i><em>8.00/10</em></div>
+ <div class="stat"><i>Assets</i><em>3 GLBs</em></div>
+</div>
+<div class="stats" id="stats-b" style="left:968px">
+ <div class="stat"><i>Time</i><em>3 h 54 min</em><small>active time</small></div>
+ <div class="stat"><i>Tokens</i><em>~6.63M</em><small>uncached</small></div>
+ <div class="stat"><i>Jury</i><em>8.61/10</em></div>
+ <div class="stat"><i>Assets</i><em>4 GLBs</em></div>
+</div>
+</div>
+<script>
+window.applySpec = (spec) => {
+  const fillSide = (side, nameId, statsId) => {
+    if (!side) return;
+    const nameEl = document.getElementById(nameId);
+    nameEl.querySelector('b').textContent = side.model || side.title || '';
+    nameEl.querySelector('span').textContent = side.harness || side.subtitle || '';
+    const statsEl = document.getElementById(statsId);
+    const items = [
+      { label: side.timeLabel || 'Time', value: side.timeLandscape || side.time || '', note: side.timeNoteLandscape ?? side.timeNote },
+      { label: side.costLabel || (side.tokens ? 'Tokens' : 'Cost'), value: side.tokens || side.cost || '', note: side.tokensNote ?? side.costNote },
+      { label: side.passesLabel || (side.score ? 'Jury' : 'Passes'), value: String(side.score ?? side.passes ?? ''), note: side.scoreNote ?? side.passesNote },
+      { label: side.checksLabel || (side.assets ? 'Assets' : 'Checks'), value: String(side.assets ?? side.checks ?? ''), note: side.assetsNote ?? side.checksNote },
+    ];
+    statsEl.innerHTML = items.map((it) =>
+      `<div class="stat"><i>${it.label}</i><em>${it.value}</em>${it.note ? `<small>${it.note}</small>` : ''}</div>`
+    ).join('');
+  };
+  fillSide(spec.left || spec.top, 'name-a', 'stats-a');
+  fillSide(spec.right || spec.bottom, 'name-b', 'stats-b');
+};
+</script>
+</body></html>

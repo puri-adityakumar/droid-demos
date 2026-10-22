@@ -1,0 +1,60 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:1080px;background:transparent;font-family:Geist,'Liberation Sans',sans-serif;color:#111}
+.sheet{position:absolute;inset:0;}
+svg{position:absolute;inset:0}
+.header{position:absolute;left:80px;top:64px;width:1280px;display:flex;align-items:baseline;justify-content:space-between;gap:20px}
+.header b{font-size:40px;font-weight:650;letter-spacing:-.02em}
+.header span{font-size:20px;color:#6b6b6b}
+.stats{position:absolute;left:80px;top:886px;width:1280px;display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid #111}
+.stat{padding:16px 0 0 0}
+.stat i{display:block;font-style:normal;font-family:'Geist Mono',monospace;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:#6b6b6b}
+.stat em{display:block;font-style:normal;font-size:34px;font-weight:600;letter-spacing:-.02em;margin-top:6px}
+.stat small{display:block;font-size:15px;color:#8a8a8a;margin-top:4px}
+</style></head><body><div class="sheet">
+<svg width="1440" height="1080" viewBox="0 0 1440 1080"><defs><mask id="m"><rect width="1440" height="1080" fill="#fff"/><rect id="cutout-mask" x="80" y="140" width="1280" height="720" rx="0" fill="#000"/></mask></defs><rect width="1440" height="1080" fill="#fafaf8" mask="url(#m)"/><rect id="cutout-border" x="80" y="140" width="1280" height="720" fill="none" stroke="#111" stroke-opacity="0.14" stroke-width="1"/></svg>
+<div class="header" id="header"><b>KOBO // Roast Lab</b><span>Gemini 4 Argon (high) · /awwwards + /jury + Blender 4.2</span></div>
+<div class="stats" id="stats">
+ <div class="stat"><i>Time</i><em>3h 54m</em><small>active compute</small></div>
+ <div class="stat"><i>Tokens</i><em>~6.63M</em><small>34.93M w/ cache</small></div>
+ <div class="stat"><i>Jury</i><em>8.61 / 10</em><small>blind /jury</small></div>
+ <div class="stat"><i>Assets</i><em>4 GLBs</em><small>procedural bpy</small></div>
+</div>
+</div>
+<script>
+window.applySpec = (spec) => {
+  const p = spec.project || spec.left || spec;
+  if (!p) return;
+  const h = document.getElementById('header');
+  const statsEl = document.getElementById('stats');
+  if (spec.aspect === '16:10') {
+    const cm = document.getElementById('cutout-mask');
+    const cb = document.getElementById('cutout-border');
+    for (const el of [cm, cb]) {
+      el.setAttribute('x', '80');
+      el.setAttribute('y', '112');
+      el.setAttribute('width', '1280');
+      el.setAttribute('height', '800');
+    }
+    h.style.left = '80px';
+    h.style.top = '44px';
+    h.style.width = '1280px';
+    statsEl.style.left = '80px';
+    statsEl.style.top = '932px';
+    statsEl.style.width = '1280px';
+  }
+  h.querySelector('b').textContent = p.title || p.model || '';
+  h.querySelector('span').textContent = p.subtitle || p.harness || '';
+  const items = p.stats || [
+    { label: p.timeLabel || 'Time', value: p.time || '', note: p.timeNote },
+    { label: p.tokensLabel || 'Tokens', value: p.tokens || p.cost || '', note: p.tokensNote ?? p.costNote },
+    { label: p.scoreLabel || 'Jury', value: String(p.score ?? p.passes ?? ''), note: p.scoreNote ?? p.passesNote },
+    { label: p.assetsLabel || 'Assets', value: String(p.assets ?? p.checks ?? ''), note: p.assetsNote ?? p.checksNote },
+  ];
+  statsEl.innerHTML = items.map((it) =>
+    `<div class="stat"><i>${it.label}</i><em>${it.value}</em>${it.note ? `<small>${it.note}</small>` : ''}</div>`
+  ).join('');
+};
+</script>
+</body></html>

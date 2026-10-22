@@ -1,0 +1,44 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1350px;background:transparent;font-family:Geist,'Liberation Sans',sans-serif;color:#111}
+.sheet{position:absolute;inset:0;}
+svg{position:absolute;inset:0}
+.header{position:absolute;left:52px;top:116px;width:976px;display:flex;flex-direction:column;gap:10px}
+.header b{font-size:46px;font-weight:650;letter-spacing:-.02em;line-height:1}
+.header span{font-size:21px;color:#6b6b6b;line-height:1.2}
+.stats{position:absolute;left:52px;top:886px;width:976px;display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid #111}
+.stat{padding:22px 0 0 0}
+.stat i{display:block;font-style:normal;font-family:'Geist Mono',monospace;font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:#6b6b6b}
+.stat em{display:block;font-style:normal;font-size:36px;font-weight:600;letter-spacing:-.02em;margin-top:10px}
+.stat small{display:block;font-size:16px;color:#8a8a8a;margin-top:6px}
+</style></head><body><div class="sheet">
+<svg width="1080" height="1350" viewBox="0 0 1080 1350"><defs><mask id="m"><rect width="1080" height="1350" fill="#fff"/><rect x="52" y="240" width="976" height="610" rx="0" fill="#000"/></mask></defs><rect width="1080" height="1350" fill="#fafaf8" mask="url(#m)"/><rect x="52" y="240" width="976" height="610" fill="none" stroke="#111" stroke-opacity="0.14" stroke-width="1"/></svg>
+<div class="header" id="header"><b>KOBO // Roast Lab</b><span>Gemini 4 Argon (high) · /awwwards + /jury + Blender 4.2</span></div>
+<div class="stats" id="stats">
+ <div class="stat"><i>Time</i><em>3h 54m</em><small>active compute</small></div>
+ <div class="stat"><i>Tokens</i><em>~6.63M</em><small>34.93M w/ cache</small></div>
+ <div class="stat"><i>Jury</i><em>8.61 / 10</em><small>blind /jury</small></div>
+ <div class="stat"><i>Assets</i><em>4 GLBs</em><small>procedural bpy</small></div>
+</div>
+</div>
+<script>
+window.applySpec = (spec) => {
+  const p = spec.project || spec.left || spec;
+  if (!p) return;
+  const h = document.getElementById('header');
+  h.querySelector('b').textContent = p.title || p.model || '';
+  h.querySelector('span').textContent = p.subtitle || p.harness || '';
+  const statsEl = document.getElementById('stats');
+  const items = p.stats || [
+    { label: p.timeLabel || 'Time', value: p.time || '', note: p.timeNote },
+    { label: p.tokensLabel || 'Tokens', value: p.tokens || p.cost || '', note: p.tokensNote ?? p.costNote },
+    { label: p.scoreLabel || 'Jury', value: String(p.score ?? p.passes ?? ''), note: p.scoreNote ?? p.passesNote },
+    { label: p.assetsLabel || 'Assets', value: String(p.assets ?? p.checks ?? ''), note: p.assetsNote ?? p.checksNote },
+  ];
+  statsEl.innerHTML = items.map((it) =>
+    `<div class="stat"><i>${it.label}</i><em>${it.value}</em>${it.note ? `<small>${it.note}</small>` : ''}</div>`
+  ).join('');
+};
+</script>
+</body></html>

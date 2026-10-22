@@ -1,0 +1,35 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1350px;background:transparent;font-family:Geist,'Liberation Sans',sans-serif;color:#111}
+svg{position:absolute;inset:0}
+.row{position:absolute;left:52px;width:976px;height:96px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+.v{font-size:40px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.v small{display:block;font-family:'Geist Mono',monospace;font-size:14px;font-weight:400;color:#6b6b6b;letter-spacing:.12em;margin-top:8px;text-transform:uppercase}
+.l{justify-self:start}.r{justify-self:end;text-align:right}
+.n{text-align:center;line-height:1}
+.n b{display:block;font-size:40px;font-weight:650;letter-spacing:-.02em}
+.n span{display:block;font-size:18px;color:#6b6b6b;margin-top:8px}
+</style></head><body>
+<svg width="1080" height="1350" viewBox="0 0 1080 1350"><defs><mask id="m"><rect width="1080" height="1350" fill="#fff"/><rect x="52" y="116" width="976" height="549" rx="0" fill="#000"/><rect x="52" y="761" width="976" height="549" rx="0" fill="#000"/></mask></defs>
+<rect width="1080" height="1350" fill="#fafaf8" mask="url(#m)"/><rect x="52" y="116" width="976" height="549" fill="none" stroke="#111" stroke-opacity="0.14" stroke-width="1"/><rect x="52" y="761" width="976" height="549" fill="none" stroke="#111" stroke-opacity="0.14" stroke-width="1"/></svg>
+<div class="row" id="row-a" style="top:20px"><div class="v l">4h 53m<small>active time</small></div><div class="n"><b>Lindqvist CMM-04</b><span>Gemini 4 Argon (high) · Factory Droid</span></div><div class="v r">~8.24M<small>uncached tokens</small></div></div>
+<div class="row" id="row-b" style="top:665px"><div class="v l">3h 54m<small>active time</small></div><div class="n"><b>KOBO Roast Lab</b><span>Gemini 4 Argon (high) · Factory Droid</span></div><div class="v r">~6.63M<small>uncached tokens</small></div></div>
+<script>
+window.applySpec = (spec) => {
+  const fillRow = (side, rowId) => {
+    if (!side) return;
+    const row = document.getElementById(rowId);
+    const timeNote = side.timeNoteVertical ?? side.timeNote;
+    const costVal = side.tokens || side.cost || '';
+    const costNote = side.tokensNote ?? side.costNoteVertical ?? side.costNote;
+    row.innerHTML =
+      `<div class="v l">${side.timeVertical || side.time || ''}${timeNote ? `<small>${timeNote}</small>` : ''}</div>` +
+      `<div class="n"><b>${side.model || side.title || ''}</b><span>${side.harness || side.subtitle || ''}</span></div>` +
+      `<div class="v r">${costVal}${costNote ? `<small>${costNote}</small>` : ''}</div>`;
+  };
+  fillRow(spec.left || spec.top, 'row-a');
+  fillRow(spec.right || spec.bottom, 'row-b');
+};
+</script>
+</body></html>

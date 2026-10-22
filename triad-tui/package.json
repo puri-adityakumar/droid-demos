@@ -1,0 +1,27 @@
+{
+  "name": "triad-tui",
+  "version": "1.0.0",
+  "description": "Nostalgic 3-lane terminal UI for running Frontier Lab, Open Source, and Lightweight models side-by-side with @factory/droid-sdk",
+  "type": "module",
+  "bin": {
+    "triad": "./src/index.tsx"
+  },
+  "scripts": {
+    "start": "tsx src/index.tsx",
+    "dev": "tsx watch src/index.tsx",
+    "demo": "tsx src/index.tsx --demo",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@factory/droid-sdk": "^0.10.0",
+    "ink": "^8.0.0",
+    "react": "^19.3.1",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
